@@ -191,13 +191,6 @@ export default function SalesPage() {
           >
             Add Sale
           </button>
-          <button
-            onClick={fetchData}
-            className="btn btn-outline flex items-center gap-1 text-xs sm:text-sm"
-          >
-            <ArrowPathIcon className="h-4 w-4" />
-            <span>Refresh</span>
-          </button>
         </div>
       </div>
 
