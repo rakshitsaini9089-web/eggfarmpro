@@ -122,15 +122,15 @@ export default function LoginPage() {
                     </div>
                     
                     <div className="form-group d-md-flex">
+                      <div className="w-50 text-md-right">
+                        <a href="#" style={{ color: '#fff' }}>Forgot Password</a>
+                      </div>
                       <div className="w-50">
                         <label className="checkbox-wrap checkbox-primary text-white">
                           Remember Me
                           <input type="checkbox" defaultChecked />
                           <span className="checkmark"></span>
                         </label>
-                      </div>
-                      <div className="w-50 text-md-right">
-                        <a href="#" style={{ color: '#fff' }}>Forgot Password</a>
                       </div>
                     </div>
                   </form>
