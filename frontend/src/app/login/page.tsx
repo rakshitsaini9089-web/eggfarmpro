@@ -217,15 +217,15 @@ export default function LoginPage() {
                       </button>
                     </div>
                     
-                    <div className="form-group d-md-flex align-items-center">
-                      <div className="w-50">
-                        <label className="checkbox-wrap checkbox-primary text-white" style={{ fontWeight: 400, cursor: 'pointer' }}>
-                          Remember Me
-                          <input type="checkbox" defaultChecked style={{ cursor: 'pointer' }} />
+                    <div className="form-group d-flex align-items-center justify-content-between">
+                      <div className="d-flex align-items-center">
+                        <label className="checkbox-wrap checkbox-primary text-white mb-0" style={{ fontWeight: 400, cursor: 'pointer' }}>
+                          <input type="checkbox" defaultChecked style={{ cursor: 'pointer', marginRight: '8px' }} />
                           <span className="checkmark"></span>
+                          Remember Me
                         </label>
                       </div>
-                      <div className="w-50 text-md-right">
+                      <div>
                         <a href="#" style={{ color: '#fff', fontWeight: 400, textDecoration: 'none', transition: 'color 0.2s ease' }} 
                            onMouseEnter={(e) => e.currentTarget.style.color = '#a5d6a7'}
                            onMouseLeave={(e) => e.currentTarget.style.color = '#fff'}>
