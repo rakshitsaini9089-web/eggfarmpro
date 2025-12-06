@@ -2,6 +2,12 @@ const Sale = require('../models/Sale');
 const Payment = require('../models/Payment');
 const Expense = require('../models/Expense');
 const Vaccine = require('../models/Vaccine');
+const { AIEngine } = require('../utils/aiEngine');
+const Batch = require('../models/Batch');
+const EggProduction = require('../models/EggProduction');
+const FeedConsumption = require('../models/FeedConsumption');
+const Mortality = require('../models/Mortality');
+const Client = require('../models/Client');
 
 /**
  * Get dashboard statistics
@@ -216,6 +222,78 @@ async function getDashboardStats(req, res) {
       .sort({ scheduledDate: 1 })
       .limit(5);
     
+    // Generate AI insights for dashboard
+    const aiEngine = new AIEngine();
+    
+    // Get recent data for AI analysis
+    const batches = await Batch.find(farmFilter);
+    const recentEggProduction = await EggProduction.find({
+      date: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }, // Last 7 days
+      ...farmFilter
+    });
+    
+    const recentFeedConsumption = await FeedConsumption.find({
+      date: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }, // Last 7 days
+      ...farmFilter
+    });
+    
+    const recentMortality = await Mortality.find({
+      date: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }, // Last 7 days
+      ...farmFilter
+    });
+    
+    // Prepare data for AI analysis
+    const aiData = {
+      todaysSalesTotal,
+      todaysExpenseTotal,
+      todaysProfit,
+      cashTotal,
+      upiTotal,
+      totalDue,
+      batches: batches.length,
+      recentEggProduction: recentEggProduction.reduce((sum, record) => sum + (record.quantity || 0), 0),
+      recentFeedConsumption: recentFeedConsumption.reduce((sum, record) => sum + (record.quantity || 0), 0),
+      recentMortality: recentMortality.reduce((sum, record) => sum + (record.count || 0), 0)
+    };
+    
+    // Generate AI insights
+    const insightsPrompt = `
+    As an egg farm management expert, analyze the following dashboard metrics and provide concise insights:
+    
+    Today's Metrics:
+    - Sales: ₹${aiData.todaysSalesTotal.toFixed(2)}
+    - Expenses: ₹${aiData.todaysExpenseTotal.toFixed(2)}
+    - Profit: ₹${aiData.todaysProfit.toFixed(2)}
+    - Cash Payments: ₹${aiData.cashTotal.toFixed(2)}
+    - UPI Payments: ₹${aiData.upiTotal.toFixed(2)}
+    - Total Due: ₹${aiData.totalDue.toFixed(2)}
+    - Active Batches: ${aiData.batches}
+    - Recent Egg Production: ${aiData.recentEggProduction} eggs
+    - Recent Feed Consumption: ${aiData.recentFeedConsumption} kg
+    - Recent Mortality: ${aiData.recentMortality} birds
+    
+    Provide exactly 4 insights in the following format:
+    {
+      "healthAlert": "string",
+      "financialInsight": "string",
+      "productionTip": "string",
+      "marketOpportunity": "string"
+    }
+    `;
+    
+    let aiInsights = {
+      healthAlert: "Monitor flock health regularly",
+      financialInsight: "Track daily expenses to maintain profitability",
+      productionTip: "Maintain optimal feeding schedule for consistent production",
+      marketOpportunity: "Explore local market opportunities for better pricing"
+    };
+    
+    try {
+      aiInsights = await aiEngine.generateJSON(insightsPrompt);
+    } catch (error) {
+      console.warn('Failed to generate AI insights:', error.message);
+    }
+    
     // Prepare response
     const stats = {
       todaysSales: {
@@ -242,7 +320,8 @@ async function getDashboardStats(req, res) {
         sales: monthlySalesTotal,
         expenses: monthlyExpenseTotal,
         profit: monthlyProfit
-      }
+      },
+      aiInsights // Add AI insights to the response
     };
     
     console.log('Dashboard stats response:', stats);

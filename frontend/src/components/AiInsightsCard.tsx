@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { dashboardAPI } from '@/lib/api';
 
 interface AiInsight {
   id: string;
@@ -11,63 +12,95 @@ interface AiInsight {
 }
 
 export function AiInsightsCard() {
-  const [insights, setInsights] = useState<AiInsight[]>([
-    {
-      id: '1',
-      title: 'High Mortality Alert',
-      description: 'Mortality rate increased by 15% compared to last week. Check for disease outbreak.',
-      priority: 'high',
-      action: 'View Mortality Records'
-    },
-    {
-      id: '2',
-      title: 'Feed Optimization',
-      description: 'Based on current consumption patterns, switching to Feed Type B could reduce costs by 8%.',
-      priority: 'medium',
-      action: 'Explore Feed Options'
-    },
-    {
-      id: '3',
-      title: 'Market Opportunity',
-      description: 'Local market rates are 12% higher than your current pricing. Consider adjusting rates.',
-      priority: 'medium'
-    },
-    {
-      id: '4',
-      title: 'Vaccination Reminder',
-      description: 'Batch #E2024-001 is due for Newcastle vaccine in 3 days.',
-      priority: 'high',
-      action: 'Schedule Vaccination'
-    }
-  ]);
-  
+  const [insights, setInsights] = useState<AiInsight[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleRefreshInsights = async () => {
+  const fetchAiInsights = async () => {
     setLoading(true);
     setError(null);
     
     try {
-      // In a real implementation, this would call the backend API
-      // const response = await fetch('/api/ai/insights/dashboard', {
-      //   method: 'GET',
-      // });
+      // Fetch insights from the dashboard stats endpoint which now includes AI insights
+      const data = await dashboardAPI.getStats();
       
-      // if (!response.ok) throw new Error('Failed to fetch insights');
+      // Use the AI insights from the dashboard stats
+      const aiInsights = data.aiInsights || {};
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Transform the data to match our insights format
+      const transformedInsights: AiInsight[] = [
+        {
+          id: '1',
+          title: 'Health Alert',
+          description: aiInsights.healthAlert || 'No health alerts at this time',
+          priority: 'high',
+          action: 'Check Health Records'
+        },
+        {
+          id: '2',
+          title: 'Financial Insight',
+          description: aiInsights.financialInsight || 'Your financials are stable',
+          priority: 'medium'
+        },
+        {
+          id: '3',
+          title: 'Production Tip',
+          description: aiInsights.productionTip || 'Continue with current practices',
+          priority: 'medium'
+        },
+        {
+          id: '4',
+          title: 'Market Opportunity',
+          description: aiInsights.marketOpportunity || 'Monitor local market prices',
+          priority: 'low'
+        }
+      ];
       
-      // For demo purposes, we'll just shuffle the existing insights
-      const shuffled = [...insights].sort(() => Math.random() - 0.5);
-      setInsights(shuffled);
+      setInsights(transformedInsights);
     } catch (err) {
-      setError('Failed to refresh insights. Please try again.');
-      console.error('Insights refresh error:', err);
+      setError('Failed to load AI insights. Please try again.');
+      console.error('Insights fetch error:', err);
+      // Fallback to mock data if API fails
+      setInsights([
+        {
+          id: '1',
+          title: 'High Mortality Alert',
+          description: 'Mortality rate increased by 15% compared to last week. Check for disease outbreak.',
+          priority: 'high',
+          action: 'View Mortality Records'
+        },
+        {
+          id: '2',
+          title: 'Feed Optimization',
+          description: 'Based on current consumption patterns, switching to Feed Type B could reduce costs by 8%.',
+          priority: 'medium',
+          action: 'Explore Feed Options'
+        },
+        {
+          id: '3',
+          title: 'Market Opportunity',
+          description: 'Local market rates are 12% higher than your current pricing. Consider adjusting rates.',
+          priority: 'medium'
+        },
+        {
+          id: '4',
+          title: 'Vaccination Reminder',
+          description: 'Batch #E2024-001 is due for Newcastle vaccine in 3 days.',
+          priority: 'high',
+          action: 'Schedule Vaccination'
+        }
+      ]);
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchAiInsights();
+  }, []);
+
+  const handleRefreshInsights = async () => {
+    await fetchAiInsights();
   };
 
   const getPriorityColor = (priority: string) => {

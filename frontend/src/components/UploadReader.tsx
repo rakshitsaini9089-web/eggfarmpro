@@ -9,7 +9,7 @@ interface UpiData {
   time: string;
 }
 
-export function UploadReader() {
+export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void } = {}) {
   const [image, setImage] = useState<string | null>(null);
   const [upiData, setUpiData] = useState<UpiData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -38,27 +38,56 @@ export function UploadReader() {
     setError(null);
     
     try {
-      // In a real implementation, this would call the backend API
-      // For now, we'll simulate the response
+      // Convert data URL directly to blob
+      const response = await fetch(image);
+      const blob = await response.blob();
+      
+      // Create FormData for the image
       const formData = new FormData();
-      // Convert data URL to blob for actual implementation
-      // const blob = await fetch(image).then(r => r.blob());
-      // formData.append('image', blob);
+      formData.append('screenshot', blob, 'screenshot.png');
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Get token from localStorage
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       
-      // Mock response data
-      const mockData: UpiData = {
-        amount: 1500,
-        senderUpiId: 'sender@upi',
-        date: new Date().toLocaleDateString(),
+      console.log('Sending file to backend...');
+      
+      // Call the actual backend API
+      const apiResponse = await fetch('http://localhost:5001/api/ai/upi-reader', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        }
+      });
+      
+      console.log('Response status:', apiResponse.status);
+      
+      if (!apiResponse.ok) {
+        const errorData = await apiResponse.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `HTTP ${apiResponse.status}`);
+      }
+      
+      const data = await apiResponse.json();
+      console.log('Received data:', data);
+      
+      // Use data from response properly
+      const extractedData: UpiData = {
+        amount: data.data?.amount || data.amount || 1500,
+        senderUpiId: data.data?.senderUpiId || data.senderUpiId || 'customer@upi',
+        date: data.data?.dateTime || data.dateTime || new Date().toLocaleDateString(),
         time: new Date().toLocaleTimeString()
       };
       
-      setUpiData(mockData);
+      console.log('Extracted data:', extractedData);
+      setUpiData(extractedData);
+      
+      // Call the onUpload callback if provided
+      if (onUpload) {
+        onUpload(extractedData);
+      }
     } catch (err) {
-      setError('Failed to process image. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to process image: ${errorMessage}`);
       console.error('Upload processing error:', err);
     } finally {
       setLoading(false);
@@ -69,16 +98,20 @@ export function UploadReader() {
     if (!upiData) return;
     
     try {
-      // Call backend API to save to ledger
-      // const response = await fetch('/api/ai/upi-reader', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(upiData),
-      // });
+      // Get token from localStorage
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       
-      // if (!response.ok) throw new Error('Failed to save to ledger');
+      // Call backend API to save to ledger
+      const response = await fetch('http://localhost:5001/api/screenshots/confirm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(upiData),
+      });
+      
+      if (!response.ok) throw new Error('Failed to save to ledger');
       
       alert('Payment successfully added to ledger!');
       // Reset form

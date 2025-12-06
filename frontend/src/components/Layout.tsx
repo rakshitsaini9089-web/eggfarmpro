@@ -182,10 +182,15 @@ export default function Layout({ children }: LayoutProps) {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
+        @media (max-width: 768px) {
+          .sidebar-desktop {
+            display: none !important;
+          }
+        }
       `}</style>
       
       {/* Sidebar */}
-      <div className={`hidden md:flex md:flex-col md:relative z-30 ${sidebarCollapsed ? 'w-20' : 'w-64'} bg-white dark:bg-gray-800 shadow-xl h-full transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700`}>
+      <div className="sidebar-desktop hidden md:flex md:flex-col md:relative z-30 ${sidebarCollapsed ? 'w-20' : 'w-64'} bg-white dark:bg-gray-800 shadow-xl h-full transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-secondary dark:bg-gray-800">
           {!sidebarCollapsed && (
             <div className="flex items-center space-x-3">
@@ -258,9 +263,9 @@ export default function Layout({ children }: LayoutProps) {
       {/* Main content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-sm z-10 flex-shrink-0 px-3 py-2 sm:px-4 sm:py-3 md:px-6 md:py-3 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between gap-2 sm:gap-3">
-            <div className="flex items-center gap-2 min-w-0">
+        <header className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-sm z-10 flex-shrink-0 px-2 py-2 sm:px-3 sm:py-3 md:px-6 md:py-3 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 md:gap-3">
+            <div className="flex items-center gap-1 sm:gap-2 min-w-0 flex-1">
               {/* Mobile sidebar toggle */}
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -273,17 +278,17 @@ export default function Layout({ children }: LayoutProps) {
                 </svg>
               </button>
               <div className="flex flex-col min-w-0">
-                <h1 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white truncate">
+                <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-gray-900 dark:text-white truncate">
                   {getPageTitle()}
                 </h1>
                 {selectedFarm && (
-                  <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 truncate">
+                  <p className="text-[9px] sm:text-xs md:text-xs text-gray-500 dark:text-gray-400 truncate">
                     {selectedFarm.name} • {selectedFarm.location}
                   </p>
                 )}
               </div>
             </div>
-            <div className="flex items-center space-x-1 sm:space-x-3">
+            <div className="flex items-center gap-0.5 sm:gap-1 md:gap-3 flex-shrink-0">
               {/* User Menu */}
               <div 
                 className="relative" 
@@ -317,10 +322,10 @@ export default function Layout({ children }: LayoutProps) {
                     }
                     setUserMenuOpen(!userMenuOpen);
                   }}
-                  className="flex items-center justify-center p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors duration-300"
+                  className="flex items-center justify-center p-1 sm:p-1.5 md:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-primary-foreground dark:hover:text-white dark:hover:bg-primary transition-colors duration-300"
                   title="Account Menu"
                 >
-                  <UserCircleIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <UserCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </button>                
                 {/* User Dropdown Menu */}
                 {userMenuOpen && (
@@ -406,10 +411,10 @@ export default function Layout({ children }: LayoutProps) {
                       }
                       setFarmMenuOpen(!farmMenuOpen);
                     }}
-                    className="flex items-center justify-center p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors duration-300"
+                    className="flex items-center justify-center p-1 sm:p-1.5 md:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-primary-foreground dark:hover:text-white dark:hover:bg-primary transition-colors duration-300"
                     title={farms.length > 1 ? "Switch Farm" : "View Farm"}
                   >
-                    <BuildingLibraryIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <BuildingLibraryIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                   </button>                  
                   {/* Farm dropdown menu */}
                   {farmMenuOpen && (
@@ -480,21 +485,22 @@ export default function Layout({ children }: LayoutProps) {
               {/* Dark Mode Toggle */}
               <button
                 onClick={toggleDarkMode}
-                className="flex items-center justify-center p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors duration-300"
+                className="flex items-center justify-center p-1 sm:p-1.5 md:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-primary-foreground dark:hover:text-white dark:hover:bg-primary transition-colors duration-300"
                 title="Toggle dark mode"
               >
                 {darkMode ? (
-                  <SunIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <SunIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 ) : (
-                  <MoonIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <MoonIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 )}
-              </button>            </div>
+              </button>
+            </div>
           </div>
         </header>
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto bg-white dark:bg-gray-900">
-          <div className="mx-auto w-full max-w-6xl px-3 sm:px-4 lg:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+          <div className="mx-auto w-full max-w-6xl px-2 sm:px-3 md:px-6 py-3 sm:py-4 md:py-6 space-y-3 sm:space-y-4 md:space-y-6">
             {children}
           </div>
         </main>

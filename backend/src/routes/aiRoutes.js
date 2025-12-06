@@ -15,6 +15,12 @@ const { generateReport } = require('../controllers/reportGeneratorController');
 const { optimizeFeedFormula } = require('../controllers/feedOptimizationController');
 const { getSuggestions } = require('../controllers/diseaseSuggestionController');
 const { handleChat } = require('../controllers/chatController');
+const { 
+  predictEggProduction, 
+  predictFeedConsumption, 
+  predictMortalityTrend, 
+  predictCustomerRisk 
+} = require('../controllers/predictionController');
 
 // Apply authentication middleware to all AI routes
 router.use(aiAuthMiddleware);
@@ -46,5 +52,11 @@ router.post('/disease-suggestions', getSuggestions);
 
 // Chat Route
 router.post('/chat', handleChat);
+
+// Prediction Routes
+router.get('/predictions/egg-production', predictEggProduction);
+router.get('/predictions/feed-consumption', predictFeedConsumption);
+router.get('/predictions/mortality-trend', predictMortalityTrend);
+router.get('/predictions/customer-risk', predictCustomerRisk);
 
 module.exports = router;

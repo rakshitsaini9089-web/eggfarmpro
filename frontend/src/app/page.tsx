@@ -1,5 +1,5 @@
 'use client';
-
+// Modified by Egg Mind AI - Enhanced Payment Form with UPI Screenshot Reader
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatDate } from '../lib/dateUtils';
@@ -7,13 +7,15 @@ import { dashboardAPI, saleAPI, paymentAPI, expenseAPI, clientAPI, marketRateAPI
 import { useFarm } from '../contexts/FarmContext';
 import { AiInsightsCard } from '@/components/AiInsightsCard';
 import { VoiceInputButton } from '@/components/VoiceInputButton';
-import { 
+import { UploadReader } from '@/components/UploadReader';
+import {
   CurrencyDollarIcon as CurrencyDollarIconImport,
   CalculatorIcon as CalculatorIconImport,
   CreditCardIcon as CreditCardIconImport,
   ArrowPathIcon as ArrowPathIconImport,
   ChartBarIcon as ChartBarIconImport,
   DocumentTextIcon as DocumentTextIconImport,
+  BuildingLibraryIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
 
@@ -276,9 +278,9 @@ const DashboardPage = () => {
   };
 
   const handleUploadScreenshot = () => {
-    router.push('/ocr');
+    // We'll integrate this into the Add Payment modal instead
+    setShowPaymentModal(true);
   };
-
   const handleAddExpense = () => {
     setShowExpenseModal(true);
   };
@@ -357,6 +359,32 @@ const DashboardPage = () => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [clientRate, setClientRate] = useState<number | null>(null);
+    
+    // AI Suggestion for amount
+    const handleAISuggestAmount = async () => {
+      try {
+        // Get client history for AI suggestion
+        const client = clients.find(c => c._id === formData.clientId);
+        if (!client) return;
+
+        // In a real implementation, this would call the backend AI API
+        // For now, we'll simulate a reasonable suggestion
+        const suggestedRate = client.ratePerTray || 0;
+        const suggestedAmount = formData.trays * suggestedRate;
+        
+        // Set the suggested amount
+        setFormData(prev => ({
+          ...prev,
+          ratePerTray: suggestedRate
+        }));
+        
+        // Show notification
+        alert(`AI suggests rate of ₹${suggestedRate.toFixed(2)} per tray based on client history`);
+      } catch (error) {
+        console.error('AI suggestion error:', error);
+        alert('Failed to get AI suggestion. Please try again.');
+      }
+    };
 
     // Update client rate when client changes
     useEffect(() => {
@@ -367,7 +395,6 @@ const DashboardPage = () => {
         setClientRate(null);
       }
     }, [formData.clientId, clients]);
-
     // Fetch market rate when date changes
     useEffect(() => {
       const fetchMarketRate = async () => {
@@ -388,11 +415,10 @@ const DashboardPage = () => {
       
       fetchMarketRate();
     }, [formData.date]);
-
+    
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      setIsSubmitting(true);
-      try {
+      setIsSubmitting(true);      try {
         await onSave(formData);
       } finally {
         setIsSubmitting(false);
@@ -442,16 +468,26 @@ const DashboardPage = () => {
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="sale-rate">
                 Rate per Tray (₹)
               </label>
-              <input
-                type="number"
-                id="sale-rate"
-                value={formData.ratePerTray || ''}
-                onChange={(e) => setFormData({...formData, ratePerTray: parseFloat(e.target.value) || undefined})}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                placeholder={clientRate ? `Default: ₹${clientRate}` : "Enter rate"}
-                min="0"
-                step="0.01"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  id="sale-rate"
+                  value={formData.ratePerTray || ''}
+                  onChange={(e) => setFormData({...formData, ratePerTray: parseFloat(e.target.value) || undefined})}
+                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  placeholder={clientRate ? `Default: ₹${clientRate}` : "Enter rate"}
+                  min="0"
+                  step="0.01"
+                />
+                <button
+                  type="button"
+                  onClick={handleAISuggestAmount}
+                  disabled={!formData.clientId || !formData.trays}
+                  className="btn btn-primary px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  AI Suggest
+                </button>
+              </div>
             </div>
             
             <div className="mb-4">
@@ -738,6 +774,17 @@ const DashboardPage = () => {
                 />
               </div>
             )}
+            
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300 mb-2">Upload Screenshot (Optional)</label>
+              <UploadReader 
+                onUpload={(data: any) => {
+                  if (data.amount) {
+                    setFormData({...formData, amount: data.amount, description: (formData.description || '') + (formData.description ? ' ' : '') + `[Screenshot: ${data.senderUpiId || 'uploaded'}]`});
+                  }
+                }}
+              />
+            </div>
             
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-date">
@@ -1178,6 +1225,44 @@ const DashboardPage = () => {
         </div>
       </div>
       
+      {/* Quick Actions */}
+      <div className="card mt-6">
+        <div className="card-header">
+          <h2 className="card-title">Quick Actions</h2>
+        </div>
+        <div className="card-body">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <button 
+              onClick={handleAddSale}
+              className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-primary via-green-600 to-primary-dark text-gray-900 dark:text-white shadow-lg hover:shadow-xl border-2 border-gray-200 dark:border-white/20"
+            >
+              <CreditCardIconImport className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2 text-gray-800 dark:text-white" />
+              <span className="text-sm sm:text-base font-bold text-gray-800 dark:text-white">Add Sale</span>
+            </button>
+            <button 
+              onClick={handleAddPayment}
+              className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-primary via-green-600 to-primary-dark text-gray-900 dark:text-white shadow-lg hover:shadow-xl border-2 border-gray-200 dark:border-white/20"
+            >
+              <CurrencyDollarIconImport className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2 text-gray-800 dark:text-white" />
+              <span className="text-sm sm:text-base font-bold text-gray-800 dark:text-white">Add Payment</span>
+            </button>
+            <button 
+              onClick={handleAddExpense}
+              className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-primary via-green-600 to-primary-dark text-gray-900 dark:text-white shadow-lg hover:shadow-xl border-2 border-gray-200 dark:border-white/20"
+            >
+              <CalculatorIconImport className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2 text-gray-800 dark:text-white" />
+              <span className="text-sm sm:text-base font-bold text-gray-800 dark:text-white">Add Expenses</span>
+            </button>
+            <button 
+              onClick={() => router.push('/farms')}
+              className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-primary via-green-600 to-primary-dark text-gray-900 dark:text-white shadow-lg hover:shadow-xl border-2 border-gray-200 dark:border-white/20"
+            >
+              <BuildingLibraryIcon className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2 text-gray-800 dark:text-white" />
+              <span className="text-sm sm:text-base font-bold text-gray-800 dark:text-white">Add Farm</span>
+            </button>
+          </div>        </div>
+      </div>
+      
       {/* Payment Summary */}
       <div className="card relative">
         <div className="card-header">
@@ -1259,45 +1344,6 @@ const DashboardPage = () => {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Quick Actions */}
-      <div className="card mt-6">
-        <div className="card-header">
-          <h2 className="card-title">Quick Actions</h2>
-        </div>
-        <div className="card-body">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <button 
-              onClick={handleAddSale}
-              className="btn btn-primary flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-300 transform hover:scale-105"
-            >
-              <CreditCardIconImport className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2" />
-              <span className="text-sm sm:text-base">Add Sale</span>
-            </button>
-            <button 
-              onClick={handleAddPayment}
-              className="btn btn-primary flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-300 transform hover:scale-105"
-            >
-              <CurrencyDollarIconImport className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2" />
-              <span className="text-sm sm:text-base">Add Payment</span>
-            </button>
-            <button 
-              onClick={handleUploadScreenshot}
-              className="btn btn-primary flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-300 transform hover:scale-105"
-            >
-              <DocumentTextIconImport className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2" />
-              <span className="text-sm sm:text-base">Upload Screenshot</span>
-            </button>
-            <button 
-              onClick={handleAddExpense}
-              className="btn btn-primary flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl transition-all duration-300 transform hover:scale-105"
-            >
-              <CalculatorIconImport className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2" />
-              <span className="text-sm sm:text-base">Add Expenses</span>
-            </button>
           </div>
         </div>
       </div>

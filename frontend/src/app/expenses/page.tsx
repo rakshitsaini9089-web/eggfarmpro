@@ -184,23 +184,23 @@ export default function ExpensesPage() {
           </p>
         </div>
         <div className="card-body p-0">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <div className="table-responsive">
+            <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">
                     Description
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Amount (₹)
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -211,31 +211,33 @@ export default function ExpensesPage() {
                     key={expense._id}
                     className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-600 dark:text-gray-300">
                       {new Date(expense.date).toLocaleDateString()}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <td className="px-3 sm:px-6 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">
                       {getTypeLabel(expense.type)}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                       {expense.description}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-600 dark:text-gray-300">
                       ₹{(expense.amount || 0).toLocaleString()}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                      <button
-                        onClick={() => handleEditExpense(expense)}
-                        className="text-primary hover:text-primary-dark"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteExpense(expense._id)}
-                        className="text-danger hover:text-red-700"
-                      >
-                        Delete
-                      </button>
+                    <td className="px-3 sm:px-6 py-3 text-sm font-medium text-right">
+                      <div className="flex gap-2 justify-end flex-wrap">
+                        <button
+                          onClick={() => handleEditExpense(expense)}
+                          className="text-primary hover:text-primary-dark text-xs sm:text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteExpense(expense._id)}
+                          className="text-danger hover:text-red-700 text-xs sm:text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

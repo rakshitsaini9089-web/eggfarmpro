@@ -89,14 +89,35 @@ h1 {
   line-height: 2.5rem;
 }
 
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.75rem;
+    line-height: 2rem;
+  }
+}
+
 h2 {
   font-size: 1.875rem;
   line-height: 2.25rem;
 }
 
+@media (max-width: 640px) {
+  h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+}
+
 h3 {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+@media (max-width: 640px) {
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
 }
 
 /* Interactive element cursors */
@@ -131,6 +152,13 @@ select {
   contain: layout style;
 }
 
+@media (max-width: 640px) {
+  .card {
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 4px -1px rgba(var(--gray-900), 0.1);
+  }
+}
+
 [data-theme="dark"] .card {
   background-color: rgb(var(--gray-800));
   border-color: rgb(var(--gray-700));
@@ -152,6 +180,15 @@ select {
   overflow: hidden; /* Prevent content from overflowing */
 }
 
+@media (max-width: 640px) {
+  .card-header {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
 [data-theme="dark"] .card-header {
   border-color: rgb(var(--gray-700));
   background-color: rgb(var(--gray-700));
@@ -161,12 +198,24 @@ select {
   padding: 1.5rem;
 }
 
+@media (max-width: 640px) {
+  .card-body {
+    padding: 1rem;
+  }
+}
+
 .card-title {
   font-size: 1.25rem;
   font-weight: 700;
   color: rgb(var(--gray-800));
   position: relative;
   padding-bottom: 8px;
+}
+
+@media (max-width: 640px) {
+  .card-title {
+    font-size: 1.1rem;
+  }
 }
 
 [data-theme="dark"] .card-title {
@@ -492,4 +541,223 @@ select {
 
 .accent-dark {
   --accent-dark: 59, 130, 246;
+}
+
+/* Responsive Table Wrapper */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+  min-width: 100%;
+}
+
+.table-responsive table th,
+.table-responsive table td {
+  min-width: 80px;
+  padding: 0.75rem 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .table-responsive table th,
+  .table-responsive table td {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Form utilities */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .form-group {
+    margin-bottom: 0.75rem;
+  }
+}
+
+.form-row {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    gap: 0.75rem;
+  }
+}
+
+.form-row-2col {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 640px) {
+  .form-row-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-row-3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .form-row-3col {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-row-3col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Button responsive sizing */
+.btn {
+  font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .btn {
+    font-size: 0.8125rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Grid utilities */
+.grid-cols-auto {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-cols-auto {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-cols-auto {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-auto {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Additional responsive utilities */
+.hidden-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hidden-mobile {
+    display: block;
+  }
+}
+
+.hidden-desktop {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .hidden-desktop {
+    display: none;
+  }
+}
+
+/* Responsive text utilities */
+.text-responsive {
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .text-responsive {
+    font-size: 1rem;
+  }
+}
+
+/* Responsive padding utilities */
+.p-responsive {
+  padding: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .p-responsive {
+    padding: 1rem;
+  }
+}
+
+.px-responsive {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .px-responsive {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.py-responsive {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .py-responsive {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Responsive gap utilities */
+.gap-responsive {
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .gap-responsive {
+    gap: 1rem;
+  }
+}
+
+/* Modal responsive utilities */
+.modal-responsive {
+  width: 90vw;
+  max-width: 500px;
+}
+
+@media (max-width: 640px) {
+  .modal-responsive {
+    width: 95vw;
+    max-height: 90vh;
+  }
+}
+
+/* Flex responsive utilities */
+.flex-responsive {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .flex-responsive {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
 }

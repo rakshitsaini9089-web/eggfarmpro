@@ -86,11 +86,26 @@ export default function PartnershipDashboard() {
       setLoading(true);
       setError(null);
       
-      // Get all farms
-      const allFarms = await farmAPI.getAll();
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout - took too long to fetch data')), 15000)
+      );
+      
+      // Get all farms with timeout
+      const allFarmsPromise = farmAPI.getAll();
+      const allFarms = await Promise.race([allFarmsPromise, timeoutPromise]);
       
       // Debug: Log all farms to see what we're working with
       console.log('All farms:', allFarms);
+      
+      // If no farms, set empty shares and return
+      if (!allFarms || allFarms.length === 0) {
+        console.log('No farms found');
+        setPartnerShares([]);
+        setLoading(false);
+        return;
+      }
+      
       setDebugInfo(allFarms);
       
       // Filter for partnership farms - more inclusive filtering
@@ -193,6 +208,14 @@ export default function PartnershipDashboard() {
   };
 
   useEffect(() => {
+    // Check if user is logged in
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!token) {
+      setError('Please log in to view partnership data.');
+      setLoading(false);
+      return;
+    }
+    
     fetchPartnershipData();
   }, []);
 
@@ -272,17 +295,17 @@ export default function PartnershipDashboard() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Partnership Dashboard</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">View your consolidated partnership data across all farms</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Partnership Dashboard</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">View your consolidated partnership data across all farms</p>
         </div>
         <button 
           onClick={fetchPartnershipData}
-          className="btn btn-primary flex items-center space-x-2"
+          className="btn btn-primary flex items-center justify-center sm:justify-start space-x-2 text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 w-full sm:w-auto"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
           </svg>
           <span>Refresh Data</span>
@@ -292,31 +315,31 @@ export default function PartnershipDashboard() {
       {/* Consolidated Summary */}
       <div className="card">
         <div className="card-header">
-          <h2 className="card-title">Your Consolidated Partnership Summary</h2>
+          <h2 className="card-title text-lg sm:text-xl">Your Consolidated Partnership Summary</h2>
         </div>
         <div className="card-body">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 rounded-xl border border-blue-100 dark:border-blue-800/50">
-              <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200">Total Birds</h3>
-              <p className="text-2xl font-bold text-blue-600 dark:text-blue-300">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-4">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-3 sm:p-4 rounded-xl border border-blue-100 dark:border-blue-800/50">
+              <h3 className="text-sm sm:text-lg font-semibold text-blue-800 dark:text-blue-200">Total Birds</h3>
+              <p className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</p>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-4 rounded-xl border border-green-100 dark:border-green-800/50">
-              <h3 className="text-lg font-semibold text-green-800 dark:text-green-200">Sales Share</h3>
-              <p className="text-2xl font-bold text-green-600 dark:text-green-300">₹{consolidatedTotals.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-3 sm:p-4 rounded-xl border border-green-100 dark:border-green-800/50">
+              <h3 className="text-sm sm:text-lg font-semibold text-green-800 dark:text-green-200">Sales Share</h3>
+              <p className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">₹{consolidatedTotals.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-4 rounded-xl border border-purple-100 dark:border-purple-800/50">
-              <h3 className="text-lg font-semibold text-purple-800 dark:text-purple-200">Payment Share</h3>
-              <p className="text-2xl font-bold text-purple-600 dark:text-purple-300">₹{consolidatedTotals.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-3 sm:p-4 rounded-xl border border-purple-100 dark:border-purple-800/50">
+              <h3 className="text-sm sm:text-lg font-semibold text-purple-800 dark:text-purple-200">Payment Share</h3>
+              <p className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-300">₹{consolidatedTotals.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             </div>
-            <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 p-4 rounded-xl border border-red-100 dark:border-red-800/50">
-              <h3 className="text-lg font-semibold text-red-800 dark:text-red-200">Expense Share</h3>
-              <p className="text-2xl font-bold text-red-600 dark:text-red-300">₹{consolidatedTotals.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 p-3 sm:p-4 rounded-xl border border-red-100 dark:border-red-800/50">
+              <h3 className="text-sm sm:text-lg font-semibold text-red-800 dark:text-red-200">Expense Share</h3>
+              <p className="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-300">₹{consolidatedTotals.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             </div>
-            <div className={`p-4 rounded-xl border ${consolidatedTotals.totalProfit >= 0 ? 'bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 border-emerald-100 dark:border-emerald-800/50' : 'bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/30 dark:to-rose-800/30 border-rose-100 dark:border-rose-800/50'}`}>
-              <h3 className="text-lg font-semibold text-emerald-800 dark:text-emerald-200">Profit/Loss</h3>
-              <p className={`text-2xl font-bold ${consolidatedTotals.totalProfit >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'}`}>
+            <div className={`p-3 sm:p-4 rounded-xl border ${consolidatedTotals.totalProfit >= 0 ? 'bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 border-emerald-100 dark:border-emerald-800/50' : 'bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/30 dark:to-rose-800/30 border-rose-100 dark:border-rose-800/50'}`}>
+              <h3 className="text-sm sm:text-lg font-semibold text-emerald-800 dark:text-emerald-200">Profit/Loss</h3>
+              <p className={`text-xl sm:text-2xl font-bold ${consolidatedTotals.totalProfit >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'}`}>
                 ₹{consolidatedTotals.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                <span className="text-base font-normal ml-2">
+                <span className="text-sm sm:text-base font-normal ml-1 sm:ml-2">
                   ({consolidatedTotals.totalProfit >= 0 ? 'Profit' : 'Loss'})
                 </span>
               </p>
@@ -328,7 +351,7 @@ export default function PartnershipDashboard() {
       {/* Individual Partnership Shares */}
       <div className="card">
         <div className="card-header">
-          <h2 className="card-title">Your Partnership Shares</h2>
+          <h2 className="card-title text-lg sm:text-xl">Your Partnership Shares</h2>
         </div>
         <div className="card-body">
           {partnerShares.length === 0 ? (
@@ -340,35 +363,35 @@ export default function PartnershipDashboard() {
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">You don't have any partnership shares yet.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="table-responsive">
+              <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Farm Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Location</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Partner</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ownership %</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Birds Owned</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total Birds in Farm</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sales (₹)</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Payments (₹)</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Expenses (₹)</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Profit/Loss (₹)</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Farm Name</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">Location</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Partner</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">Ownership %</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">Birds Owned</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">Total Birds in Farm</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">Sales (₹)</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">Payments (₹)</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">Expenses (₹)</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Profit/Loss (₹)</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {partnerShares.map((share, index) => (
                     <tr key={`${share.farm._id}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{share.farm.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{share.farm.location}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{share.partnerName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{share.percentage}%</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{Math.round(share.birdShare).toLocaleString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{Math.round(share.totalBirdsInFarm).toLocaleString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">₹{share.salesShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">₹{share.paymentShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">₹{share.expenseShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${share.profitShare >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{share.farm.name}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden sm:table-cell">{share.farm.location}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{share.partnerName}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden md:table-cell">{share.percentage}%</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">{Math.round(share.birdShare).toLocaleString()}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">{Math.round(share.totalBirdsInFarm).toLocaleString()}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{share.salesShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{share.paymentShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{share.expenseShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className={`px-3 sm:px-6 py-4 text-sm font-medium ${share.profitShare >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                         ₹{share.profitShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         <span className="text-xs font-normal ml-1">
                           ({share.profitShare >= 0 ? 'Profit' : 'Loss'})
@@ -379,13 +402,14 @@ export default function PartnershipDashboard() {
                 </tbody>
                 <tfoot className="bg-gray-50 dark:bg-gray-700 font-bold">
                   <tr>
-                    <td colSpan={4} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">Total</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300"></td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">₹{consolidatedTotals.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">₹{consolidatedTotals.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">₹{consolidatedTotals.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm ${consolidatedTotals.totalProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    <td colSpan={3} className="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-white">Total</td>
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden md:table-cell"></td>
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</td>
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell"></td>
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{consolidatedTotals.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{consolidatedTotals.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{consolidatedTotals.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td className={`px-3 sm:px-6 py-4 text-sm ${consolidatedTotals.totalProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                       ₹{consolidatedTotals.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       <span className="text-xs font-normal ml-1">
                         ({consolidatedTotals.totalProfit >= 0 ? 'Profit' : 'Loss'})
@@ -402,7 +426,7 @@ export default function PartnershipDashboard() {
       {/* Farm Details */}
       <div className="card">
         <div className="card-header">
-          <h2 className="card-title">Partnership Farm Details</h2>
+          <h2 className="card-title text-lg sm:text-xl">Partnership Farm Details</h2>
         </div>
         <div className="card-body">
           {uniqueFarms.length === 0 ? (
@@ -414,48 +438,48 @@ export default function PartnershipDashboard() {
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by adding a partnership farm.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {uniqueFarms.map((farm) => (
-                <div key={farm._id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 hover:shadow-md transition-all duration-300 bg-white dark:bg-gray-800">
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">{farm.name}</h3>
-                  <div className="space-y-2">
-                    <p className="text-gray-600 dark:text-gray-300 text-sm flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div key={farm._id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-3 sm:p-5 hover:shadow-md transition-all duration-300 bg-white dark:bg-gray-800">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white mb-2 sm:mb-3 line-clamp-2">{farm.name}</h3>
+                  <div className="space-y-1 sm:space-y-2">
+                    <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      {farm.location}
+                      <span className="truncate">{farm.location}</span>
                     </p>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                       </svg>
-                      {farm.contact.phone}
+                      <span className="truncate">{farm.contact.phone}</span>
                     </p>
                     {farm.contact.email && (
-                      <p className="text-gray-600 dark:text-gray-300 text-sm flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        {farm.contact.email}
+                        <span className="truncate text-xs sm:text-sm">{farm.contact.email}</span>
                       </p>
                     )}
                     {farm.capacity && (
-                      <p className="text-gray-600 dark:text-gray-300 text-sm flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
-                        Capacity: {farm.capacity.toLocaleString()} birds
+                        <span className="truncate">Capacity: {farm.capacity.toLocaleString()} birds</span>
                       </p>
                     )}
                   </div>
-                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                    <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">Partners:</h4>
-                    <ul className="space-y-2">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <h4 className="font-medium text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">Partners:</h4>
+                    <ul className="space-y-1 sm:space-y-2">
                       {farm.partnerDetails?.map((partner: { name: string; percentage: number }, idx: number) => (
-                        <li key={idx} className="text-sm text-gray-600 dark:text-gray-300 flex justify-between items-center">
-                          <span>{partner.name}</span>
-                          <span className="font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary px-2 py-1 rounded-full text-xs">
+                        <li key={idx} className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 flex justify-between items-center gap-2">
+                          <span className="truncate">{partner.name}</span>
+                          <span className="font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary px-2 py-1 rounded-full text-xs flex-shrink-0">
                             {partner.percentage}%
                           </span>
                         </li>

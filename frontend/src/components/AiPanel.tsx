@@ -176,38 +176,47 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="w-full max-w-md bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl z-50 border border-gray-200 dark:border-gray-700 flex flex-col">
+    <div className="w-full max-w-md bg-white/70 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-2xl z-50 border border-gray-400/40 dark:border-gray-700/50 flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-primary/90 rounded-t-xl">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-            <img src="/ai.jpg" alt="EggMind AI" className="h-5 w-5 object-contain" />
+      <div className="flex items-center justify-between p-4 border-b border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-r from-lime-500 via-green-400 to-emerald-500 rounded-t-2xl relative overflow-hidden">
+        {/* Animated gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 dark:from-black/20 dark:via-transparent dark:to-black/20"></div>
+        {/* Overlay for better text contrast in light mode */}
+        <div className="absolute inset-0 bg-black/5 dark:bg-transparent rounded-t-2xl"></div>
+        <div className="flex items-center space-x-3 relative z-10">
+          <div className="w-12 h-12 rounded-full bg-white/95 flex items-center justify-center shadow-lg ring-2 ring-white/20">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-lime-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5a4 4 0 100-8 4 4 0 000 8z" />
+            </svg>
           </div>
-          <h3 className="font-semibold text-white">EggMind AI</h3>
+          <div>
+            <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight uppercase tracking-wider">Egg Mind AI</h3>
+            <p className="text-xs text-gray-700 dark:text-gray-300 font-medium leading-tight mt-1">Your Farming Assistant</p>
+          </div>
         </div>
         <button 
           onClick={onClose}
-          className="text-white hover:text-gray-200 focus:outline-none"
+          className="text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-100 hover:bg-white/20 dark:hover:bg-white/10 focus:outline-none transition-all relative z-10 p-1 rounded-lg"
           aria-label="Close panel"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-96">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-96 bg-gradient-to-b from-white/40 via-white/30 to-white/40 dark:from-gray-800/40 dark:via-gray-800/30 dark:to-gray-800/40 backdrop-blur-sm">
         {messages.map((message) => (
           <div 
             key={message.id} 
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div 
-              className={`max-w-[80%] rounded-lg p-3 ${
+              className={`max-w-[80%] rounded-2xl p-3 shadow-md backdrop-blur-sm ${
                 message.role === 'user' 
-                  ? 'bg-primary text-white rounded-br-none' 
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none'
+                  ? 'bg-gradient-to-br from-lime-500 to-green-600 text-white rounded-br-none shadow-lg' 
+                  : 'bg-white/50 dark:bg-gray-700/60 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-200/40 dark:border-gray-600/40'
               }`}
             >
               <p className="text-sm">{message.content}</p>
@@ -219,11 +228,11 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg rounded-bl-none p-3">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+            <div className="bg-white/40 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 rounded-2xl rounded-bl-none p-3 shadow-md backdrop-blur-sm border border-gray-200/30 dark:border-gray-600/30">
+              <div className="flex space-x-2">
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-2 h-2 bg-primary-dark rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
               </div>
             </div>
           </div>
@@ -232,7 +241,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-t from-white/60 to-white/40 dark:from-gray-900/60 dark:to-gray-800/40 backdrop-blur-xl">
         <div className="flex space-x-2">
           <div className="flex-1 relative">
             <input
@@ -240,7 +249,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask EggMind AI anything..."
-              className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-2 pr-10 border border-gray-300/40 dark:border-gray-600/40 rounded-xl bg-white/70 dark:bg-gray-700/50 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent backdrop-blur-sm placeholder-gray-400 dark:placeholder-gray-500"
               disabled={isLoading}
             />
             <button
@@ -262,12 +271,12 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
           <button
             type="submit"
             disabled={isLoading || !inputValue.trim()}
-            className="bg-primary hover:bg-primary-dark text-white rounded-lg p-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="bg-gradient-to-r from-primary to-green-500 hover:from-primary-dark hover:to-green-600 text-gray-900 dark:text-white rounded-xl p-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
             aria-label="Send message"
           >
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
-              className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`}
+              className={`h-5 w-5 rotate-90 ${isLoading ? 'animate-spin' : ''}`}
               fill="none" 
               viewBox="0 0 24 24" 
               stroke="currentColor"

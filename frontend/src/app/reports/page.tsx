@@ -408,27 +408,27 @@ function ReportsPage() {
                 <h2 className="card-title">Individual Farm Financials</h2>
               </div>
               <div className="card-body p-0">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <div className="table-responsive">
+                  <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Farm Name</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sales (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payments (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit/Loss (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Farm Name</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Location</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sales (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Payments (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Expenses (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit/Loss (₹)</th>
                     </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {allFarmsFinancials.map((farmFin, index) => (
                       <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{farmFin.farm.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{farmFin.farm.location}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{farmFin.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{farmFin.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{farmFin.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${farmFin.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900">{farmFin.farm.name}</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden sm:table-cell">{farmFin.farm.location}</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500">₹{farmFin.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden md:table-cell">₹{farmFin.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">₹{farmFin.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className={`px-3 sm:px-6 py-4 text-sm font-medium ${farmFin.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           ₹{farmFin.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           <span className="text-xs font-normal ml-1">
                             ({farmFin.totalProfit >= 0 ? 'Profit' : 'Loss'})
@@ -535,24 +535,24 @@ function ReportsPage() {
                 </button>
               </div>
               <div className="card-body p-0">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <div className="table-responsive">
+                  <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sales (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payments (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit/Loss (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sales (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Payments (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Expenses (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit/Loss (₹)</th>
                     </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{ownerFinancials.ownerName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{ownerFinancials.salesShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{ownerFinancials.paymentShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{ownerFinancials.expenseShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${ownerFinancials.profitShare >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900">{ownerFinancials.ownerName}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500">₹{ownerFinancials.salesShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden md:table-cell">₹{ownerFinancials.paymentShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">₹{ownerFinancials.expenseShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className={`px-3 sm:px-6 py-4 text-sm font-medium ${ownerFinancials.profitShare >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         ₹{ownerFinancials.profitShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         <span className="text-xs font-normal ml-1">
                           ({ownerFinancials.profitShare >= 0 ? 'Profit' : 'Loss'})
@@ -580,27 +580,27 @@ function ReportsPage() {
                 </button>
               </div>
               <div className="card-body p-0">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <div className="table-responsive">
+                  <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Partner</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sales Share (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Share (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expense Share (₹)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit/Loss Share (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Partner</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Sales Share (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Payment Share (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Expense Share (₹)</th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit/Loss Share (₹)</th>
                     </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {partnerFinancials.partnerShares.map((partner, index) => (
                       <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{partner.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{partner.percentage}%</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{partner.salesShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{partner.paymentShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{partner.expenseShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${partner.profitShare >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900">{partner.name}</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500">{partner.percentage}%</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden sm:table-cell">₹{partner.salesShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden md:table-cell">₹{partner.paymentShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">₹{partner.expenseShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className={`px-3 sm:px-6 py-4 text-sm font-medium ${partner.profitShare >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           ₹{partner.profitShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           <span className="text-xs font-normal ml-1">
                             ({partner.profitShare >= 0 ? 'Profit' : 'Loss'})
@@ -609,12 +609,12 @@ function ReportsPage() {
                       </tr>
                     ))}
                     <tr className="bg-gray-50 font-bold">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Total</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">100%</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{partnerFinancials.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{partnerFinancials.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{partnerFinancials.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${partnerFinancials.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-900">Total</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500">100%</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden sm:table-cell">₹{partnerFinancials.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden md:table-cell">₹{partnerFinancials.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">₹{partnerFinancials.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className={`px-3 sm:px-6 py-4 text-sm ${partnerFinancials.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         ₹{partnerFinancials.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         <span className="text-xs font-normal ml-1">
                           ({partnerFinancials.totalProfit >= 0 ? 'Profit' : 'Loss'})

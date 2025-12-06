@@ -63,6 +63,19 @@ A complete full-stack web application for managing an egg farm business with fea
 - Date-based expense logging
 - Expense reporting
 
+## Recent Fixes and Improvements
+
+### Header Icons Visibility Fix
+- Fixed header icons showing white when hovered or clicked in light mode
+- Changed `hover:text-white` to `hover:text-primary-foreground` for better visibility
+- Affected components: User Menu Icon, Farm Switch Icon, Dark Mode Toggle Icon
+
+### Partnership Dashboard Loading Fix
+- Added authentication token check to prevent infinite loading
+- Implemented 15-second timeout for API requests
+- Added early return logic for empty farm data
+- Improved error handling and user feedback
+
 ## Project Structure
 
 ```
@@ -77,16 +90,16 @@ egg-farm-management-system/
 │   ├── tailwind.config.ts    # TailwindCSS configuration
 │   └── tsconfig.json         # TypeScript configuration
 └── backend/                  # Express.js backend
-    ├── src/
-    │   ├── controllers/      # Request handlers
-    │   ├── models/           # Mongoose models
-    │   ├── routes/           # API routes
-    │   ├── middleware/       # Custom middleware
-    │   ├── config/           # Configuration files
-    │   └── utils/            # Utility functions
-    ├── uploads/              # Uploaded files (screenshots)
-    ├── server.js             # Entry point
-    └── package.json          # Dependencies
+   ├── src/
+   │   ├── controllers/      # Request handlers
+   │   ├── models/           # Mongoose models
+   │   ├── routes/           # API routes
+   │   ├── middleware/       # Custom middleware
+   │   ├── config/           # Configuration files
+   │   └── utils/            # Utility functions
+   ├── uploads/              # Uploaded files (screenshots)
+   ├── server.js             # Entry point
+   └── package.json          # Dependencies
 ```
 
 ## Color Scheme
@@ -130,6 +143,7 @@ egg-farm-management-system/
    - Create `.env` file in the backend directory
    - Set `MONGODB_URI` to your MongoDB connection string
    - Set `JWT_SECRET` for authentication
+   - Set `PORT=5001` for backend
 
 5. **Start the development servers**
    ```bash
@@ -140,22 +154,10 @@ egg-farm-management-system/
    npm run dev
    ```
 
-### Deployment
-
-1. **Build frontend**
-   ```bash
-   cd frontend
-   npm run build
-   ```
-
-2. **Start production servers**
-   ```bash
-   # Backend
-   cd backend
-   npm start
-   
-   # Serve frontend build (using any static server)
-   ```
+### Accessing the Application
+Once both servers are running:
+1. Open your browser and navigate to `http://localhost:3001`
+2. You should see the Egg Farm Management System dashboard
 
 ## API Endpoints
 
@@ -212,6 +214,36 @@ egg-farm-management-system/
 ### Dashboard
 - `GET /api/dashboard` - Get dashboard statistics
 
+## Troubleshooting
+
+### Common Issues
+
+1. **Port already in use:**
+   - Change the PORT in `.env` file
+   - Or kill the process using the port:
+     ```bash
+     # On Windows
+     netstat -ano | findstr :5001
+     taskkill /PID <PID> /F
+     
+     # On Mac/Linux
+     lsof -i :5001
+     kill -9 <PID>
+     ```
+
+2. **MongoDB connection error:**
+   - Ensure MongoDB is running
+   - Check your `MONGODB_URI` in the `.env` file
+   - For MongoDB Atlas, ensure your IP is whitelisted
+
+3. **Dependency installation errors:**
+   - Clear npm cache: `npm cache clean --force`
+   - Delete `node_modules` and `package-lock.json` and reinstall:
+     ```bash
+     rm -rf node_modules package-lock.json
+     npm install
+     ```
+
 ## Contributing
 
 1. Fork the repository
@@ -222,7 +254,7 @@ egg-farm-management-system/
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 

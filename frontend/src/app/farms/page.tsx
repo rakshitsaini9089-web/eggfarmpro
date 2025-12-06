@@ -232,61 +232,61 @@ export default function FarmsPage() {
           <h2 className="card-title">Farms Overview</h2>
         </div>
         <div className="card-body p-0">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <div className="table-responsive">
+            <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                   >
                     Farm Name
                   </th>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell"
                   >
                     Location
                   </th>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                   >
                     Owner / Org.
                   </th>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell"
                   >
                     Business Type
                   </th>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell"
                   >
                     Partners
                   </th>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell"
                   >
                     Size / Capacity
                   </th>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell"
                   >
                     Contact
                   </th>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                   >
                     Status
                   </th>
                   <th
                     scope="col"
-                    className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                   >
                     Actions
                   </th>
@@ -298,27 +298,27 @@ export default function FarmsPage() {
                     key={farm._id}
                     className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <td className="px-3 sm:px-6 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">
                       {farm.name}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hidden sm:table-cell">
                       {farm.location}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-700 dark:text-gray-300">
                       {farm.owner}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                      {farm.businessType === 'sole_proprietorship' && 'Sole Proprietorship'}
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hidden md:table-cell">
+                      {farm.businessType === 'sole_proprietorship' && 'Sole'}
                       {farm.businessType === 'partnership' && 'Partnership'}
-                      {farm.businessType === 'corporation' && 'Corporation'}
+                      {farm.businessType === 'corporation' && 'Corp'}
                       {farm.businessType === 'llc' && 'LLC'}
-                      {!farm.businessType && 'Not specified'}
+                      {!farm.businessType && 'N/A'}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hidden lg:table-cell">
                       {farm.businessType === 'partnership' && farm.partnerDetails ? (
                         <div className="space-y-0.5">
                           {farm.partnerDetails.map((partner, index) => (
-                            <div key={index}>
+                            <div key={index} className="text-xs">
                               {partner.name}: {partner.percentage}%
                             </div>
                           ))}
@@ -327,16 +327,15 @@ export default function FarmsPage() {
                         'N/A'
                       )}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                      {farm.size ? `${farm.size} acres` : 'N/A'}
-                      <br />
-                      {farm.capacity ? `${farm.capacity} birds` : 'N/A'}
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hidden lg:table-cell">
+                      {farm.size ? `${farm.size}ac` : 'N/A'}
+                      {farm.capacity && ` / ${farm.capacity}b`}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                      {farm.contact.phone && <div>Phone: {farm.contact.phone}</div>}
-                      {farm.contact.email && <div>Email: {farm.contact.email}</div>}
+                    <td className="px-3 sm:px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hidden xl:table-cell">
+                      {farm.contact.phone && <div>{farm.contact.phone}</div>}
+                      {farm.contact.email && <div className="text-xs">{farm.contact.email}</div>}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-3">
                       <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           farm.isActive
@@ -347,19 +346,21 @@ export default function FarmsPage() {
                         {farm.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                      <button
-                        onClick={() => handleEditFarm(farm)}
-                        className="text-primary hover:text-primary-dark"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteFarm(farm._id)}
-                        className="text-danger hover:text-red-700"
-                      >
-                        Delete
-                      </button>
+                    <td className="px-3 sm:px-6 py-3 text-sm font-medium text-right">
+                      <div className="flex gap-2 justify-end flex-wrap">
+                        <button
+                          onClick={() => handleEditFarm(farm)}
+                          className="text-primary hover:text-primary-dark text-xs sm:text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteFarm(farm._id)}
+                          className="text-danger hover:text-red-700 text-xs sm:text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
