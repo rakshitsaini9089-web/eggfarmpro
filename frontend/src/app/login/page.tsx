@@ -38,7 +38,7 @@ export default function LoginPage() {
   return (
     <>
       <Head>
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
         <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" />
       </Head>
@@ -47,7 +47,7 @@ export default function LoginPage() {
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat js-fullheight"
         style={{ 
           backgroundImage: "url('/loginbg.jpg')",
-          fontFamily: "'Lato', Arial, sans-serif",
+          fontFamily: "'Poppins', sans-serif",
           filter: "blur(5px) brightness(0.7)",
           transform: "scale(1.05)"
         }}
@@ -61,22 +61,55 @@ export default function LoginPage() {
           <div className="container">
             <div className="row justify-content-center">
               <div className="col-md-6 text-center mb-5">
-                <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2rem' }}>Welcome to Egg Farm Pro</h2>
-                <p className="text-white mt-2" style={{ fontSize: '1.1rem', fontWeight: 300 }}>Egg Farm Operation And Management System</p>
+                <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)', letterSpacing: '1px' }}>Welcome to Egg Farm Pro</h2>
+                <p className="text-white mt-2" style={{ fontSize: '1.2rem', fontWeight: 300, textShadow: '0 1px 5px rgba(0,0,0,0.2)' }}>Egg Farm Operation And Management System</p>
               </div>
             </div>
             <div className="row justify-content-center">
               <div className="col-md-6 col-lg-4">
-                <div className="login-wrap p-0">
-                  <h3 className="mb-4 text-center text-white">Login</h3>
+                <div className="login-wrap p-0" style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)', 
+                  backdropFilter: 'blur(10px)', 
+                  borderRadius: '15px', 
+                  padding: '2.5rem !important',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  transform: 'translateY(0)',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+                }}
+                >
+                  <div className="d-flex justify-content-center mb-4">
+                    <div style={{ 
+                      width: '70px', 
+                      height: '70px', 
+                      borderRadius: '50%', 
+                      backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backdropFilter: 'blur(5px)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)'
+                    }}>
+                      <i className="fa fa-egg" style={{ fontSize: '2rem', color: '#4CAF50' }}></i>
+                    </div>
+                  </div>
+                  <h3 className="mb-4 text-center text-white" style={{ fontWeight: 500, fontSize: '1.5rem' }}>Login</h3>
                   <form action="#" className="signin-form" onSubmit={handleSubmit}>
                     {error && (
-                      <div className="rounded-lg bg-danger text-white px-4 py-3 text-sm text-white mb-4" style={{ backgroundColor: 'rgba(220, 53, 69, 0.8)' }}>
+                      <div className="rounded-lg px-4 py-3 text-sm text-white mb-4 animate__animated animate__shakeX" style={{ backgroundColor: 'rgba(220, 53, 69, 0.9)', borderRadius: '8px' }}>
                         {error}
                       </div>
                     )}
                     
-                    <div className="form-group">
+                    <div className="form-group mb-4">
                       <input 
                         type="text" 
                         className="form-control" 
@@ -84,10 +117,30 @@ export default function LoginPage() {
                         required 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        style={{ 
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid transparent',
+                          borderRadius: '8px',
+                          padding: '14px 20px',
+                          fontSize: '16px',
+                          fontWeight: 400,
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
+                          e.target.style.borderColor = 'rgba(76, 175, 80, 0.5)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                          e.target.style.borderColor = 'transparent';
+                        }}
                       />
                     </div>
                     
-                    <div className="form-group">
+                    <div className="form-group mb-4 position-relative">
                       <input 
                         id="password-field" 
                         type={showPassword ? "text" : "password"} 
@@ -96,52 +149,126 @@ export default function LoginPage() {
                         required 
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        style={{ 
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid transparent',
+                          borderRadius: '8px',
+                          padding: '14px 50px 14px 20px',
+                          fontSize: '16px',
+                          fontWeight: 400,
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
+                          e.target.style.borderColor = 'rgba(76, 175, 80, 0.5)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                          e.target.style.borderColor = 'transparent';
+                        }}
                       />
                       <span 
                         className={`fa fa-fw ${showPassword ? 'fa-eye-slash' : 'fa-eye'} field-icon toggle-password`}
                         onClick={() => setShowPassword(!showPassword)}
                         style={{ 
                           position: 'absolute',
-                          right: '15px', 
+                          right: '20px', 
                           top: '50%', 
                           transform: 'translateY(-50%)',
                           cursor: 'pointer',
-                          color: '#777'
+                          color: '#777',
+                          fontSize: '18px',
+                          transition: 'color 0.2s ease'
                         }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#4CAF50'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#777'}
                       ></span>
                     </div>
                     
-                    <div className="form-group">
+                    <div className="form-group mb-4">
                       <button 
                         type="submit" 
                         className="form-control btn btn-primary submit px-3"
                         disabled={loading}
+                        style={{ 
+                          backgroundColor: '#4CAF50',
+                          border: '1px solid transparent',
+                          borderRadius: '8px',
+                          padding: '14px',
+                          fontSize: '16px',
+                          fontWeight: 500,
+                          transition: 'all 0.3s ease',
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          boxShadow: '0 4px 15px rgba(76, 175, 80, 0.4)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '1px'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#45a049';
+                          e.currentTarget.style.boxShadow = '0 6px 20px rgba(76, 175, 80, 0.6)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#4CAF50';
+                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(76, 175, 80, 0.4)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
                       >
-                        {loading ? 'Signing in…' : 'Sign In'}
+                        {loading ? (
+                          <span>
+                            <i className="fa fa-spinner fa-spin mr-2"></i> Signing in…
+                          </span>
+                        ) : 'Sign In'}
                       </button>
                     </div>
                     
-                    <div className="form-group d-md-flex">
+                    <div className="form-group d-md-flex align-items-center">
                       <div className="w-50">
-                        <label className="checkbox-wrap checkbox-primary text-white">
+                        <label className="checkbox-wrap checkbox-primary text-white" style={{ fontWeight: 400, cursor: 'pointer' }}>
                           Remember Me
-                          <input type="checkbox" defaultChecked />
+                          <input type="checkbox" defaultChecked style={{ cursor: 'pointer' }} />
                           <span className="checkmark"></span>
                         </label>
                       </div>
                       <div className="w-50 text-md-right">
-                        <a href="#" style={{ color: '#fff' }}>Forgot Password</a>
+                        <a href="#" style={{ color: '#fff', fontWeight: 400, textDecoration: 'none', transition: 'color 0.2s ease' }} 
+                           onMouseEnter={(e) => e.currentTarget.style.color = '#a5d6a7'}
+                           onMouseLeave={(e) => e.currentTarget.style.color = '#fff'}>
+                          Forgot Password?
+                        </a>
                       </div>
                     </div>
                   </form>
                   
-                  <p className="w-100 text-center text-white mt-4 mb-4">— Or Sign In With —</p>
+                  <p className="w-100 text-center text-white mt-4 mb-4" style={{ fontWeight: 300 }}>— Or Sign In With —</p>
                   <div className="social d-flex text-center">
-                    <a href="#" className="px-2 py-2 mr-md-1 rounded" style={{ backgroundColor: '#3b5998', color: '#fff', marginRight: '5px' }}>
-                      <span className="ion-logo-facebook mr-2"></span> Facebook
+                    <a href="#" className="flex-fill px-3 py-2 mr-2 rounded d-flex align-items-center justify-content-center" 
+                       style={{ backgroundColor: 'rgba(59, 89, 152, 0.8)', color: '#fff', marginRight: '10px', transition: 'all 0.3s ease', textDecoration: 'none' }}
+                       onMouseEnter={(e) => {
+                         e.currentTarget.style.backgroundColor = 'rgba(59, 89, 152, 1)';
+                         e.currentTarget.style.transform = 'translateY(-2px)';
+                       }}
+                       onMouseLeave={(e) => {
+                         e.currentTarget.style.backgroundColor = 'rgba(59, 89, 152, 0.8)';
+                         e.currentTarget.style.transform = 'translateY(0)';
+                       }}>
+                      <i className="ion-logo-facebook mr-2"></i> Facebook
                     </a>
-                    <a href="#" className="px-2 py-2 ml-md-1 rounded" style={{ backgroundColor: '#1DA1F2', color: '#fff', marginLeft: '5px' }}>
-                      <span className="ion-logo-twitter mr-2"></span> Twitter
+                    <a href="#" className="flex-fill px-3 py-2 ml-2 rounded d-flex align-items-center justify-content-center" 
+                       style={{ backgroundColor: 'rgba(29, 161, 242, 0.8)', color: '#fff', marginLeft: '10px', transition: 'all 0.3s ease', textDecoration: 'none' }}
+                       onMouseEnter={(e) => {
+                         e.currentTarget.style.backgroundColor = 'rgba(29, 161, 242, 1)';
+                         e.currentTarget.style.transform = 'translateY(-2px)';
+                       }}
+                       onMouseLeave={(e) => {
+                         e.currentTarget.style.backgroundColor = 'rgba(29, 161, 242, 0.8)';
+                         e.currentTarget.style.transform = 'translateY(0)';
+                       }}>
+                      <i className="ion-logo-twitter mr-2"></i> Twitter
                     </a>
                   </div>
                 </div>
@@ -161,6 +288,7 @@ export default function LoginPage() {
           padding-left: 30px;
           cursor: pointer;
           user-select: none;
+          font-weight: 400;
         }
         
         .checkbox-primary input {
@@ -178,7 +306,7 @@ export default function LoginPage() {
           height: 20px;
           width: 20px;
           background-color: rgba(255, 255, 255, 0.8);
-          border-radius: 3px;
+          border-radius: 4px;
           transition: all 0.3s;
         }
         
@@ -217,29 +345,45 @@ export default function LoginPage() {
         .form-control {
           background-color: rgba(255, 255, 255, 0.9);
           border: 1px solid transparent;
-          border-radius: 5px;
-          padding: 12px 15px;
+          border-radius: 8px;
+          padding: 14px 20px;
           font-size: 16px;
-          font-weight: 300;
+          font-weight: 400;
           width: 100%;
           box-sizing: border-box;
+          transition: all 0.3s ease;
         }
         
         .btn-primary {
           background-color: #4CAF50;
           border: 1px solid transparent;
-          border-radius: 5px;
-          padding: 12px;
+          border-radius: 8px;
+          padding: 14px;
           font-size: 16px;
-          font-weight: 400;
-          transition: all 0.3s;
+          font-weight: 500;
+          transition: all 0.3s ease;
           width: 100%;
           box-sizing: border-box;
+        }
+        
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+          20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .animate__shakeX {
+          animation: shake 0.5s ease;
         }
         
         @media (max-width: 767.98px) {
           .login-wrap {
             padding: 20px !important;
+            margin: 0 15px;
+          }
+          
+          .social a {
+            margin: 5px !important;
           }
         }
       `}</style>
