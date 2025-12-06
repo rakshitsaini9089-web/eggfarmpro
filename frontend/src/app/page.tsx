@@ -1358,13 +1358,7 @@ const DashboardPage = () => {
           <div className="card-header">
             <div className="flex justify-between items-center">
               <h2 className="card-title">30-Day Profit Trend</h2>
-              <button 
-                onClick={fetchDashboardStats}
-                className="btn btn-outline flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-              >
-                <ArrowPathIconImport className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span>Refresh</span>
-              </button>
+              {/* Refresh button removed as per user request */}
             </div>
           </div>
           <div className="card-body">
@@ -1414,13 +1408,7 @@ const DashboardPage = () => {
           <div className="card-header">
             <div className="flex justify-between items-center">
               <h2 className="card-title">7-Day Profit Trend</h2>
-              <button 
-                onClick={fetchDashboardStats}
-                className="btn btn-outline flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-              >
-                <ArrowPathIconImport className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span>Refresh</span>
-              </button>
+              {/* Refresh button removed as per user request */}
             </div>
           </div>
           <div className="card-body">
