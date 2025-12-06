@@ -68,7 +68,7 @@ export default function LoginPage() {
             <div className="row justify-content-center">
               <div className="col-md-6 col-lg-4">
                 <div className="login-wrap p-0">
-                  <h3 className="mb-4 text-center text-white">Have an account?</h3>
+                  <h3 className="mb-4 text-center text-white">Login</h3>
                   <form action="#" className="signin-form" onSubmit={handleSubmit}>
                     {error && (
                       <div className="rounded-lg bg-danger text-white px-4 py-3 text-sm text-white mb-4" style={{ backgroundColor: 'rgba(220, 53, 69, 0.8)' }}>
