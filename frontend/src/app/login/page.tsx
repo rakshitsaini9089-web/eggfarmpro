@@ -245,6 +245,13 @@ export default function LoginPage() {
                       </div>
                     </div>
                   </form>
+                  
+                  {/* Copyright Notice */}
+                  <div className="mt-4 text-center">
+                    <p className="text-white mb-0" style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+                      © {new Date().getFullYear()} Egg Farm Pro. All rights reserved.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
