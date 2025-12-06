@@ -296,45 +296,45 @@ export default function PartnershipDashboard() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4">
+      <div className="flex flex-col xs:flex-row xs:justify-between xs:items-center gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Partnership Dashboard</h1>
-          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">View your consolidated partnership data across all farms</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Partnership Dashboard</h1>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">View your consolidated partnership data across all farms</p>
         </div>
       </div>
       
       {/* Consolidated Summary */}
       <div className="card">
         <div className="card-header">
-          <h2 className="card-title text-lg sm:text-xl">Your Consolidated Partnership Summary</h2>
+          <h2 className="card-title">Your Consolidated Partnership Summary</h2>
         </div>
         <div className="card-body">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-3 sm:p-4 rounded-xl border border-blue-100 dark:border-blue-800/50">
-              <h3 className="text-sm sm:text-lg font-semibold text-blue-800 dark:text-blue-200">Total Birds</h3>
-              <p className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300 truncate">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</p>
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 rounded-xl border border-blue-100 dark:border-blue-800/50">
+              <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200">Total Birds</h3>
+              <p className="text-lg font-bold text-blue-600 dark:text-blue-300 truncate mt-1">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</p>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-3 sm:p-4 rounded-xl border border-green-100 dark:border-green-800/50">
-              <h3 className="text-sm sm:text-lg font-semibold text-green-800 dark:text-green-200">Sales Share</h3>
-              <p className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300 truncate">₹{consolidatedTotals.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-4 rounded-xl border border-green-100 dark:border-green-800/50">
+              <h3 className="text-sm font-semibold text-green-800 dark:text-green-200">Sales Share</h3>
+              <p className="text-lg font-bold text-green-600 dark:text-green-300 truncate mt-1">₹{consolidatedTotals.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-3 sm:p-4 rounded-xl border border-purple-100 dark:border-purple-800/50">
-              <h3 className="text-sm sm:text-lg font-semibold text-purple-800 dark:text-purple-200">Payment Share</h3>
-              <p className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-300 truncate">
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-4 rounded-xl border border-purple-100 dark:border-purple-800/50">
+              <h3 className="text-sm font-semibold text-purple-800 dark:text-purple-200">Payment Share</h3>
+              <p className="text-lg font-bold text-purple-600 dark:text-purple-300 truncate mt-1">
                 ₹{consolidatedTotals.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
-            <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 p-3 sm:p-4 rounded-xl border border-red-100 dark:border-red-800/50">
-              <h3 className="text-sm sm:text-lg font-semibold text-red-800 dark:text-red-200">Expense Share</h3>
-              <p className="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-300 truncate">
+            <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 p-4 rounded-xl border border-red-100 dark:border-red-800/50">
+              <h3 className="text-sm font-semibold text-red-800 dark:text-red-200">Expense Share</h3>
+              <p className="text-lg font-bold text-red-600 dark:text-red-300 truncate mt-1">
                 ₹{consolidatedTotals.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
-            <div className={`p-3 sm:p-4 rounded-xl border ${consolidatedTotals.totalProfit >= 0 ? 'bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 border-emerald-100 dark:border-emerald-800/50' : 'bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/30 dark:to-rose-800/30 border-rose-100 dark:border-rose-800/50'}`}>
-              <h3 className="text-sm sm:text-lg font-semibold text-emerald-800 dark:text-emerald-200">Profit/Loss</h3>
-              <p className={`text-xl sm:text-2xl font-bold ${consolidatedTotals.totalProfit >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'} truncate`}>
+            <div className={`p-4 rounded-xl border ${consolidatedTotals.totalProfit >= 0 ? 'bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 border-emerald-100 dark:border-emerald-800/50' : 'bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/30 dark:to-rose-800/30 border-rose-100 dark:border-rose-800/50'}`}>
+              <h3 className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">Profit/Loss</h3>
+              <p className={`text-lg font-bold ${consolidatedTotals.totalProfit >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'} truncate mt-1`}>
                 ₹{consolidatedTotals.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                <span className="text-sm sm:text-base font-normal ml-1 sm:ml-2 whitespace-nowrap">
+                <span className="text-xs font-normal ml-1 whitespace-nowrap">
                   ({consolidatedTotals.totalProfit >= 0 ? 'Profit' : 'Loss'})
                 </span>
               </p>
@@ -346,7 +346,7 @@ export default function PartnershipDashboard() {
       {/* Individual Partnership Shares */}
       <div className="card">
         <div className="card-header">
-          <h2 className="card-title text-lg sm:text-xl">Your Partnership Shares</h2>
+          <h2 className="card-title">Your Partnership Shares</h2>
         </div>
         <div className="card-body">
           {partnerShares.length === 0 ? (
@@ -421,7 +421,7 @@ export default function PartnershipDashboard() {
       {/* Farm Details */}
       <div className="card">
         <div className="card-header">
-          <h2 className="card-title text-lg sm:text-xl">Partnership Farm Details</h2>
+          <h2 className="card-title">Partnership Farm Details</h2>
         </div>
         <div className="card-body">
           {uniqueFarms.length === 0 ? (
@@ -433,33 +433,33 @@ export default function PartnershipDashboard() {
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by adding a partnership farm.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
               {uniqueFarms.map((farm) => (
-                <div key={farm._id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-3 sm:p-5 hover:shadow-md transition-all duration-300 bg-white dark:bg-gray-800">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white mb-2 sm:mb-3 line-clamp-2">{farm.name}</h3>
-                  <div className="space-y-1 sm:space-y-2">
-                    <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm flex items-start gap-2">
+                <div key={farm._id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition-all duration-300 bg-white dark:bg-gray-800">
+                  <h3 className="text-base font-semibold text-gray-800 dark:text-white mb-3 line-clamp-2">{farm.name}</h3>
+                  <div className="space-y-2">
+                    <p className="text-gray-600 dark:text-gray-300 text-sm flex items-start gap-2">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                       <span className="truncate">{farm.location}</span>
                     </p>
-                    <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm flex items-start gap-2">
+                    <p className="text-gray-600 dark:text-gray-300 text-sm flex items-start gap-2">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                       </svg>
                       <span className="truncate">{farm.contact.phone}</span>
                     </p>
                     {farm.contact.email && (
-                      <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm flex items-start gap-2">
+                      <p className="text-gray-600 dark:text-gray-300 text-sm flex items-start gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                         <span className="truncate">{farm.contact.email}</span>
                       </p>
                     )}
-                    <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm flex items-start gap-2">
+                    <p className="text-gray-600 dark:text-gray-300 text-sm flex items-start gap-2">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
