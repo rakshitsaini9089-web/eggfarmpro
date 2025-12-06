@@ -176,7 +176,7 @@ export default function LoginPage() {
                     <div className="form-group mb-4">
                       <button 
                         type="submit" 
-                        className="form-control btn btn-primary submit px-3"
+                        className="form-control btn btn-primary submit px-3 d-flex align-items-center justify-content-center"
                         disabled={loading}
                         style={{ 
                           backgroundColor: '#4CAF50',
@@ -204,10 +204,16 @@ export default function LoginPage() {
                         }}
                       >
                         {loading ? (
-                          <span>
-                            <i className="fa fa-spinner fa-spin mr-2"></i> Signing in…
-                          </span>
-                        ) : 'Sign In'}
+                          <>
+                            <i className="fa fa-spinner fa-spin mr-2"></i>
+                            <span>Signing in…</span>
+                          </>
+                        ) : (
+                          <>
+                            <i className="fa fa-sign-in-alt mr-2"></i>
+                            <span>Sign In</span>
+                          </>
+                        )}
                       </button>
                     </div>
                     
