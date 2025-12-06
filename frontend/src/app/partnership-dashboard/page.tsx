@@ -309,7 +309,7 @@ export default function PartnershipDashboard() {
           <h2 className="card-title text-lg sm:text-xl">Your Consolidated Partnership Summary</h2>
         </div>
         <div className="card-body">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-3 sm:p-4 rounded-xl border border-blue-100 dark:border-blue-800/50">
               <h3 className="text-sm sm:text-lg font-semibold text-blue-800 dark:text-blue-200">Total Birds</h3>
               <p className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</p>
@@ -360,31 +360,31 @@ export default function PartnershipDashboard() {
               <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Farm Name</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">Location</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Partner</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">Ownership %</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">Birds Owned</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">Total Birds in Farm</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">Sales (₹)</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">Payments (₹)</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">Expenses (₹)</th>
-                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Profit/Loss (₹)</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Farm Name</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">Location</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Partner</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">Ownership %</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">Birds Owned</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">Total Birds in Farm</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden 2xl:table-cell">Sales (₹)</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden 2xl:table-cell">Payments (₹)</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden 2xl:table-cell">Expenses (₹)</th>
+                    <th className="px-3 sm:px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Profit/Loss (₹)</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {partnerShares.map((share, index) => (
                     <tr key={`${share.farm._id}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{share.farm.name}</td>
-                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden sm:table-cell">{share.farm.location}</td>
-                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{share.partnerName}</td>
-                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden md:table-cell">{share.percentage}%</td>
-                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">{Math.round(share.birdShare).toLocaleString()}</td>
-                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">{Math.round(share.totalBirdsInFarm).toLocaleString()}</td>
-                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{share.salesShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{share.paymentShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{share.expenseShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                      <td className={`px-3 sm:px-6 py-4 text-sm font-medium ${share.profitShare >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{share.farm.name}</td>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden sm:table-cell">{share.farm.location}</td>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{share.partnerName}</td>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden md:table-cell">{share.percentage}%</td>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">{Math.round(share.birdShare).toLocaleString()}</td>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">{Math.round(share.totalBirdsInFarm).toLocaleString()}</td>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden 2xl:table-cell">₹{share.salesShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden 2xl:table-cell">₹{share.paymentShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden 2xl:table-cell">₹{share.expenseShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className={`px-3 sm:px-4 md:px-6 py-4 text-sm font-medium ${share.profitShare >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                         ₹{share.profitShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         <span className="text-xs font-normal ml-1">
                           ({share.profitShare >= 0 ? 'Profit' : 'Loss'})
@@ -395,14 +395,13 @@ export default function PartnershipDashboard() {
                 </tbody>
                 <tfoot className="bg-gray-50 dark:bg-gray-700 font-bold">
                   <tr>
-                    <td colSpan={3} className="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-white">Total</td>
-                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden md:table-cell"></td>
-                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</td>
-                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell"></td>
-                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{consolidatedTotals.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{consolidatedTotals.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell">₹{consolidatedTotals.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td className={`px-3 sm:px-6 py-4 text-sm ${consolidatedTotals.totalProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    <td colSpan={4} className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-900 dark:text-white">Total</td>
+                    <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">{Math.round(consolidatedTotals.totalBirds).toLocaleString()}</td>
+                    <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden xl:table-cell"></td>
+                    <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden 2xl:table-cell">₹{consolidatedTotals.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden 2xl:table-cell">₹{consolidatedTotals.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden 2xl:table-cell">₹{consolidatedTotals.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td className={`px-3 sm:px-4 md:px-6 py-4 text-sm ${consolidatedTotals.totalProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                       ₹{consolidatedTotals.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       <span className="text-xs font-normal ml-1">
                         ({consolidatedTotals.totalProfit >= 0 ? 'Profit' : 'Loss'})
