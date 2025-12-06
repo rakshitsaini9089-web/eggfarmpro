@@ -97,13 +97,26 @@ export function CustomBarChart({
                   </div>
                 </div>
                 <div 
-                  className="w-full bg-gradient-to-t from-primary to-green-500 rounded-t-lg hover:from-green-700 hover:to-green-600 transition-all duration-500 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-105"
+                  className="w-full rounded-t-lg hover:opacity-90 transition-all duration-300 cursor-pointer transform hover:scale-105 relative"
                   style={{ height: `${barHeight}%` }}
                 >
+                  {/* Area fill with gradient from top to bottom */}
+                  <div 
+                    className="absolute inset-0 rounded-t-lg"
+                    style={{ 
+                      background: `linear-gradient(to top, rgb(var(--primary)) 0%, rgb(var(--primary)) ${barHeight}%, transparent ${barHeight}%, transparent 100%)`
+                    }}
+                  ></div>
+                  
+                  {/* Border */}
+                  <div 
+                    className="absolute inset-0 rounded-t-lg border border-primary/30"
+                  ></div>
+                  
                   {/* Show value inside bar for high values */}
                   {barHeight > 20 && value > 0 && (
-                    <div className="flex justify-center items-center h-full">
-                      <span className="text-[8px] sm:text-xs text-white font-bold transform -rotate-90 origin-center whitespace-nowrap">
+                    <div className="flex justify-center items-center h-full relative z-10">
+                      <span className="text-[8px] sm:text-xs text-primary font-bold transform -rotate-90 origin-center whitespace-nowrap">
                         {value.toLocaleString()}
                       </span>
                     </div>
