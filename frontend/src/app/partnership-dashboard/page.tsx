@@ -328,12 +328,14 @@ export default function PartnershipDashboard() {
             </div>
             <div className={`p-3 sm:p-4 rounded-xl border ${consolidatedTotals.totalProfit >= 0 ? 'bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 border-emerald-100 dark:border-emerald-800/50' : 'bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/30 dark:to-rose-800/30 border-rose-100 dark:border-rose-800/50'}`}>
               <h3 className="text-sm sm:text-lg font-semibold text-emerald-800 dark:text-emerald-200">Profit/Loss</h3>
-              <p className={`text-xl sm:text-2xl font-bold ${consolidatedTotals.totalProfit >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'}`}>
-                ₹{consolidatedTotals.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                <span className="text-sm sm:text-base font-normal ml-1 sm:ml-2">
+              <div className="flex items-baseline mt-1">
+                <p className={`text-xl sm:text-2xl font-bold ${consolidatedTotals.totalProfit >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'}`}>
+                  ₹{consolidatedTotals.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+                <span className="text-xs sm:text-sm font-normal ml-2 whitespace-nowrap">
                   ({consolidatedTotals.totalProfit >= 0 ? 'Profit' : 'Loss'})
                 </span>
-              </p>
+              </div>
             </div>
           </div>
         </div>
