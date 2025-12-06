@@ -197,7 +197,7 @@ export default function Layout({ children }: LayoutProps) {
               <img src="/logo.png" alt="EggFarm Pro Logo" className="w-12 h-12 object-contain rounded-none border-0" />
               <div>
                 <h1 className="text-xl font-bold text-gray-800 dark:text-white">Egg Farm Pro</h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Powered Farm Management System</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 break-words">AI Powered Farm Management System</p>
               </div>
             </div>
           )}
@@ -520,8 +520,7 @@ export default function Layout({ children }: LayoutProps) {
                 <img src="/logo.png" alt="EggFarm Pro Logo" className="w-11 h-11 object-contain rounded-none border-0" />
                 <div>
                   <h1 className="text-base font-semibold text-gray-800 dark:text-white">Egg Farm Pro</h1>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400">AI Powered Farm Management</p>
-                </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 break-words">AI Powered Farm Management</p>                </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
