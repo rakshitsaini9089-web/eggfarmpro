@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { farmAPI, saleAPI, paymentAPI, expenseAPI, batchAPI } from '../../lib/api';
 import { useFarm } from '../../contexts/FarmContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface Farm {
   _id: string;
@@ -80,6 +82,29 @@ export default function PartnershipDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<any>(null);
   const { farms } = useFarm();
+  const { user } = useAuth();
+  const router = useRouter();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (user === null) {
+      router.push('/login');
+    }
+  }, [user, router]);
+
+  // Show loading state while checking authentication
+  if (user === undefined) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-primary"></div>
+      </div>
+    );
+  }
+
+  // Show access denied if not authenticated
+  if (user === null) {
+    return null; // Will redirect via useEffect
+  }
 
   const fetchPartnershipData = async () => {
     try {
