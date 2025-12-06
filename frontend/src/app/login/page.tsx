@@ -242,10 +242,6 @@ export default function LoginPage() {
                           <p className="text-white mb-1" style={{ fontSize: '0.8rem' }}><strong>Admin:</strong> admin@example.com</p>
                           <p className="text-white mb-0" style={{ fontSize: '0.8rem' }}><strong>Password:</strong> admin123</p>
                         </div>
-                        <div>
-                          <p className="text-white mb-1" style={{ fontSize: '0.8rem' }}><strong>User:</strong> user@example.com</p>
-                          <p className="text-white mb-0" style={{ fontSize: '0.8rem' }}><strong>Password:</strong> user123</p>
-                        </div>
                       </div>
                     </div>
                   </form>
