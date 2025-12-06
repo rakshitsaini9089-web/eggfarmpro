@@ -114,7 +114,7 @@ export function AIReportCard() {
 
   return (
     <div className="card">
-      <div className="card-header">
+      <div className="card-header flex justify-between items-center">
         <h2 className="card-title">AI-Powered Reports</h2>
         <button onClick={() => setIsMinimized(!isMinimized)}>
           {isMinimized ? <ChevronDownIcon className="h-5 w-5" /> : <ChevronUpIcon className="h-5 w-5" />}
