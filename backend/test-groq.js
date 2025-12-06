@@ -2,7 +2,14 @@ const axios = require('axios');
 
 async function testGroq() {
   try {
-    const GROQ_API_KEY = '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';
+    // Use environment variable instead of hardcoded key
+    const GROQ_API_KEY = process.env.GROQ_API_KEY;
+    
+    // Check if API key is available
+    if (!GROQ_API_KEY) {
+      console.error('GROQ_API_KEY environment variable is not set');
+      return;
+    }
     
     const response = await axios.post(
       'https://api.groq.com/openai/v1/chat/completions',
