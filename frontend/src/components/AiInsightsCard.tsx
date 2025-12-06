@@ -47,12 +47,6 @@ export function AiInsightsCard() {
           title: 'Production Tip',
           description: aiInsights.productionTip || 'Continue with current practices',
           priority: 'medium'
-        },
-        {
-          id: '4',
-          title: 'Market Opportunity',
-          description: aiInsights.marketOpportunity || 'Monitor local market prices',
-          priority: 'low'
         }
       ];
       
@@ -78,12 +72,6 @@ export function AiInsightsCard() {
         },
         {
           id: '3',
-          title: 'Market Opportunity',
-          description: 'Local market rates are 12% higher than your current pricing. Consider adjusting rates.',
-          priority: 'medium'
-        },
-        {
-          id: '4',
           title: 'Vaccination Reminder',
           description: 'Batch #E2024-001 is due for Newcastle vaccine in 3 days.',
           priority: 'high',
