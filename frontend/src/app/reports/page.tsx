@@ -59,7 +59,7 @@ function ReportsPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [allFarms, setAllFarms] = useState<Farm[]>([]); // Add state for all farms
   const [loading, setLoading] = useState(true);
-  const [exporting, setExporting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { selectedFarm } = useFarm();
 
   const fetchData = async () => {
@@ -291,30 +291,6 @@ function ReportsPage() {
     return farmFinancials;
   };
 
-  const handleExport = async (reportType: string, format: 'csv' | 'pdf') => {
-    try {
-      setExporting(true);
-      const response = await reportAPI.generate({
-        reportType,
-        format,
-        farmId: selectedFarm?._id
-      });
-      
-      // Trigger download
-      const link = document.createElement('a');
-      link.href = `/api${response.report.downloadUrl}`;
-      link.download = response.report.filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Failed to export report:', error);
-      alert('Failed to export report. Please try again.');
-    } finally {
-      setExporting(false);
-    }
-  };
-
   const partnerFinancials = calculatePartnerWiseFinancials();
   const farmFinancials = calculateFarmWiseFinancials();
   const ownerFinancials = calculateOwnerWiseFinancials();
@@ -344,22 +320,6 @@ function ReportsPage() {
       {/* AI-Powered Reports Section */}
       <AIReportCard />
       
-      <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => handleExport('sales', 'csv')}
-            disabled={exporting}
-            className="btn btn-outline text-xs sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {exporting ? 'Exporting…' : 'Export Sales CSV'}
-          </button>
-          <button
-            onClick={() => handleExport('payments', 'csv')}
-            disabled={exporting}
-            className="btn btn-outline text-xs sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {exporting ? 'Exporting…' : 'Export Payments CSV'}
-          </button>
-        </div>      
       {!selectedFarm ? (
         <React.Fragment>
           {/* All Farms Financial Summary */}
@@ -527,13 +487,7 @@ function ReportsPage() {
             <div className="card">
               <div className="card-header flex justify-between items-center">
                 <h2 className="card-title">Owner Financials</h2>
-                <button
-                  onClick={() => handleExport('owner-financials', 'csv')}
-                  disabled={exporting}
-                  className="btn btn-outline btn-sm text-xs sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {exporting ? 'Exporting…' : 'Export CSV'}
-                </button>
+
               </div>
               <div className="card-body p-0">
                 <div className="table-responsive">
@@ -572,13 +526,7 @@ function ReportsPage() {
             <div className="card">
               <div className="card-header flex justify-between items-center">
                 <h2 className="card-title">Partner-wise Financials</h2>
-                <button
-                  onClick={() => handleExport('partner-financials', 'csv')}
-                  disabled={exporting}
-                  className="btn btn-outline btn-sm text-xs sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {exporting ? 'Exporting…' : 'Export CSV'}
-                </button>
+
               </div>
               <div className="card-body p-0">
                 <div className="table-responsive">
