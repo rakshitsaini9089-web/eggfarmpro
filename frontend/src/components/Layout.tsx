@@ -190,7 +190,7 @@ export default function Layout({ children }: LayoutProps) {
       `}</style>
       
       {/* Sidebar */}
-      <div className="sidebar-desktop hidden md:flex md:flex-col md:relative z-30 ${sidebarCollapsed ? 'w-20' : 'w-48'} bg-white dark:bg-gray-800 shadow-xl h-full transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700">
+      <div className="sidebar-desktop hidden md:flex md:flex-col md:relative z-30 ${sidebarCollapsed ? 'w-20' : 'w-48'} bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-xl h-full transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-secondary dark:bg-gray-800">
           {!sidebarCollapsed && (
             <div className="flex items-center space-x-3 max-w-full">
@@ -514,7 +514,7 @@ export default function Layout({ children }: LayoutProps) {
             className="fixed inset-0 z-40 bg-black/50 md:hidden"
             onClick={() => setSidebarOpen(false)}
           ></div>
-          <div className="fixed inset-y-0 left-0 z-50 w-48 bg-white dark:bg-gray-800 shadow-xl md:hidden flex flex-col border-r border-gray-200 dark:border-gray-700">
+          <div className="fixed inset-y-0 left-0 z-50 w-48 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-xl md:hidden flex flex-col border-r border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-secondary dark:bg-gray-800">
               <div className="flex items-center space-x-3 max-w-full">
                 <img src="/logo.png" alt="EggFarm Pro Logo" className="w-9 h-9 object-contain rounded-none border-0" />
