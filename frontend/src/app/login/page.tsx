@@ -45,29 +45,24 @@ export default function LoginPage() {
       <div 
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat js-fullheight"
         style={{ 
-          backgroundImage: "url('https://images.unsplash.com/photo-1593708232986-0b480c2a0cfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')",
           fontFamily: "'Lato', Arial, sans-serif"
         }}
       >
-        <section className="ftco-section w-full">
+        <section className="ftco-section">
           <div className="container">
             <div className="row justify-content-center">
               <div className="col-md-6 text-center mb-5">
-                <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2rem' }}>Welcome to Egg Farm Pro</h2>
-                <p className="text-white mt-2" style={{ fontSize: '1.1rem', fontWeight: 300 }}>Egg Farm Operation And Management System</p>
+                <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2rem' }}>Login #10</h2>
               </div>
             </div>
             <div className="row justify-content-center">
               <div className="col-md-6 col-lg-4">
-                <div className="login-wrap p-4 p-md-5" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', borderRadius: '10px' }}>
-                  <div className="icon d-flex align-items-center justify-content-center" style={{ backgroundColor: '#4CAF50', width: '80px', height: '80px', borderRadius: '50%', margin: '0 auto 20px' }}>
-                    <span className="fa fa-user-o text-white" style={{ fontSize: '2rem' }}></span>
-                  </div>
-                  <h3 className="text-center mb-4 text-white">Have an account?</h3>
-                  
-                  <form action="#" className="signin-form text-center" onSubmit={handleSubmit}>
+                <div className="login-wrap p-0">
+                  <h3 className="mb-4 text-center text-white">Have an account?</h3>
+                  <form action="#" className="signin-form" onSubmit={handleSubmit}>
                     {error && (
-                      <div className="rounded-lg bg-danger text-white px-3 py-2 mb-3 text-center" style={{ backgroundColor: 'rgba(220, 53, 69, 0.9)' }}>
+                      <div className="rounded-lg bg-danger text-white px-4 py-3 text-sm text-white mb-4" style={{ backgroundColor: 'rgba(220, 53, 69, 0.8)' }}>
                         {error}
                       </div>
                     )}
@@ -75,20 +70,19 @@ export default function LoginPage() {
                     <div className="form-group mb-3">
                       <input 
                         type="text" 
-                        className="form-control rounded-left" 
+                        className="form-control" 
                         placeholder="Username" 
                         required 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         style={{ 
-                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
                           borderColor: 'transparent',
                           borderRadius: '5px',
                           padding: '12px 15px',
                           fontSize: '16px',
                           fontWeight: 300,
-                          width: '100%',
-                          boxSizing: 'border-box'
+                          width: '100%'
                         }}
                       />
                     </div>
@@ -97,20 +91,19 @@ export default function LoginPage() {
                       <input 
                         id="password-field" 
                         type={showPassword ? "text" : "password"} 
-                        className="form-control rounded-left" 
+                        className="form-control" 
                         placeholder="Password" 
                         required 
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         style={{ 
-                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
                           borderColor: 'transparent',
                           borderRadius: '5px',
                           padding: '12px 45px 12px 15px',
                           fontSize: '16px',
                           fontWeight: 300,
-                          width: '100%',
-                          boxSizing: 'border-box'
+                          width: '100%'
                         }}
                       />
                       <span 
@@ -129,7 +122,7 @@ export default function LoginPage() {
                     <div className="form-group">
                       <button 
                         type="submit" 
-                        className="form-control btn btn-primary rounded submit px-3"
+                        className="form-control btn btn-primary submit px-3"
                         disabled={loading}
                         style={{ 
                           backgroundColor: '#4CAF50',
@@ -139,8 +132,7 @@ export default function LoginPage() {
                           fontSize: '16px',
                           fontWeight: 400,
                           transition: 'all 0.3s',
-                          width: '100%',
-                          boxSizing: 'border-box'
+                          width: '100%'
                         }}
                       >
                         {loading ? 'Signing in…' : 'Sign In'}
@@ -151,7 +143,7 @@ export default function LoginPage() {
                       <div className="w-50 text-left">
                         <label className="checkbox-wrap checkbox-primary text-white" style={{ fontWeight: 300 }}>
                           Remember Me
-                          <input type="checkbox" defaultChecked className="ml-2" style={{ transform: 'scale(1.2)' }} />
+                          <input type="checkbox" defaultChecked className="ml-2" />
                           <span className="checkmark"></span>
                         </label>
                       </div>
@@ -161,12 +153,12 @@ export default function LoginPage() {
                     </div>
                   </form>
                   
-                  <p className="w-100 text-center text-white my-3">&mdash; Or Sign In With &mdash;</p>
+                  <p className="w-100 text-center text-white mt-4 mb-4">— Or Sign In With —</p>
                   <div className="social d-flex text-center">
-                    <a href="#" className="px-2 py-2 mr-md-1 rounded" style={{ backgroundColor: '#3b5998', color: '#fff', flex: 1, marginRight: '5px' }}>
+                    <a href="#" className="flex-1 px-3 py-2 mr-md-1 rounded" style={{ backgroundColor: '#3b5998', color: '#fff', marginRight: '5px' }}>
                       <span className="ion-logo-facebook mr-2"></span> Facebook
                     </a>
-                    <a href="#" className="px-2 py-2 ml-md-1 rounded" style={{ backgroundColor: '#1DA1F2', color: '#fff', flex: 1, marginLeft: '5px' }}>
+                    <a href="#" className="flex-1 px-3 py-2 ml-md-1 rounded" style={{ backgroundColor: '#1DA1F2', color: '#fff', marginLeft: '5px' }}>
                       <span className="ion-logo-twitter mr-2"></span> Twitter
                     </a>
                   </div>
