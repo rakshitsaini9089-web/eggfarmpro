@@ -62,7 +62,7 @@ export default function LoginPage() {
             <div className="row justify-content-center">
               <div className="col-md-6 text-center mb-5">
                 <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)', letterSpacing: '1px' }}>Welcome</h2>
-                <p className="text-white mt-2" style={{ fontSize: '1.2rem', fontWeight: 300, textShadow: '0 1px 5px rgba(0,0,0,0.2)' }}>Egg Farm Operation And Management System.</p>
+                <p className="text-white mt-2" style={{ fontSize: '1.2rem', fontWeight: 300, textShadow: '0 1px 5px rgba(0,0,0,0.2)' }}>Ai Powered Egg Farm Operation And Management System.</p>
               </div>
             </div>
             <div className="row justify-content-center">
