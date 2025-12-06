@@ -48,7 +48,7 @@ export default function LoginPage() {
         style={{ 
           backgroundImage: "url('/loginbg.jpg')",
           fontFamily: "'Lato', Arial, sans-serif",
-          filter: "blur(5px)",
+          filter: "blur(5px) brightness(0.7)",
           transform: "scale(1.05)"
         }}
       >
@@ -122,15 +122,15 @@ export default function LoginPage() {
                     </div>
                     
                     <div className="form-group d-md-flex">
-                      <div className="w-50 text-md-right">
-                        <a href="#" style={{ color: '#fff' }}>Forgot Password</a>
-                      </div>
                       <div className="w-50">
                         <label className="checkbox-wrap checkbox-primary text-white">
                           Remember Me
                           <input type="checkbox" defaultChecked />
                           <span className="checkmark"></span>
                         </label>
+                      </div>
+                      <div className="w-50 text-md-right">
+                        <a href="#" style={{ color: '#fff' }}>Forgot Password</a>
                       </div>
                     </div>
                   </form>
