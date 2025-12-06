@@ -45,7 +45,7 @@ export default function LoginPage() {
       <div 
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat js-fullheight"
         style={{ 
-          backgroundImage: "url('https://images.unsplash.com/photo-1597848212624-a19eb35e2651?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1593708232986-0b480c2a0cfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')",
           fontFamily: "'Lato', Arial, sans-serif"
         }}
       >
@@ -53,7 +53,8 @@ export default function LoginPage() {
           <div className="container">
             <div className="row justify-content-center">
               <div className="col-md-6 text-center mb-5">
-                <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2rem' }}>Login #10</h2>
+                <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2rem' }}>Welcome to Egg Farm Pro</h2>
+                <p className="text-white mt-2" style={{ fontSize: '1.1rem', fontWeight: 300 }}>Egg Farm Operation And Management System</p>
               </div>
             </div>
             <div className="row justify-content-center">
@@ -64,7 +65,7 @@ export default function LoginPage() {
                   </div>
                   <h3 className="text-center mb-4 text-white">Have an account?</h3>
                   
-                  <form action="#" className="signin-form" onSubmit={handleSubmit}>
+                  <form action="#" className="signin-form text-center" onSubmit={handleSubmit}>
                     {error && (
                       <div className="rounded-lg bg-danger text-white px-3 py-2 mb-3 text-center" style={{ backgroundColor: 'rgba(220, 53, 69, 0.9)' }}>
                         {error}
@@ -85,7 +86,9 @@ export default function LoginPage() {
                           borderRadius: '5px',
                           padding: '12px 15px',
                           fontSize: '16px',
-                          fontWeight: 300
+                          fontWeight: 300,
+                          width: '100%',
+                          boxSizing: 'border-box'
                         }}
                       />
                     </div>
@@ -105,7 +108,9 @@ export default function LoginPage() {
                           borderRadius: '5px',
                           padding: '12px 45px 12px 15px',
                           fontSize: '16px',
-                          fontWeight: 300
+                          fontWeight: 300,
+                          width: '100%',
+                          boxSizing: 'border-box'
                         }}
                       />
                       <span 
@@ -133,7 +138,9 @@ export default function LoginPage() {
                           padding: '12px',
                           fontSize: '16px',
                           fontWeight: 400,
-                          transition: 'all 0.3s'
+                          transition: 'all 0.3s',
+                          width: '100%',
+                          boxSizing: 'border-box'
                         }}
                       >
                         {loading ? 'Signing in…' : 'Sign In'}
