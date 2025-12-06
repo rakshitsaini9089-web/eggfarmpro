@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -47,6 +48,12 @@ export function AiInsightsCard() {
           title: 'Production Tip',
           description: aiInsights.productionTip || 'Continue with current practices',
           priority: 'medium'
+        },
+        {
+          id: '4',
+          title: 'Market Opportunity',
+          description: aiInsights.marketOpportunity || 'Monitor local market prices',
+          priority: 'low'
         }
       ];
       
@@ -72,6 +79,12 @@ export function AiInsightsCard() {
         },
         {
           id: '3',
+          title: 'Market Opportunity',
+          description: 'Local market rates are 12% higher than your current pricing. Consider adjusting rates.',
+          priority: 'medium'
+        },
+        {
+          id: '4',
           title: 'Vaccination Reminder',
           description: 'Batch #E2024-001 is due for Newcastle vaccine in 3 days.',
           priority: 'high',
@@ -105,27 +118,7 @@ export function AiInsightsCard() {
       <div className="card-header">
         <div className="flex justify-between items-center">
           <h2 className="card-title">AI Insights & Recommendations</h2>
-          <button 
-            onClick={handleRefreshInsights}
-            disabled={loading}
-            className="btn btn-outline flex items-center gap-1 sm:gap-2 text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <svg 
-              className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} 
-              xmlns="http://www.w3.org/2000/svg" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
-              />
-            </svg>
-            <span>{loading ? 'Refreshing...' : 'Refresh'}</span>
-          </button>
+          {/* Refresh button removed as per user request */}
         </div>
       </div>
       <div className="card-body">
@@ -163,15 +156,6 @@ export function AiInsightsCard() {
               )}
             </div>
           ))}
-        </div>
-        
-        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-          <h3 className="font-medium text-blue-800 dark:text-blue-200">How it works</h3>
-          <ul className="mt-2 text-sm text-blue-700 dark:text-blue-300 space-y-1">
-            <li>• EggMind AI continuously analyzes your farm data to provide actionable insights</li>
-            <li>• Recommendations cover health, finance, operations, and market opportunities</li>
-            <li>• Insights are updated daily with fresh data analysis</li>
-          </ul>
         </div>
       </div>
     </div>
