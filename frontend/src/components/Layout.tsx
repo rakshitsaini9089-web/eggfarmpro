@@ -270,7 +270,6 @@ export default function Layout({ children }: LayoutProps) {
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="md:hidden inline-flex items-center justify-center text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-primary p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"
-                title="Open sidebar"
                 aria-label="Open sidebar"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
