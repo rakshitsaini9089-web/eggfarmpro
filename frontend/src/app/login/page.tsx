@@ -233,35 +233,22 @@ export default function LoginPage() {
                         </a>
                       </div>
                     </div>
+                    
+                    {/* Demo Credentials */}
+                    <div className="mt-4 p-3 rounded" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+                      <p className="text-white mb-2" style={{ fontWeight: 500, fontSize: '0.9rem' }}>Demo Credentials:</p>
+                      <div className="d-flex justify-content-between">
+                        <div>
+                          <p className="text-white mb-1" style={{ fontSize: '0.8rem' }}><strong>Admin:</strong> admin@example.com</p>
+                          <p className="text-white mb-0" style={{ fontSize: '0.8rem' }}><strong>Password:</strong> admin123</p>
+                        </div>
+                        <div>
+                          <p className="text-white mb-1" style={{ fontSize: '0.8rem' }}><strong>User:</strong> user@example.com</p>
+                          <p className="text-white mb-0" style={{ fontSize: '0.8rem' }}><strong>Password:</strong> user123</p>
+                        </div>
+                      </div>
+                    </div>
                   </form>
-                  
-                  <p className="w-100 text-center text-white mt-4 mb-4" style={{ fontWeight: 300 }}>— Or Sign In With —</p>
-                  <div className="social d-flex text-center">
-                    <a href="#" className="flex-fill px-3 py-2 mr-2 rounded d-flex align-items-center justify-content-center" 
-                       style={{ backgroundColor: 'rgba(59, 89, 152, 0.8)', color: '#fff', marginRight: '10px', transition: 'all 0.3s ease', textDecoration: 'none' }}
-                       onMouseEnter={(e) => {
-                         e.currentTarget.style.backgroundColor = 'rgba(59, 89, 152, 1)';
-                         e.currentTarget.style.transform = 'translateY(-2px)';
-                       }}
-                       onMouseLeave={(e) => {
-                         e.currentTarget.style.backgroundColor = 'rgba(59, 89, 152, 0.8)';
-                         e.currentTarget.style.transform = 'translateY(0)';
-                       }}>
-                      <i className="ion-logo-facebook mr-2"></i> Facebook
-                    </a>
-                    <a href="#" className="flex-fill px-3 py-2 ml-2 rounded d-flex align-items-center justify-content-center" 
-                       style={{ backgroundColor: 'rgba(29, 161, 242, 0.8)', color: '#fff', marginLeft: '10px', transition: 'all 0.3s ease', textDecoration: 'none' }}
-                       onMouseEnter={(e) => {
-                         e.currentTarget.style.backgroundColor = 'rgba(29, 161, 242, 1)';
-                         e.currentTarget.style.transform = 'translateY(-2px)';
-                       }}
-                       onMouseLeave={(e) => {
-                         e.currentTarget.style.backgroundColor = 'rgba(29, 161, 242, 0.8)';
-                         e.currentTarget.style.transform = 'translateY(0)';
-                       }}>
-                      <i className="ion-logo-twitter mr-2"></i> Twitter
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>
