@@ -103,8 +103,8 @@ export default function LoginPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         style={{ 
-                          backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                          border: '1px solid transparent',
+                          backgroundColor: 'transparent',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
                           borderRadius: '8px',
                           padding: '14px 20px',
                           fontSize: '16px',
@@ -112,7 +112,8 @@ export default function LoginPage() {
                           width: '100%',
                           boxSizing: 'border-box',
                           transition: 'all 0.3s ease',
-                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                          color: '#fff'
                         }}
                         onFocus={(e) => {
                           e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
@@ -120,7 +121,7 @@ export default function LoginPage() {
                         }}
                         onBlur={(e) => {
                           e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                          e.target.style.borderColor = 'transparent';
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
                         }}
                       />
                     </div>
@@ -135,8 +136,8 @@ export default function LoginPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         style={{ 
-                          backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                          border: '1px solid transparent',
+                          backgroundColor: 'transparent',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
                           borderRadius: '8px',
                           padding: '14px 50px 14px 20px',
                           fontSize: '16px',
@@ -144,7 +145,8 @@ export default function LoginPage() {
                           width: '100%',
                           boxSizing: 'border-box',
                           transition: 'all 0.3s ease',
-                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                          color: '#fff'
                         }}
                         onFocus={(e) => {
                           e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
@@ -152,7 +154,7 @@ export default function LoginPage() {
                         }}
                         onBlur={(e) => {
                           e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                          e.target.style.borderColor = 'transparent';
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
                         }}
                       />
                       <span 
