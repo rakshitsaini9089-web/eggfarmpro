@@ -86,21 +86,6 @@ export default function LoginPage() {
                   e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
                 }}
                 >
-                  <div className="d-flex justify-content-center mb-4">
-                    <div style={{ 
-                      width: '70px', 
-                      height: '70px', 
-                      borderRadius: '50%', 
-                      backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backdropFilter: 'blur(5px)',
-                      border: '1px solid rgba(255, 255, 255, 0.3)'
-                    }}>
-                      <i className="fa fa-egg" style={{ fontSize: '2rem', color: '#4CAF50' }}></i>
-                    </div>
-                  </div>
                   <h3 className="mb-4 text-center text-white" style={{ fontWeight: 500, fontSize: '1.5rem' }}>Login</h3>
                   <form action="#" className="signin-form" onSubmit={handleSubmit}>
                     {error && (
