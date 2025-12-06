@@ -18,11 +18,10 @@ function getApiBaseUrl() {
     return 'https://clean-bears-make.loca.lt/api';
   }
   
-  // For ngrok, use the same hostname but with port 5001
+    // For ngrok, use the proxy route to avoid CORS issues
   if (window.location.hostname.includes('ngrok')) {
-    // Extract the base hostname without port
-    const baseHost = window.location.hostname.replace(/:\d+$/, '');
-    return `${window.location.protocol}//${baseHost}:5001/api`;
+    // Use the Next.js API proxy route
+    return `/api/proxy`;
   }
   
   // For local development, use the same hostname but with port 5001
@@ -33,19 +32,43 @@ const API_BASE_URL = getApiBaseUrl();
 
 // Generic fetch function with error handling
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
-  
-  // Get token from localStorage
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  
-  const config: RequestInit = {
+  let url = `${API_BASE_URL}${endpoint}`;
+  let config: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       ...options.headers,
     },
     ...options,
   };
+  
+  // Get token from localStorage
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  
+  // If using proxy (ngrok), pass the endpoint as a query parameter
+  if (API_BASE_URL === '/api/proxy') {
+    url = `${API_BASE_URL}?endpoint=${encodeURIComponent(endpoint)}`;
+    
+    // For POST requests, we need to move the body to the proxy request body
+    // and set the Authorization header in the proxy request
+    config = {
+      ...config,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+    };
+  } else {
+    // For direct API calls, set the Authorization header normally
+    config = {
+      ...config,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+    };
+  }
 
   try {
     const response = await fetch(url, config);
