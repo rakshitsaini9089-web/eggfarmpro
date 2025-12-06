@@ -210,7 +210,7 @@ export default function LoginPage() {
                           </>
                         ) : (
                           <>
-                            <i className="fa fa-sign-in-alt mr-2"></i>
+                            <i className="fa fa-arrow-right mr-2"></i>
                             <span>Sign In</span>
                           </>
                         )}
