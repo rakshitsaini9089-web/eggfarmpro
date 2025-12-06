@@ -151,7 +151,7 @@ export function AIReportCard() {
                   className={`ml-4 px-4 py-2 rounded-lg text-sm font-medium ${
                     report.status === 'generating' || generatingType === report.type
                       ? 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
-                      : 'bg-primary hover:bg-primary-dark text-white'
+                      : 'bg-primary hover:bg-primary-dark text-gray-900 dark:text-white'
                   }`}
                 >
                   {generatingType === report.type ? 'Generating...' : 'Generate'}
@@ -159,15 +159,6 @@ export function AIReportCard() {
               </div>
             </div>
           ))}
-        </div>
-        
-        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-          <h3 className="font-medium text-blue-800 dark:text-blue-200">How it works</h3>
-          <ul className="mt-2 text-sm text-blue-700 dark:text-blue-300 space-y-1">
-            <li>• AI analyzes your farm data to create insightful reports</li>
-            <li>• Reports include production metrics, financial summaries, and trend analysis</li>
-            <li>• Generated PDFs can be downloaded and shared</li>
-          </ul>
         </div>
       </div>
     </div>
