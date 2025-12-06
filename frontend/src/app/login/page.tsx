@@ -46,7 +46,7 @@ export default function LoginPage() {
       <div 
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat js-fullheight"
         style={{ 
-          backgroundImage: "url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1593708232986-0b480c2a0cfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')",
           fontFamily: "'Lato', Arial, sans-serif"
         }}
       >
@@ -56,7 +56,8 @@ export default function LoginPage() {
             <div className="container">
               <div className="row justify-content-center">
                 <div className="col-md-6 text-center mb-5">
-                  <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2rem' }}>Login #10</h2>
+                  <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2rem' }}>Welcome to Egg Farm Pro</h2>
+                  <p className="text-white mt-2" style={{ fontSize: '1.1rem', fontWeight: 300 }}>Egg Farm Operation And Management System</p>
                 </div>
               </div>
               <div className="row justify-content-center">
