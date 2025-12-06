@@ -86,7 +86,7 @@ export default function LoginPage() {
                   e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
                 }}
                 >
-                  <h3 className="mb-4 text-center text-white" style={{ fontWeight: 500, fontSize: '1.5rem' }}>Enter Your Credentials</h3>
+                  <h3 className="mb-4 text-center text-white" style={{ fontWeight: 500, fontSize: '1.5rem' }}>Access Account</h3>
                   <form action="#" className="signin-form" onSubmit={handleSubmit}>
                     {error && (
                       <div className="rounded-lg px-4 py-3 text-sm text-white mb-4 animate__animated animate__shakeX" style={{ backgroundColor: 'rgba(220, 53, 69, 0.9)', borderRadius: '8px' }}>
@@ -113,7 +113,8 @@ export default function LoginPage() {
                           boxSizing: 'border-box',
                           transition: 'all 0.3s ease',
                           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                          color: '#fff'
+                          color: '#fff',
+                          outline: 'none'
                         }}
                         onFocus={(e) => {
                           e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
@@ -146,7 +147,8 @@ export default function LoginPage() {
                           boxSizing: 'border-box',
                           transition: 'all 0.3s ease',
                           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                          color: '#fff'
+                          color: '#fff',
+                          outline: 'none'
                         }}
                         onFocus={(e) => {
                           e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
