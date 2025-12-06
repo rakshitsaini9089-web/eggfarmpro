@@ -22,11 +22,10 @@ function getApiBaseUrl() {
     return `${window.location.protocol}//${window.location.hostname}:5001/api`;
   }
   
-  // For ngrok, use the same hostname but with port 5001
+  // For ngrok, use the proxy route to avoid CORS issues
   if (window.location.hostname.includes('ngrok')) {
-    // Extract the base hostname without port
-    const baseHost = window.location.hostname.replace(/:\d+$/, '');
-    return `${window.location.protocol}//${baseHost}:5001/api`;
+    // Use the Next.js API proxy route
+    return `/api/proxy`;
   }
   
   // For local development, use the same hostname but with port 5001
@@ -90,13 +89,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (usernameOrEmail: string, password: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      let url = `${API_BASE_URL}/auth/login`;
+      let fetchOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: usernameOrEmail, password }), // Still sending as 'email' to backend
-      });
+      };
+      
+      // If using proxy (ngrok), pass the endpoint as a query parameter
+      if (API_BASE_URL === '/api/proxy') {
+        url = `${API_BASE_URL}?endpoint=${encodeURIComponent('/auth/login')}`;
+        // For proxy, we need to include the Authorization header in the request to the proxy
+        fetchOptions = {
+          ...fetchOptions,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+      }
+      
+      const response = await fetch(url, fetchOptions);
 
       if (!response.ok) {
         // Try to get the error message from the response
