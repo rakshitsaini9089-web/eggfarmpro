@@ -217,21 +217,17 @@ export default function LoginPage() {
                       </button>
                     </div>
                     
-                    <div className="form-group d-flex align-items-center justify-content-between">
-                      <div className="d-flex align-items-center">
-                        <label className="checkbox-wrap checkbox-primary text-white mb-0" style={{ fontWeight: 400, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                          <input type="checkbox" defaultChecked style={{ cursor: 'pointer', marginRight: '8px' }} />
-                          <span className="checkmark"></span>
-                          Remember Me
-                        </label>
-                      </div>
-                      <div>
-                        <a href="#" style={{ color: '#fff', fontWeight: 400, textDecoration: 'none', transition: 'color 0.2s ease' }} 
-                           onMouseEnter={(e) => e.currentTarget.style.color = '#a5d6a7'}
-                           onMouseLeave={(e) => e.currentTarget.style.color = '#fff'}>
-                          Forgot Password?
-                        </a>
-                      </div>
+                    <div className="form-group d-flex justify-content-between align-items-center">
+                      <label className="checkbox-wrap checkbox-primary text-white mb-0" style={{ fontWeight: 400, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                        <input type="checkbox" defaultChecked style={{ cursor: 'pointer', marginRight: '8px' }} />
+                        <span className="checkmark"></span>
+                        Remember Me
+                      </label>
+                      <a href="#" style={{ color: '#fff', fontWeight: 400, textDecoration: 'none', transition: 'color 0.2s ease' }} 
+                         onMouseEnter={(e) => e.currentTarget.style.color = '#a5d6a7'}
+                         onMouseLeave={(e) => e.currentTarget.style.color = '#fff'}>
+                        Forgot Password?
+                      </a>
                     </div>
                     
                     {/* Demo Credentials */}
@@ -249,7 +245,7 @@ export default function LoginPage() {
                   {/* Copyright Notice */}
                   <div className="mt-4 text-center">
                     <p className="text-white mb-0" style={{ fontSize: '0.8rem', opacity: 0.7 }}>
-                      © {new Date().getFullYear()} Egg Farm Pro. All rights reserved. Made with ❤️ by Rakxx.
+                      © {new Date().getFullYear()} Egg Farm Pro. All rights reserved. Crafted with ❤️
                     </p>
                   </div>
                 </div>
