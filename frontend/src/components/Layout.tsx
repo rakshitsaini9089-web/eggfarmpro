@@ -196,7 +196,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex items-center space-x-3 max-w-full">
               <img src="/logo.png" alt="EggFarm Pro Logo" className="w-8 h-8 object-contain rounded-none border-0" />
               <div className="max-w-[calc(100%-2.25rem)]">
-                <h1 className="text-sm font-semibold text-gray-800 dark:text-white truncate">Egg Farm Pro</h1>
+                <h1 className="text-base font-semibold text-gray-800 dark:text-white truncate">Egg Farm Pro</h1>
                 <p className="text-[9px] text-gray-500 dark:text-gray-400 break-words whitespace-normal overflow-hidden truncate">AI Powered Farm Management</p>
               </div>
             </div>
