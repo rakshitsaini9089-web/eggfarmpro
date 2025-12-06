@@ -46,9 +46,16 @@ export default function LoginPage() {
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat js-fullheight"
         style={{ 
           backgroundImage: "url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')",
-          fontFamily: "'Lato', Arial, sans-serif"
+          fontFamily: "'Lato', Arial, sans-serif",
+          filter: "blur(5px)",
+          transform: "scale(1.05)"
         }}
       >
+        {/* Blurred background overlay */}
+      </div>
+      
+      {/* Content wrapper to show on top of blurred background */}
+      <div className="min-h-screen flex items-center justify-center" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
         <section className="ftco-section">
           <div className="container">
             <div className="row justify-content-center">
@@ -167,77 +174,77 @@ export default function LoginPage() {
             </div>
           </div>
         </section>
-        
-        <style jsx global>{`
-          .js-fullheight {
-            height: 100vh;
-          }
-          
-          .checkbox-primary {
-            position: relative;
-            padding-left: 30px;
-            cursor: pointer;
-            user-select: none;
-          }
-          
-          .checkbox-primary input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-            height: 0;
-            width: 0;
-          }
-          
-          .checkmark {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 20px;
-            width: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 3px;
-            transition: all 0.3s;
-          }
-          
-          .checkbox-primary:hover input ~ .checkmark {
-            background-color: rgba(255, 255, 255, 1);
-          }
-          
-          .checkbox-primary input:checked ~ .checkmark {
-            background-color: #4CAF50;
-          }
-          
-          .checkmark:after {
-            content: "";
-            position: absolute;
-            display: none;
-          }
-          
-          .checkbox-primary input:checked ~ .checkmark:after {
-            display: block;
-          }
-          
-          .checkbox-primary .checkmark:after {
-            left: 7px;
-            top: 3px;
-            width: 6px;
-            height: 12px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-          }
-          
-          .field-icon {
-            cursor: pointer;
-          }
-          
-          @media (max-width: 767.98px) {
-            .login-wrap {
-              padding: 20px !important;
-            }
-          }
-        `}</style>
       </div>
+        
+      <style jsx global>{`
+        .js-fullheight {
+          height: 100vh;
+        }
+        
+        .checkbox-primary {
+          position: relative;
+          padding-left: 30px;
+          cursor: pointer;
+          user-select: none;
+        }
+        
+        .checkbox-primary input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0;
+        }
+        
+        .checkmark {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 20px;
+          width: 20px;
+          background-color: rgba(255, 255, 255, 0.8);
+          border-radius: 3px;
+          transition: all 0.3s;
+        }
+        
+        .checkbox-primary:hover input ~ .checkmark {
+          background-color: rgba(255, 255, 255, 1);
+        }
+        
+        .checkbox-primary input:checked ~ .checkmark {
+          background-color: #4CAF50;
+        }
+        
+        .checkmark:after {
+          content: "";
+          position: absolute;
+          display: none;
+        }
+        
+        .checkbox-primary input:checked ~ .checkmark:after {
+          display: block;
+        }
+        
+        .checkbox-primary .checkmark:after {
+          left: 7px;
+          top: 3px;
+          width: 6px;
+          height: 12px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+        }
+        
+        .field-icon {
+          cursor: pointer;
+        }
+        
+        @media (max-width: 767.98px) {
+          .login-wrap {
+            padding: 20px !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
