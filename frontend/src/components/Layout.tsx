@@ -193,11 +193,11 @@ export default function Layout({ children }: LayoutProps) {
       <div className="sidebar-desktop hidden md:flex md:flex-col md:relative z-30 ${sidebarCollapsed ? 'w-20' : 'w-64'} bg-white dark:bg-gray-800 shadow-xl h-full transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-secondary dark:bg-gray-800">
           {!sidebarCollapsed && (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 max-w-full">
               <img src="/logo.png" alt="EggFarm Pro Logo" className="w-12 h-12 object-contain rounded-none border-0" />
-              <div>
+              <div className="max-w-[calc(100%-4rem)]">
                 <h1 className="text-xl font-bold text-gray-800 dark:text-white">Egg Farm Pro</h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400 break-words">AI Powered Farm Management System</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 break-words whitespace-normal overflow-hidden">AI Powered Farm Management System</p>
               </div>
             </div>
           )}
@@ -516,11 +516,12 @@ export default function Layout({ children }: LayoutProps) {
           ></div>
           <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-xl md:hidden flex flex-col border-r border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-secondary dark:bg-gray-800">
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 max-w-full">
                 <img src="/logo.png" alt="EggFarm Pro Logo" className="w-11 h-11 object-contain rounded-none border-0" />
-                <div>
+                <div className="max-w-[calc(100%-3.5rem)]">
                   <h1 className="text-base font-semibold text-gray-800 dark:text-white">Egg Farm Pro</h1>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 break-words">AI Powered Farm Management</p>                </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 break-words whitespace-normal overflow-hidden">AI Powered Farm Management</p>
+                </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
