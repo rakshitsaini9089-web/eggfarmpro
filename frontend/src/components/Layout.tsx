@@ -322,7 +322,7 @@ export default function Layout({ children }: LayoutProps) {
                     setUserMenuOpen(!userMenuOpen);
                   }}
                   className="flex items-center justify-center p-1 sm:p-1.5 md:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-primary-foreground dark:hover:text-white dark:hover:bg-primary transition-colors duration-300"
-                  title="Account Menu"
+                  aria-label="Account menu"
                 >
                   <UserCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </button>                
@@ -411,7 +411,7 @@ export default function Layout({ children }: LayoutProps) {
                       setFarmMenuOpen(!farmMenuOpen);
                     }}
                     className="flex items-center justify-center p-1 sm:p-1.5 md:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-primary-foreground dark:hover:text-white dark:hover:bg-primary transition-colors duration-300"
-                    title={farms.length > 1 ? "Switch Farm" : "View Farm"}
+                    aria-label={farms.length > 1 ? "Switch Farm" : "View Farm"}
                   >
                     <BuildingLibraryIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                   </button>                  
@@ -485,7 +485,7 @@ export default function Layout({ children }: LayoutProps) {
               <button
                 onClick={toggleDarkMode}
                 className="flex items-center justify-center p-1 sm:p-1.5 md:p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-primary-foreground dark:hover:text-white dark:hover:bg-primary transition-colors duration-300"
-                title="Toggle dark mode"
+                aria-label="Toggle dark mode"
               >
                 {darkMode ? (
                   <SunIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
