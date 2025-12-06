@@ -1,0 +1,351 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { farmAPI } from '../../lib/api';
+
+interface Farm {
+  _id: string;
+  name: string;
+  location: string;
+  owner: string;
+  contact: {
+    phone?: string;
+    email?: string;
+  };
+  size?: number;
+  capacity?: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: {
+    username: string;
+  };
+  updatedBy: {
+    username: string;
+  };
+}
+
+export default function FarmsPage() {
+  const [farms, setFarms] = useState<Farm[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [editingFarm, setEditingFarm] = useState<Farm | null>(null);
+  const [activeOnly, setActiveOnly] = useState(false);
+
+  const fetchFarms = async () => {
+    try {
+      setLoading(true);
+      const data = activeOnly ? await farmAPI.getActive() : await farmAPI.getAll();
+      setFarms(data);
+    } catch (error) {
+      console.error('Failed to fetch farms:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFarms();
+  }, [activeOnly]);
+
+  const handleAddFarm = () => {
+    setEditingFarm(null);
+    setShowModal(true);
+  };
+
+  const handleEditFarm = (farm: Farm) => {
+    setEditingFarm(farm);
+    setShowModal(true);
+  };
+
+  const handleDeleteFarm = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this farm?')) {
+      try {
+        await farmAPI.delete(id);
+        fetchFarms();
+      } catch (error) {
+        console.error('Failed to delete farm:', error);
+      }
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    // Convert relevant fields to numbers
+    const numericFields = ['size', 'capacity'];
+    numericFields.forEach(field => {
+      if (data[field]) {
+        const value = parseFloat(data[field] as string);
+        data[field] = isNaN(value) ? undefined : value;
+      }
+    });
+
+    // Convert isActive to boolean
+    data.isActive = data.isActive === 'true';
+
+    try {
+      if (editingFarm) {
+        await farmAPI.update(editingFarm._id, data);
+      } else {
+        await farmAPI.create(data);
+      }
+      setShowModal(false);
+      fetchFarms();
+    } catch (error) {
+      console.error('Failed to save farm:', error);
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-green-800">Farm Management</h1>
+        <button
+          onClick={handleAddFarm}
+          className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+        >
+          Add Farm
+        </button>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+        <div className="flex items-center">
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={activeOnly}
+              onChange={(e) => setActiveOnly(e.target.checked)}
+              className="rounded text-green-600 focus:ring-green-500"
+            />
+            <span className="ml-2 text-gray-700 dark:text-gray-300">
+              Show only active farms
+            </span>
+          </label>
+        </div>
+      </div>
+
+      {/* Farms Table */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Farm Name
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Location
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Owner
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Size/Capacity
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Contact
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {farms.map((farm) => (
+                <tr key={farm._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">
+                    {farm.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                    {farm.location}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                    {farm.owner}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                    {farm.size ? `${farm.size} acres` : 'N/A'}
+                    <br />
+                    {farm.capacity ? `${farm.capacity} birds` : 'N/A'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                    {farm.contact.phone && <div>Phone: {farm.contact.phone}</div>}
+                    {farm.contact.email && <div>Email: {farm.contact.email}</div>}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      farm.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {farm.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleEditFarm(farm)}
+                      className="text-green-600 hover:text-green-900 mr-3"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteFarm(farm._id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        {farms.length === 0 && !loading && (
+          <div className="text-center py-8">
+            <p className="text-gray-500 dark:text-gray-400">No farms found.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Modal for adding/editing farms */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                {editingFarm ? 'Edit Farm' : 'Add New Farm'}
+              </h2>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="px-6 py-4">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Farm Name *
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={editingFarm?.name || ''}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Location *
+                </label>
+                <input
+                  type="text"
+                  name="location"
+                  defaultValue={editingFarm?.location || ''}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Owner *
+                </label>
+                <input
+                  type="text"
+                  name="owner"
+                  defaultValue={editingFarm?.owner || ''}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  name="contact.phone"
+                  defaultValue={editingFarm?.contact?.phone || ''}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="contact.email"
+                  defaultValue={editingFarm?.contact?.email || ''}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Size (acres)
+                </label>
+                <input
+                  type="number"
+                  name="size"
+                  defaultValue={editingFarm?.size || ''}
+                  min="0"
+                  step="0.01"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Capacity (birds)
+                </label>
+                <input
+                  type="number"
+                  name="capacity"
+                  defaultValue={editingFarm?.capacity || ''}
+                  min="0"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Status
+                </label>
+                <select
+                  name="isActive"
+                  defaultValue={editingFarm?.isActive ? 'true' : 'false'}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </div>
+              
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  {editingFarm ? 'Update' : 'Save'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

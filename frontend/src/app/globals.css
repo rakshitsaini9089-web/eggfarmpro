@@ -1,0 +1,495 @@
+/* stylelint-disable at-rule-no-unknown */
+/* These are Tailwind CSS directives - not standard CSS */
+/* Also disabling for @apply directives which are also non-standard */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens – light, clean, green primary theme */
+:root {
+  --foreground-rgb: 15, 23, 42; /* slate-900 */
+  --background-start-rgb: 248, 250, 252; /* slate-50 */
+  --background-end-rgb: 248, 250, 252;
+
+  /* Primary brand – modern green */
+  --primary: 34, 197, 94;       /* #22C55E */
+  --primary-light: 52, 211, 153;/* #34D399 */
+  --primary-dark: 22, 163, 74;  /* #16A34A */
+  --primary-x-dark: 21, 128, 61;
+
+  --secondary: 240, 253, 244;   /* soft green background */
+  --accent: 59, 130, 246;
+  --accent-dark: 37, 99, 235; /* #2563eb */
+  --success: 16, 185, 129;
+  --warning: 245, 158, 11;
+  --warning-dark: 217, 119, 6; /* #d97706 */
+  --danger: 239, 68, 68;
+  --danger-dark: 220, 38, 38; /* #dc2626 */
+  --white: 255, 255, 255;
+  --gray-50: 248, 250, 252;
+  --gray-100: 241, 245, 249;
+  --gray-200: 226, 232, 240;
+  --gray-300: 203, 213, 225;
+  --gray-400: 148, 163, 184;
+  --gray-500: 100, 116, 139;
+  --gray-600: 71, 85, 105;
+  --gray-700: 51, 65, 85;
+  --gray-800: 30, 41, 59;
+  --gray-900: 15, 23, 42;
+}
+
+[data-theme="dark"] {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 17, 24, 39; /* gray-900 */
+  --background-end-rgb: 17, 24, 39; /* gray-900 */
+  --gray-50: 249, 250, 251;
+  --gray-100: 243, 244, 246;
+  --gray-200: 229, 231, 235;
+  --gray-300: 209, 213, 219;
+  --gray-400: 156, 163, 175;
+  --gray-500: 107, 114, 128;
+  --gray-600: 75, 85, 99;
+  --gray-700: 55, 65, 81;
+  --gray-800: 31, 41, 55;
+  --gray-900: 17, 24, 39;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Typography improvements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+h1 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+h2 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+/* Interactive element cursors */
+button,
+a,
+input[type='button'],
+input[type='submit'],
+input[type='reset'] {
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  color: rgb(var(--gray-900));
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  color: rgb(var(--white));
+}
+
+/* Card component styles */
+.card {
+  background-color: rgb(var(--white));
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(var(--gray-900), 0.1), 0 2px 4px -1px rgba(var(--gray-900), 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(var(--gray-200), 0.7);
+  overflow: hidden;
+  contain: layout style;
+}
+
+[data-theme="dark"] .card {
+  background-color: rgb(var(--gray-800));
+  border-color: rgb(var(--gray-700));
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(var(--gray-900), 0.1), 0 4px 6px -2px rgba(var(--gray-900), 0.05);
+  border-color: rgba(var(--primary-light), 0.5);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(var(--gray-200));
+  background-color: rgb(var(--secondary));
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+[data-theme="dark"] .card-header {
+  border-color: rgb(var(--gray-700));
+  background-color: rgb(var(--gray-700));
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgb(var(--gray-800));
+  position: relative;
+  padding-bottom: 8px;
+}
+
+[data-theme="dark"] .card-title {
+  color: rgb(var(--white));
+}
+
+.card-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, rgb(var(--primary)), rgb(var(--primary-light)));
+  border-radius: 2px;
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--white), 0.5), 0 0 0 4px rgba(var(--primary), 0.5);
+}
+
+.btn-primary {
+  color: rgb(var(--white));
+  background: linear-gradient(135deg, rgb(var(--primary)), rgb(var(--primary-dark)));
+  border: none;
+  box-shadow: 0 4px 6px rgba(var(--primary), 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--white), 0.5), 0 0 0 4px rgba(var(--primary), 0.5);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgb(var(--primary-dark)), rgb(var(--primary-x-dark)));
+  box-shadow: 0 6px 8px rgba(var(--primary), 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(var(--primary), 0.2);
+}
+
+.btn-secondary {
+  background-color: rgb(var(--gray-200));
+  color: rgb(var(--gray-800));
+}
+
+.btn-secondary:hover {
+  background-color: rgb(var(--gray-300));
+}
+
+[data-theme="dark"] .btn-secondary {
+  background-color: rgb(var(--gray-700));
+  color: rgb(var(--white));
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+  background-color: rgb(var(--gray-600));
+}
+
+.btn-secondary:focus {
+  box-shadow: 0 0 0 2px rgba(var(--white), 0.5), 0 0 0 4px rgba(var(--gray-500), 0.5);
+}
+
+.btn-success {
+  background-color: rgb(var(--success));
+  color: rgb(var(--white));
+}
+
+.btn-success:hover {
+  background-color: rgb(var(--primary-x-dark));
+}
+
+.btn-success:focus {
+  box-shadow: 0 0 0 2px rgba(var(--white), 0.5), 0 0 0 4px rgba(var(--success), 0.5);
+}
+
+.btn-danger {
+  background-color: rgb(var(--danger));
+  color: rgb(var(--white));
+}
+
+.btn-danger:hover {
+  background-color: rgb(var(--danger-dark));
+}
+
+.btn-danger:focus {
+  box-shadow: 0 0 0 2px rgba(var(--white), 0.5), 0 0 0 4px rgba(var(--danger), 0.5);
+}
+
+.btn-warning {
+  background-color: rgb(var(--warning));
+  color: rgb(var(--white));
+}
+
+.btn-warning:hover {
+  background-color: rgb(var(--warning-dark));
+}
+
+.btn-warning:focus {
+  box-shadow: 0 0 0 2px rgba(var(--white), 0.5), 0 0 0 4px rgba(var(--warning), 0.5);
+}
+
+.btn-accent {
+  background-color: rgb(var(--accent));
+  color: rgb(var(--white));
+}
+
+.btn-accent:hover {
+  background-color: rgb(var(--accent-dark));
+}
+
+.btn-accent:focus {
+  box-shadow: 0 0 0 2px rgba(var(--white), 0.5), 0 0 0 4px rgba(var(--accent), 0.5);
+}
+
+.btn-outline {
+  border: 1px solid rgb(var(--gray-300));
+  background-color: transparent;
+  color: rgb(var(--gray-700));
+}
+
+.btn-outline:hover {
+  background-color: rgb(var(--gray-100));
+}
+
+[data-theme="dark"] .btn-outline {
+  border-color: rgb(var(--gray-600));
+  color: rgb(var(--gray-300));
+}
+
+[data-theme="dark"] .btn-outline:hover {
+  background-color: rgb(var(--gray-700));
+}
+
+.btn-outline:focus {
+  box-shadow: 0 0 0 2px rgba(var(--white), 0.5), 0 0 0 4px rgba(var(--gray-500), 0.5);
+}
+
+/* Form elements */
+.form-input, .form-select, .form-textarea {
+  display: block;
+  width: 100%;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 1px solid rgb(var(--gray-300));
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(var(--gray-900), 0.05);
+  outline: none;
+  background-color: rgb(var(--white));
+  transition: all 0.3s ease;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary), 0.3);
+  border-color: rgb(var(--primary-light));
+}
+
+[data-theme="dark"] .form-input, 
+[data-theme="dark"] .form-select, 
+[data-theme="dark"] .form-textarea {
+  border-color: rgb(var(--gray-600));
+  background-color: rgb(var(--gray-800));
+  color: rgb(var(--white));
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(var(--gray-700));
+  margin-bottom: 0.25rem;
+}
+
+[data-theme="dark"] .form-label {
+  color: rgb(var(--gray-300));
+}
+
+/* Custom Scrollbar Styles - Light Mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--gray-100));
+  border-radius: 10px;
+  margin: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--gray-300));
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--primary-light));
+  transform: scaleY(1.1);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgb(var(--primary));
+}
+
+::-webkit-scrollbar-corner {
+  background: rgb(var(--gray-100));
+}
+
+/* Firefox Scrollbar - Light Mode */
+*:not([data-theme="dark"]) {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--gray-300)) rgb(var(--gray-100));
+}
+
+*:not([data-theme="dark"]):hover {
+  scrollbar-color: rgb(var(--primary-light)) rgb(var(--gray-100));
+}
+
+/* Dark Mode Scrollbar Styles */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: rgb(var(--gray-800));
+  border-radius: 10px;
+  margin: 2px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgb(var(--gray-600));
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--primary-light));
+  transform: scaleY(1.1);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:active {
+  background: rgb(var(--primary));
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-corner {
+  background: rgb(var(--gray-800));
+}
+
+/* Firefox Dark Mode Scrollbar */
+[data-theme="dark"] * {
+  scrollbar-color: rgb(var(--gray-600)) rgb(var(--gray-800));
+}
+
+[data-theme="dark"] *:hover {
+  scrollbar-color: rgb(var(--primary-light)) rgb(var(--gray-800));
+}
+
+/* Gradient backgrounds */
+.bg-gradient-primary {
+  background-image: linear-gradient(to right, rgb(var(--primary)), rgb(var(--primary-dark)));
+}
+
+.bg-gradient-secondary {
+  background-image: linear-gradient(to right, rgb(var(--secondary)), rgb(var(--gray-100)));
+}
+
+[data-theme="dark"] .bg-gradient-secondary {
+  background-image: linear-gradient(to right, rgb(var(--gray-700)), rgb(var(--gray-900)));
+}
+
+/* Animation utilities */
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Shadow enhancements */
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(var(--gray-900), 0.1), 0 10px 10px -5px rgba(var(--gray-900), 0.04);
+}
+
+.shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(var(--gray-900), 0.25);
+}
+
+/* Fix for missing danger-dark and warning-dark variables */
+.danger-dark {
+  --danger-dark: 220, 38, 38;
+}
+
+.warning-dark {
+  --warning-dark: 234, 88, 12;
+}
+
+.accent-dark {
+  --accent-dark: 59, 130, 246;
+}
