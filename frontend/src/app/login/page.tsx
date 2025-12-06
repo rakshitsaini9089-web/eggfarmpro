@@ -219,7 +219,7 @@ export default function LoginPage() {
                     
                     <div className="form-group d-flex align-items-center justify-content-between">
                       <div className="d-flex align-items-center">
-                        <label className="checkbox-wrap checkbox-primary text-white mb-0" style={{ fontWeight: 400, cursor: 'pointer' }}>
+                        <label className="checkbox-wrap checkbox-primary text-white mb-0" style={{ fontWeight: 400, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                           <input type="checkbox" defaultChecked style={{ cursor: 'pointer', marginRight: '8px' }} />
                           <span className="checkmark"></span>
                           Remember Me
@@ -249,7 +249,7 @@ export default function LoginPage() {
                   {/* Copyright Notice */}
                   <div className="mt-4 text-center">
                     <p className="text-white mb-0" style={{ fontSize: '0.8rem', opacity: 0.7 }}>
-                      © {new Date().getFullYear()} Egg Farm Pro. All rights reserved.
+                      © {new Date().getFullYear()} Egg Farm Pro. All rights reserved. Made with ❤️ by Rakxx.
                     </p>
                   </div>
                 </div>
