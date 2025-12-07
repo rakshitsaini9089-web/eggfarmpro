@@ -381,18 +381,23 @@ export default function WeightTrackingPage() {
                 {weightTrackings.map((weightTracking) => (
                   <tr key={weightTracking._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                      <span className="sm:hidden">Batch: </span>
                       {weightTracking.batchId.name}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                      <span className="sm:hidden">Date: </span>
                       {formatDate(weightTracking.date)}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                      <span className="sm:hidden">Weight: </span>
                       {weightTracking.averageWeight} {weightTracking.unit}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden md:table-cell">
+                      <span className="md:hidden">Sample: </span>
                       {weightTracking.sampleSize} chicks
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">
+                      <span className="lg:hidden">Deviation: </span>
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         weightTracking.deviation && weightTracking.deviation < -10 
                           ? 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100' 

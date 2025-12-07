@@ -265,7 +265,7 @@ export default function PaymentsPage() {
                           <span className="sm:hidden">Client: </span>
                           {payment.clientName}
                         </td>
-                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                           <span className="sm:hidden">Sale Date: </span>
                           {new Date(payment.saleDate).toLocaleDateString()}
                         </td>
@@ -273,15 +273,15 @@ export default function PaymentsPage() {
                           <span className="sm:hidden">Amount: </span>
                           ₹{(payment.amount || 0).toLocaleString()}
                         </td>
-                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden md:table-cell">
                           <span className="sm:hidden">Method: </span>
                           {getPaymentMethodLabel(payment.paymentMethod)}
                         </td>
-                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden lg:table-cell">
                           <span className="sm:hidden">UTR: </span>
                           {payment.utr || '-'}
                         </td>
-                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                           <span className="sm:hidden">Payment Date: </span>
                           {new Date(payment.date).toLocaleDateString()}
                         </td>

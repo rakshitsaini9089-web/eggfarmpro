@@ -354,16 +354,6 @@ export default function Layout({ children }: LayoutProps) {
                       <UserIcon className="w-4 h-4" />
                       <span>Profile</span>
                     </button>
-                    <button
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        router.push('/settings');
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition flex items-center space-x-2"
-                    >
-                      <Cog6ToothIcon className="w-4 h-4" />
-                      <span>Settings</span>
-                    </button>
                     <hr className="my-2 border-gray-200 dark:border-gray-600" />
                     <button
                       onClick={handleLogout}

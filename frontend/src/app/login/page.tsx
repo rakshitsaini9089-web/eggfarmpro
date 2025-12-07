@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Head from 'next/head';
@@ -11,9 +11,20 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
+
+  // Check if we're on the client side
+  useEffect(() => {
+    setIsClient(true);
+    
+    // If user is already authenticated, redirect to dashboard
+    if (isAuthenticated) {
+      router.push('/');
+    }
+  }, [isAuthenticated, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +53,16 @@ export default function LoginPage() {
     // Alternative: Navigate to a dedicated forgot password page
     // router.push('/forgot-password');
   };
+
+  // Don't render anything on the server side to avoid hydration issues
+  if (!isClient) {
+    return null;
+  }
+
+  // If user is already authenticated, don't show the login form
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <>
@@ -79,7 +100,7 @@ export default function LoginPage() {
                   backgroundColor: 'rgba(255, 255, 255, 0.15)', 
                   backdropFilter: 'blur(10px)', 
                   borderRadius: '15px', 
-                  padding: '2.5rem !important',
+                  padding: '2.5rem',
                   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                   border: '1px solid rgba(255, 255, 255, 0.18)',
                   transform: 'translateY(0)',
@@ -94,7 +115,7 @@ export default function LoginPage() {
                   e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
                 }}
                 >
-                  <h3 className="mb-4 text-center text-white" style={{ fontWeight: 500, fontSize: '1.5rem' }}>Sign In</h3>
+                  <h3 className="mb-4 text-center text-white" style={{ fontWeight: 500, fontSize: '1.5rem' }}>Access Your Account</h3>
                   <form action="#" className="signin-form" onSubmit={handleSubmit}>
                     {error && (
                       <div className="rounded-lg px-4 py-3 text-sm text-white mb-4 animate__animated animate__shakeX" style={{ backgroundColor: 'rgba(220, 53, 69, 0.9)', borderRadius: '8px' }}>
@@ -106,7 +127,7 @@ export default function LoginPage() {
                       <input 
                         type="text" 
                         className="form-control" 
-                        placeholder="Username" 
+                        placeholder="Username or Email" 
                         required 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -197,22 +218,24 @@ export default function LoginPage() {
                           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
                           background: 'rgba(255, 255, 255, 0.15)',
                           backdropFilter: 'blur(10px)',
-                          color: 'black',
+                          color: 'white',
                           fontSize: '16px',
                           fontWeight: 500,
-                          cursor: 'pointer',
+                          cursor: loading ? 'not-allowed' : 'pointer',
                           outline: 'none',
                           position: 'relative',
                           zIndex: 10
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)';
-                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.7)';
-                          e.currentTarget.style.boxShadow = '0 6px 8px rgba(0, 0, 0, 0.4)';
+                          if (!loading) {
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)';
+                            e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.7)';
+                            e.currentTarget.style.boxShadow = '0 6px 8px rgba(0, 0, 0, 0.4)';
+                          }
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
-                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                          e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.3)';
                           e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.3)';
                         }}
                       >
@@ -233,7 +256,7 @@ export default function LoginPage() {
                               border: '1px solid rgba(0, 0, 0, 0.2)',
                               marginLeft: '10px',
                               transition: 'all 0.3s ease',
-                              color: 'black',
+                              color: 'white',
                               fontSize: '14px'
                             }}
                           >
@@ -304,18 +327,18 @@ export default function LoginPage() {
           height: 16px;
           width: 16px;
           background-color: transparent;
-          border: 2px solid rgba(255, 255, 255, 0.8);
+          border: 1px solid rgba(255, 255, 255, 0.5);
           border-radius: 3px;
-          transition: all 0.3s;
+          transition: all 0.2s ease;
         }
         
         .checkbox-primary:hover input ~ .checkmark {
-          border-color: rgba(255, 255, 255, 1);
+          background-color: rgba(255, 255, 255, 0.1);
         }
         
         .checkbox-primary input:checked ~ .checkmark {
-          background-color: transparent;
-          border-color: rgba(255, 255, 255, 1);
+          background-color: #4CAF50;
+          border-color: #4CAF50;
         }
         
         .checkmark:after {
@@ -330,61 +353,15 @@ export default function LoginPage() {
         
         .checkbox-primary .checkmark:after {
           left: 5px;
-          top: 2px;
+          top: 1px;
           width: 5px;
-          height: 10px;
+          height: 8px;
           border: solid white;
           border-width: 0 2px 2px 0;
           transform: rotate(45deg);
         }
         
-        .field-icon {
-          cursor: pointer;
-        }
-        
-        .form-control {
-          background-color: rgba(255, 255, 255, 0.9);
-          border: 1px solid transparent;
-          border-radius: 8px;
-          padding: 14px 20px;
-          font-size: 16px;
-          font-weight: 400;
-          width: 100%;
-          box-sizing: border-box;
-          transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-          background-color: #4CAF50;
-          border: 1px solid transparent;
-          border-radius: 8px;
-          padding: 14px;
-          font-size: 16px;
-          font-weight: 500;
-          transition: all 0.3s ease;
-          width: 100%;
-          box-sizing: border-box;
-        }
-        
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-          20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
-        .animate__shakeX {
-          animation: shake 0.5s ease;
-        }
-        
-        /* Animated Gradient Button */
         .button-85 {
-          padding: 14px 20px;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-radius: 8px;
-          width: 100%;
-          box-sizing: border-box;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
           background: rgba(255, 255, 255, 0.15);
           backdrop-filter: blur(10px);
           color: white;
@@ -396,7 +373,7 @@ export default function LoginPage() {
           z-index: 10;
         }
 
-        .button-85:hover {
+        .button-85:hover:not(:disabled) {
           background: rgba(255, 255, 255, 0.25);
           border-color: rgba(255, 255, 255, 0.7);
           box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);

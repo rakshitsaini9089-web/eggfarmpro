@@ -318,24 +318,31 @@ export default function MedicinePage() {
                 {medicines.map((medicine) => (
                   <tr key={medicine._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                      <span className="sm:hidden">Medicine: </span>
                       {medicine.name}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden sm:table-cell">
+                      <span className="sm:hidden">Batch: </span>
                       {medicine.batchId.name}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                      <span className="sm:hidden">Dose: </span>
                       {medicine.dose}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden md:table-cell">
+                      <span className="md:hidden">Purpose: </span>
                       {medicine.purpose}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                      <span className="sm:hidden">Administered: </span>
                       {formatDate(medicine.administeredDate)}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">
+                      <span className="lg:hidden">Withdrawal: </span>
                       {medicine.withdrawalPeriod} {medicine.withdrawalPeriodUnit}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">
+                      <span className="lg:hidden">Cost: </span>
                       {medicine.cost ? `₹${medicine.cost.toFixed(2)}` : 'N/A'}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm font-medium text-right">

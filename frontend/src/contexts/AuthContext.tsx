@@ -90,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (usernameOrEmail: string, password: string) => {
     try {
       let url = `${API_BASE_URL}/auth/login`;
-      let fetchOptions = {
+      let fetchOptions: RequestInit = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,6 +110,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
       }
       
+      console.log('Attempting login to:', url);
+      
       const response = await fetch(url, fetchOptions);
 
       if (!response.ok) {
@@ -120,7 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           errorMessage = errorData.message || errorMessage;
         } catch (e) {
           // If we can't parse the error response, use the status text
-          errorMessage = `Login failed: ${response.statusText}`;
+          errorMessage = `Login failed: ${response.statusText} (${response.status})`;
         }
         throw new Error(errorMessage);
       }

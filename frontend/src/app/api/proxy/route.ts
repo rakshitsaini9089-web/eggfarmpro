@@ -24,6 +24,8 @@ export async function POST(request: NextRequest) {
     // Forward the request to the backend
     const backendUrl = `http://localhost:5001/api${endpoint}`;
     
+    console.log('Proxying POST request to:', backendUrl);
+    
     const backendResponse = await fetch(backendUrl, {
       method: 'POST',
       headers: {
@@ -77,6 +79,8 @@ export async function GET(request: NextRequest) {
     
     // Forward the request to the backend
     const backendUrl = `http://localhost:5001/api${endpoint}`;
+    
+    console.log('Proxying GET request to:', backendUrl);
     
     const backendResponse = await fetch(backendUrl, {
       method: 'GET',

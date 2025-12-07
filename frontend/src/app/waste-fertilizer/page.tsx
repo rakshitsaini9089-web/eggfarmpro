@@ -259,22 +259,22 @@ export default function WasteFertilizerPage() {
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Date
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Type
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Quantity
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">
                   Batch
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Details
                 </th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th scope="col" className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -282,10 +282,11 @@ export default function WasteFertilizerPage() {
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {filteredRecords.map((record) => (
                 <tr key={record._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                  <td className="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+                    <span className="sm:hidden">Date: </span>
                     {new Date(record.date).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       record.type === 'waste' 
                         ? 'bg-red-100 text-red-800' 
@@ -294,28 +295,33 @@ export default function WasteFertilizerPage() {
                       {record.type.charAt(0).toUpperCase() + record.type.slice(1)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                  <td className="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+                    <span className="sm:hidden">Quantity: </span>
                     {record.quantity} {record.unit}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                  <td className="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-gray-300 hidden sm:table-cell">
+                    <span className="sm:hidden">Batch: </span>
                     {record.batchId ? record.batchId.name : 'N/A'}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+                  <td className="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+                    <span className="sm:hidden">Details: </span>
                     {record.saleAmount ? `Sold for ₹${record.saleAmount}` : record.notes}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      onClick={() => handleEditRecord(record)}
-                      className="text-green-600 hover:text-green-900 mr-3"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteRecord(record._id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
+                  <td className="px-3 sm:px-6 py-4 text-sm font-medium text-right">
+                    <div className="flex gap-2 justify-end flex-wrap">
+                      <button
+                        onClick={() => handleEditRecord(record)}
+                        className="text-green-600 hover:text-green-900 text-xs sm:text-sm mr-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteRecord(record._id)}
+                        className="text-red-600 hover:text-red-900 text-xs sm:text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -383,12 +383,28 @@ function ReportsPage() {
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {allFarmsFinancials.map((farmFin, index) => (
                       <tr key={index}>
-                        <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900">{farmFin.farm.name}</td>
-                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden sm:table-cell">{farmFin.farm.location}</td>
-                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500">₹{farmFin.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden md:table-cell">₹{farmFin.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">₹{farmFin.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900">
+                          <span className="sm:hidden">Farm: </span>
+                          {farmFin.farm.name}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden sm:table-cell">
+                          <span className="sm:hidden">Location: </span>
+                          {farmFin.farm.location}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500">
+                          <span className="sm:hidden">Sales: </span>
+                          ₹{farmFin.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden md:table-cell">
+                          <span className="md:hidden">Payments: </span>
+                          ₹{farmFin.totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">
+                          <span className="lg:hidden">Expenses: </span>
+                          ₹{farmFin.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </td>
                         <td className={`px-3 sm:px-6 py-4 text-sm font-medium ${farmFin.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          <span className="sm:hidden">Profit/Loss: </span>
                           ₹{farmFin.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           <span className="text-xs font-normal ml-1">
                             ({farmFin.totalProfit >= 0 ? 'Profit' : 'Loss'})
@@ -587,10 +603,10 @@ function ReportsPage() {
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Client</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Trays</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount (₹)</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Client</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">Trays</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount (₹)</th>
                   </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -599,16 +615,20 @@ function ReportsPage() {
                     .slice(0, 5)
                     .map((sale) => (
                       <tr key={sale._id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="sm:hidden">Date: </span>
                           {new Date(sale.date).toLocaleDateString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                        <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">
+                          <span className="sm:hidden">Client: </span>
                           {sale.clientName}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
+                          <span className="sm:hidden">Trays: </span>
                           {sale.trays}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="sm:hidden">Amount: </span>
                           ₹{(sale.totalAmount || 0).toLocaleString()}
                         </td>
                       </tr>
@@ -629,10 +649,10 @@ function ReportsPage() {
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Client</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Payment Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount (₹)</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Method</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Client</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Payment Date</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount (₹)</th>
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">Method</th>
                   </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -641,16 +661,20 @@ function ReportsPage() {
                     .slice(0, 5)
                     .map((payment) => (
                       <tr key={payment._id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                        <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">
+                          <span className="sm:hidden">Client: </span>
                           {payment.clientName}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="sm:hidden">Payment Date: </span>
                           {new Date(payment.date).toLocaleDateString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="sm:hidden">Amount: </span>
                           ₹{(payment.amount || 0).toLocaleString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
+                          <span className="sm:hidden">Method: </span>
                           {payment.paymentMethod === 'cash' ? 'Cash' : 'UPI'}
                         </td>
                       </tr>

@@ -381,18 +381,23 @@ export default function FeedConsumptionPage() {
                 {feedConsumptions.map((feedConsumption) => (
                   <tr key={feedConsumption._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                      <span className="sm:hidden">Batch: </span>
                       {feedConsumption.batchId.name}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                      <span className="sm:hidden">Date: </span>
                       {formatDate(feedConsumption.date)}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden sm:table-cell">
+                      <span className="sm:hidden">Feed Type: </span>
                       {feedConsumption.feedType}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                      <span className="sm:hidden">Quantity: </span>
                       {feedConsumption.quantity} {feedConsumption.unit}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden md:table-cell">
+                      <span className="md:hidden">FCR: </span>
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         feedConsumption.fcr && feedConsumption.fcr > 2 
                           ? 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100' 
@@ -402,6 +407,7 @@ export default function FeedConsumptionPage() {
                       </span>
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-300 hidden lg:table-cell">
+                      <span className="lg:hidden">Weight Gain: </span>
                       {feedConsumption.weightGain ? `${feedConsumption.weightGain} kg` : 'N/A'}
                     </td>
                     <td className="px-3 sm:px-6 py-4 text-sm font-medium text-right">
