@@ -806,13 +806,91 @@ const DashboardPage = () => {
                 <label className="block text-gray-700 dark:text-gray-300 mb-2">Upload UPI Screenshot</label>
                 <UploadReader 
                   onUpload={(data: any) => {
+                    console.log('=== DASHBOARD UPI DATA RECEIVED ===');
+                    console.log('Full UPI data object:', data);
+                    console.log('Amount field:', data.amount);
+                    console.log('Amount type:', typeof data.amount);
+                    console.log('Amount length:', data.amount ? data.amount.length : 'N/A');
+                    console.log('Amount char codes:', data.amount ? data.amount.split('').map((c: string) => c.charCodeAt(0)) : 'N/A');
+                    
+                    // Parse amount safely - ULTIMATE FORCE APPROACH
+                    let parsedAmount = 0;
+                    
+                    if (data.amount) {
+                      console.log('=== PROCESSING AMOUNT ===');
+                      
+                      if (typeof data.amount === 'string') {
+                        console.log('Processing string amount:', data.amount);
+                        
+                        // ULTIMATE CLEANING APPROACH
+                        // Step 1: Log the raw string
+                        console.log('Raw amount string:', JSON.stringify(data.amount));
+                        
+                        // Step 2: Remove all non-numeric characters except decimal point
+                        let cleanAmount = data.amount.replace(/[^0-9.]/g, '');
+                        console.log('After cleaning non-numeric:', JSON.stringify(cleanAmount));
+                        
+                        // Step 3: Handle multiple decimal points
+                        const decimalPoints = (cleanAmount.match(/\./g) || []).length;
+                        console.log('Decimal points found:', decimalPoints);
+                        
+                        if (decimalPoints > 1) {
+                          // Keep only the last decimal point
+                          const parts = cleanAmount.split('.');
+                          cleanAmount = parts.slice(0, -1).join('') + '.' + parts[parts.length - 1];
+                          console.log('After fixing decimal points:', JSON.stringify(cleanAmount));
+                        }
+                        
+                        // Step 4: Parse the amount
+                        parsedAmount = parseFloat(cleanAmount);
+                        console.log('Parsed amount:', parsedAmount);
+                        
+                        // Step 5: Validate
+                        if (isNaN(parsedAmount) || parsedAmount <= 0) {
+                          console.log('Primary parsing failed, trying alternatives');
+                          
+                          // Alternative 1: Extract first number pattern
+                          const numberMatch = data.amount.match(/\d+(?:\.\d+)?/);
+                          if (numberMatch) {
+                            parsedAmount = parseFloat(numberMatch[0]);
+                            console.log('Alternative 1 (first number):', parsedAmount);
+                          }
+                          
+                          // Alternative 2: Extract all numbers and take the first
+                          if (isNaN(parsedAmount) || parsedAmount <= 0) {
+                            const allNumbers = data.amount.match(/\d+/g);
+                            if (allNumbers && allNumbers.length > 0) {
+                              parsedAmount = parseFloat(allNumbers[0]);
+                              console.log('Alternative 2 (first of all numbers):', parsedAmount);
+                            }
+                          }
+                        }
+                        
+                        console.log('Final parsed amount from string:', parsedAmount);
+                      } else if (typeof data.amount === 'number') {
+                        parsedAmount = data.amount;
+                        console.log('Using numeric amount directly:', parsedAmount);
+                      }
+                      
+                      // Final validation
+                      if (isNaN(parsedAmount) || parsedAmount <= 0 || parsedAmount > 10000000) {
+                        console.log('Amount validation failed, resetting to 0');
+                        parsedAmount = 0;
+                      }
+                      
+                      console.log('=== FINAL AMOUNT TO USE:', parsedAmount, '===');
+                    }
+                    
                     // Auto-fill form fields with extracted UPI data
+                    console.log('Updating form with amount:', parsedAmount);
                     setFormData(prev => ({
                       ...prev,
-                      amount: data.amount ? parseFloat(data.amount) : prev.amount,
+                      amount: (parsedAmount && parsedAmount > 0) ? parsedAmount : prev.amount,
                       upi_id: data.upi_id || prev.upi_id,
                       utr: data.txnid || prev.utr
                     }));
+                    
+                    console.log('Form updated with new amount');
                   }}
                 />
               </div>

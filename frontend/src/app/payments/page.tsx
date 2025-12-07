@@ -391,13 +391,92 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
 
   // Handle UPI data from UploadReader
   const handleUpiUpload = (upiData: any) => {
+    console.log('=== UPI DATA RECEIVED ===');
+    console.log('Full UPI data object:', upiData);
+    console.log('Amount field:', upiData.amount);
+    console.log('Amount type:', typeof upiData.amount);
+    console.log('Amount length:', upiData.amount ? upiData.amount.length : 'N/A');
+    console.log('Amount char codes:', upiData.amount ? upiData.amount.split('').map((c: string) => c.charCodeAt(0)) : 'N/A');
+    
+    // Parse amount safely - ULTIMATE FORCE APPROACH
+    let parsedAmount = 0;
+    
+    if (upiData.amount) {
+      console.log('=== PROCESSING AMOUNT ===');
+      
+      if (typeof upiData.amount === 'string') {
+        console.log('Processing string amount:', upiData.amount);
+        
+        // ULTIMATE CLEANING APPROACH
+        // Step 1: Log the raw string
+        console.log('Raw amount string:', JSON.stringify(upiData.amount));
+        
+        // Step 2: Remove all non-numeric characters except decimal point
+        let cleanAmount = upiData.amount.replace(/[^0-9.]/g, '');
+        console.log('After cleaning non-numeric:', JSON.stringify(cleanAmount));
+        
+        // Step 3: Handle multiple decimal points
+        const decimalPoints = (cleanAmount.match(/\./g) || []).length;
+        console.log('Decimal points found:', decimalPoints);
+        
+        if (decimalPoints > 1) {
+          // Keep only the last decimal point
+          const parts = cleanAmount.split('.');
+          cleanAmount = parts.slice(0, -1).join('') + '.' + parts[parts.length - 1];
+          console.log('After fixing decimal points:', JSON.stringify(cleanAmount));
+        }
+        
+        // Step 4: Parse the amount
+        parsedAmount = parseFloat(cleanAmount);
+        console.log('Parsed amount:', parsedAmount);
+        
+        // Step 5: Validate
+        if (isNaN(parsedAmount) || parsedAmount <= 0) {
+          console.log('Primary parsing failed, trying alternatives');
+          
+          // Alternative 1: Extract first number pattern
+          const numberMatch = upiData.amount.match(/\d+(?:\.\d+)?/);
+          if (numberMatch) {
+            parsedAmount = parseFloat(numberMatch[0]);
+            console.log('Alternative 1 (first number):', parsedAmount);
+          }
+          
+          // Alternative 2: Extract all numbers and take the first
+          if (isNaN(parsedAmount) || parsedAmount <= 0) {
+            const allNumbers = upiData.amount.match(/\d+/g);
+            if (allNumbers && allNumbers.length > 0) {
+              parsedAmount = parseFloat(allNumbers[0]);
+              console.log('Alternative 2 (first of all numbers):', parsedAmount);
+            }
+          }
+        }
+        
+        console.log('Final parsed amount from string:', parsedAmount);
+      } else if (typeof upiData.amount === 'number') {
+        parsedAmount = upiData.amount;
+        console.log('Using numeric amount directly:', parsedAmount);
+      }
+      
+      // Final validation
+      if (isNaN(parsedAmount) || parsedAmount <= 0 || parsedAmount > 10000000) {
+        console.log('Amount validation failed, resetting to 0');
+        parsedAmount = 0;
+      }
+      
+      console.log('=== FINAL AMOUNT TO USE:', parsedAmount, '===');
+    }
+    
     // Auto-fill form fields with extracted UPI data
+    console.log('Updating form with amount:', parsedAmount);
     setFormData(prev => ({
       ...prev,
       paymentMethod: 'upi',
-      amount: upiData.amount ? parseFloat(upiData.amount) : prev.amount,
-      utr: upiData.txnid || prev.utr
+      amount: (parsedAmount && parsedAmount > 0) ? parsedAmount : prev.amount,
+      utr: upiData.txnid || prev.utr,
+      upi_id: upiData.upi_id || prev.upi_id
     }));
+    
+    console.log('Form updated with new amount');
   };
 
   const handleSubmit = (e: React.FormEvent) => {

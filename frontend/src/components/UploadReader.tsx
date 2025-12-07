@@ -91,14 +91,17 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
         setLoading(false);
         
         if (!data.success) {
+          console.log('UPI processing failed:', data);
           alert("Could not read UPI details: " + (data.message || "Unknown error"));
           return;
         }
         
+        console.log('UPI data received:', data);
         setUpiData(data);
         
         // Call the onUpload callback if provided
         if (onUpload) {
+          console.log('Calling onUpload callback with data:', data);
           onUpload(data);
         }
       } else {
@@ -125,14 +128,17 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
         setLoading(false);
 
         if (!data.success) {
+          console.log('UPI processing failed:', data);
           alert("Could not read UPI details: " + (data.message || "Unknown error"));
           return;
         }
 
+        console.log('UPI data received:', data);
         setUpiData(data);
         
         // Call the onUpload callback if provided
         if (onUpload) {
+          console.log('Calling onUpload callback with data:', data);
           onUpload(data);
         }
       }
