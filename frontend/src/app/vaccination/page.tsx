@@ -124,29 +124,6 @@ export default function VaccinationPage() {
     }
   };
 
-  const handleExport = async (format: 'csv' | 'pdf') => {
-    try {
-      setExporting(true);
-      const response = await reportAPI.generate({
-        reportType: 'vaccinations',
-        format,
-      });
-      
-      // Trigger download
-      const link = document.createElement('a');
-      link.href = `/api${response.report.downloadUrl}`;
-      link.download = response.report.filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Failed to export vaccinations:', error);
-      alert('Failed to export vaccinations. Please try again.');
-    } finally {
-      setExporting(false);
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'done': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100';
@@ -177,20 +154,6 @@ export default function VaccinationPage() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Vaccination Schedule</h1>
         <div className="flex space-x-2">
-          <button
-            onClick={() => handleExport('csv')}
-            disabled={exporting}
-            className="btn btn-outline text-xs sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {exporting ? 'Exporting…' : 'Export CSV'}
-          </button>
-          <button
-            onClick={() => handleExport('pdf')}
-            disabled={exporting}
-            className="btn btn-outline text-xs sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {exporting ? 'Exporting…' : 'Export PDF'}
-          </button>
           <button
             onClick={handleAddVaccine}
             className="btn btn-primary text-xs sm:text-sm"

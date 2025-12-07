@@ -1,4 +1,6 @@
-const { exportToCSV, exportToText } = require('../services/reportService');
+const { exportToCSV, exportToText, exportToPDF } = require('../services/reportService');
+const fs = require('fs');
+const path = require('path');
 const Client = require('../models/Client');
 const Sale = require('../models/Sale');
 const Payment = require('../models/Payment');
@@ -457,8 +459,11 @@ async function generateReport(req, res) {
     let result;
     if (format === 'csv') {
       result = exportToCSV(plainData, headers, filename);
+    } else if (format === 'pdf') {
+      // For PDF, generate an actual PDF file
+      result = await exportToPDF(title, plainData, headers, { startDate, endDate }, filename);
     } else {
-      // For PDF, we'll generate a text report as a simple alternative
+      // For other formats, generate a text report as a simple alternative
       result = exportToText(title, plainData, headers, { startDate, endDate }, filename);
     }
     
@@ -504,6 +509,8 @@ function downloadReport(req, res) {
       res.setHeader('Content-Type', 'text/csv');
     } else if (ext === '.txt') {
       res.setHeader('Content-Type', 'text/plain');
+    } else if (ext === '.pdf') {
+      res.setHeader('Content-Type', 'application/pdf');
     } else {
       res.setHeader('Content-Type', 'application/octet-stream');
     }

@@ -87,29 +87,6 @@ export default function ExpensesPage() {
     }
   };
 
-  const handleExport = async (format: 'csv' | 'pdf') => {
-    try {
-      setExporting(true);
-      const response = await reportAPI.generate({
-        reportType: 'expenses',
-        format,
-      });
-      
-      // Trigger download
-      const link = document.createElement('a');
-      link.href = `/api${response.report.downloadUrl}`;
-      link.download = response.report.filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Failed to export expenses:', error);
-      alert('Failed to export expenses. Please try again.');
-    } finally {
-      setExporting(false);
-    }
-  };
-
   const getTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
       feed: 'Feed',
@@ -150,20 +127,6 @@ export default function ExpensesPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => handleExport('csv')}
-            disabled={exporting}
-            className="btn btn-outline text-xs sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {exporting ? 'Exporting…' : 'Export CSV'}
-          </button>
-          <button
-            onClick={() => handleExport('pdf')}
-            disabled={exporting}
-            className="btn btn-outline text-xs sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {exporting ? 'Exporting…' : 'Export PDF'}
-          </button>
           <button
             onClick={handleAddExpense}
             className="btn btn-primary text-xs sm:text-sm"

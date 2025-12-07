@@ -208,23 +208,111 @@ async function generateReport(req, res) {
       console.warn('Failed to generate AI summary:', error.message);
     }
     
-    // For PDF generation, we would typically use a library like pdfkit or html-pdf
-    // For now, we'll return the data that would be used to generate the PDF
+    // Generate PDF report
+    const { exportToPDF } = require('../services/reportService');
     
-    res.json({
-      success: true,
-      data: {
-        ...reportData,
-        aiSummary: aiSummary,
-        generatedAt: new Date()
+    // Prepare data for PDF generation
+    let pdfTitle = '';
+    let pdfData = [];
+    let pdfHeaders = [];
+    
+    switch(reportData.type) {
+      case 'daily':
+        pdfTitle = 'Daily Egg Farm Report';
+        pdfHeaders = ['Metric', 'Value'];
+        pdfData = [
+          { Metric: 'Active Batches', Value: reportData.data.batches },
+          { Metric: 'Eggs Produced', Value: reportData.data.eggsProduced },
+          { Metric: 'Feed Consumed (kg)', Value: reportData.data.feedConsumed },
+          { Metric: 'Mortality', Value: reportData.data.mortality },
+          { Metric: 'Expenses (₹)', Value: reportData.data.expenses.toFixed(2) },
+          { Metric: 'Sales (₹)', Value: reportData.data.sales.toFixed(2) },
+          { Metric: 'Payments Received (₹)', Value: reportData.data.payments.toFixed(2) }
+        ];
+        break;
+      case 'weekly':
+        pdfTitle = 'Weekly Egg Farm Report';
+        pdfHeaders = ['Week', 'Eggs', 'Feed (kg)', 'Mortality', 'Expenses (₹)', 'Sales (₹)'];
+        pdfData = reportData.data.map(week => ({
+          Week: week.week,
+          Eggs: week.eggsProduced,
+          'Feed (kg)': week.feedConsumed,
+          Mortality: week.mortality,
+          'Expenses (₹)': week.expenses.toFixed(2),
+          'Sales (₹)': week.sales.toFixed(2)
+        }));
+        break;
+      case 'monthly':
+        pdfTitle = 'Monthly Egg Farm Report';
+        pdfHeaders = ['Month', 'Eggs', 'Feed (kg)', 'Mortality', 'Expenses (₹)', 'Sales (₹)', 'Payments (₹)'];
+        pdfData = reportData.data.map(month => ({
+          Month: month.month,
+          Eggs: month.eggsProduced,
+          'Feed (kg)': month.feedConsumed,
+          Mortality: month.mortality,
+          'Expenses (₹)': month.expenses.toFixed(2),
+          'Sales (₹)': month.sales.toFixed(2),
+          'Payments (₹)': month.payments.toFixed(2)
+        }));
+        break;
+    }
+    
+    // Generate filename
+    const filename = `ai-${reportData.type}-report-${new Date().toISOString().split('T')[0]}`;
+    
+    // Export to PDF
+    const pdfResult = await exportToPDF(
+      `${pdfTitle} - ${reportData.period.start.toISOString().split('T')[0]} to ${reportData.period.end.toISOString().split('T')[0]}`,
+      pdfData,
+      pdfHeaders,
+      { startDate: reportData.period.start, endDate: reportData.period.end },
+      filename
+    );
+    
+    if (!pdfResult.success) {
+      throw new Error(pdfResult.error || 'Failed to generate PDF');
+    }
+    
+    // NEW: Stream PDF directly to client with proper headers
+    const fs = require('fs');
+    const path = require('path');
+    
+    // Check if file exists
+    if (!fs.existsSync(pdfResult.filePath)) {
+      throw new Error('PDF file was not created');
+    }
+    
+    // Set proper headers for PDF download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="Eggmind_Report.pdf"`);
+    
+    // Stream the PDF file directly to the response
+    const fileStream = fs.createReadStream(pdfResult.filePath);
+    fileStream.pipe(res);
+    
+    // Clean up the file after streaming (optional)
+    fileStream.on('close', () => {
+      // Optionally delete the file after sending
+      // fs.unlinkSync(pdfResult.filePath);
+    });
+    
+    fileStream.on('error', (err) => {
+      console.error('Error streaming PDF:', err);
+      if (!res.headersSent) {
+        res.status(500).json({ 
+          error: 'Failed to stream PDF',
+          details: err.message
+        });
       }
     });
   } catch (error) {
     console.error('Report Generation Error:', error);
-    res.status(500).json({ 
-      error: 'Failed to generate report',
-      details: error.message
-    });
+    if (!res.headersSent) {
+      res.status(500).json({ 
+        error: 'Failed to generate report',
+        details: error.message
+      });
+    }
   }
 }
 

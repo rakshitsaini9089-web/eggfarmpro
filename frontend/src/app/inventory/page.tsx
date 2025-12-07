@@ -246,29 +246,6 @@ export default function InventoryPage() {
     setEditingInventoryItem(null);
   };
 
-  const handleExport = async (format: 'csv' | 'pdf') => {
-    try {
-      setExporting(true);
-      const response = await reportAPI.generate({
-        reportType: 'inventory',
-        format,
-      });
-      
-      // Trigger download
-      const link = document.createElement('a');
-      link.href = `/api${response.report.downloadUrl}`;
-      link.download = response.report.filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Failed to export inventory:', error);
-      alert('Failed to export inventory. Please try again.');
-    } finally {
-      setExporting(false);
-    }
-  };
-
   // Format date for display
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
@@ -297,20 +274,6 @@ export default function InventoryPage() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Inventory Management</h1>
         <div className="flex space-x-2">
-          <button
-            onClick={() => handleExport('csv')}
-            disabled={exporting}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {exporting ? 'Exporting...' : 'Export CSV'}
-          </button>
-          <button
-            onClick={() => handleExport('pdf')}
-            disabled={exporting}
-            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {exporting ? 'Exporting...' : 'Export PDF'}
-          </button>
           <button
             onClick={handleAddNew}
             className="btn btn-primary text-xs sm:text-sm"

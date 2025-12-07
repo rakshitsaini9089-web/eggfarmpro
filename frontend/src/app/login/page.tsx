@@ -35,6 +35,14 @@ export default function LoginPage() {
     }
   };
 
+  const handleForgotPassword = () => {
+    // For now, show an alert with instructions
+    alert('Password reset functionality would be implemented here.\n\nIn a real application, this would send a password reset email to the user.');
+    
+    // Alternative: Navigate to a dedicated forgot password page
+    // router.push('/forgot-password');
+  };
+
   return (
     <>
       <Head>
@@ -61,8 +69,8 @@ export default function LoginPage() {
           <div className="container">
             <div className="row justify-content-center">
               <div className="col-md-6 text-center mb-5">
-                <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)', letterSpacing: '1px' }}>Welcome</h2>
-                <p className="text-white mt-2" style={{ fontSize: '1.2rem', fontWeight: 300, textShadow: '0 1px 5px rgba(0,0,0,0.2)' }}>Ai Powered Egg Farm Operation And Management System.</p>
+                <h2 className="heading-section text-white font-weight-bold" style={{ fontSize: '2.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)', letterSpacing: '1px' }}>Welcome to Egg farm Pro</h2>
+                <p className="text-white mt-2" style={{ fontSize: '1.2rem', fontWeight: 300, textShadow: '0 1px 5px rgba(0,0,0,0.2)' }}>Ai Powered Operation And Management system.</p>
               </div>
             </div>
             <div className="row justify-content-center">
@@ -112,19 +120,15 @@ export default function LoginPage() {
                           width: '100%',
                           boxSizing: 'border-box',
                           transition: 'all 0.3s ease',
-                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
                           color: '#fff',
                           outline: 'none'
                         }}
                         onFocus={(e) => {
-                          e.target.style.boxShadow = '0 0 15px rgba(76, 175, 80, 0.7), 0 4px 6px rgba(0, 0, 0, 0.1)';
-                          e.target.style.borderColor = 'rgba(76, 175, 80, 0.7)';
-                          e.target.style.transform = 'scale(1.02)';
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.7)';
                         }}
                         onBlur={(e) => {
-                          e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
                           e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                          e.target.style.transform = 'scale(1)';
                         }}
                       />
                     </div>
@@ -148,19 +152,15 @@ export default function LoginPage() {
                           width: '100%',
                           boxSizing: 'border-box',
                           transition: 'all 0.3s ease',
-                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
                           color: '#fff',
                           outline: 'none'
                         }}
                         onFocus={(e) => {
-                          e.target.style.boxShadow = '0 0 15px rgba(76, 175, 80, 0.7), 0 4px 6px rgba(0, 0, 0, 0.1)';
-                          e.target.style.borderColor = 'rgba(76, 175, 80, 0.7)';
-                          e.target.style.transform = 'scale(1.02)';
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.7)';
                         }}
                         onBlur={(e) => {
-                          e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
                           e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                          e.target.style.transform = 'scale(1)';
                         }}
                       />
                       <span 
@@ -181,78 +181,91 @@ export default function LoginPage() {
                       ></span>
                     </div>
                     
-                    <div className="form-group mb-4">
+                    <div className="form-group mb-4" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                       <button 
                         type="submit" 
-                        className="form-control btn btn-primary submit px-3 d-flex align-items-center justify-content-center"
+                        className="button-85"
                         disabled={loading}
-                        style={{ 
-                          backgroundColor: '#4CAF50',
-                          border: '1px solid transparent',
+                        style={{
+                          padding: '14px 20px',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
                           borderRadius: '8px',
-                          padding: '14px',
+                          width: '100%',
+                          minWidth: 'auto',
+                          boxSizing: 'border-box',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+                          background: 'rgba(255, 255, 255, 0.15)',
+                          backdropFilter: 'blur(10px)',
+                          color: 'black',
                           fontSize: '16px',
                           fontWeight: 500,
-                          transition: 'all 0.3s ease',
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          boxShadow: '0 4px 15px rgba(76, 175, 80, 0.4)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '1px'
+                          cursor: 'pointer',
+                          outline: 'none',
+                          position: 'relative',
+                          zIndex: 10
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#45a049';
-                          e.currentTarget.style.boxShadow = '0 6px 20px rgba(76, 175, 80, 0.6)';
-                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)';
+                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.7)';
+                          e.currentTarget.style.boxShadow = '0 6px 8px rgba(0, 0, 0, 0.4)';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#4CAF50';
-                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(76, 175, 80, 0.4)';
-                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.3)';
                         }}
                       >
-                        {loading ? (
-                          <>
-                            <i className="fa fa-spinner fa-spin mr-2"></i>
-                            <span>Signing in…</span>
-                          </>
-                        ) : (
-                          <>
-                            <i className="fa fa-arrow-right mr-2"></i>
-                            <span>Sign In</span>
-                          </>
-                        )}
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                          <span>
+                            {loading ? 'Signing in…' : 'Sign In'}
+                          </span>
+                          <span 
+                            className="arrow-circle"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '24px',
+                              height: '24px',
+                              borderRadius: '50%',
+                              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                              border: '1px solid rgba(0, 0, 0, 0.2)',
+                              marginLeft: '10px',
+                              transition: 'all 0.3s ease',
+                              color: 'black',
+                              fontSize: '14px'
+                            }}
+                          >
+                            {loading ? (
+                              <span className="fa fa-spinner fa-spin"></span>
+                            ) : (
+                              <span>→</span>
+                            )}
+                          </span>
+                        </span>
                       </button>
                     </div>
                     
-                    <div className="form-group d-flex justify-content-between align-items-center">
-                      <label className="checkbox-wrap checkbox-primary text-white mb-0" style={{ fontWeight: 400, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                        <input type="checkbox" defaultChecked style={{ cursor: 'pointer', marginRight: '8px' }} />
-                        <span className="checkmark"></span>
-                        Remember Me
-                      </label>
-                      <a href="#" style={{ color: '#fff', fontWeight: 400, textDecoration: 'none', transition: 'color 0.2s ease' }} 
-                         onMouseEnter={(e) => e.currentTarget.style.color = '#a5d6a7'}
+                    <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <label className="checkbox-wrap checkbox-primary text-white mb-0" style={{ fontWeight: 400, cursor: 'pointer', display: 'flex', alignItems: 'center', marginRight: '20px', fontSize: '14px' }}>
+                          <input type="checkbox" defaultChecked style={{ cursor: 'pointer', marginRight: '6px', transform: 'scale(0.8)' }} />
+                          <span className="checkmark"></span>
+                          <span>Remember Me</span>
+                        </label>
+                      </div>
+                      <a href="#" onClick={(e) => { e.preventDefault(); handleForgotPassword(); }} style={{ color: '#fff', fontWeight: 400, textDecoration: 'none', transition: 'color 0.2s ease', whiteSpace: 'nowrap', cursor: 'pointer' }} 
+                         onMouseEnter={(e) => e.currentTarget.style.color = '#ffd700'}
                          onMouseLeave={(e) => e.currentTarget.style.color = '#fff'}>
                         Forgot Password?
                       </a>
                     </div>
-                    
-                    {/* Demo Credentials */}
-                    <div className="mt-4 p-3 rounded" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
-                      <p className="text-white mb-2" style={{ fontWeight: 500, fontSize: '0.9rem' }}>Demo Credentials:</p>
-                      <div className="d-flex justify-content-between">
-                        <div>
-                          <p className="text-white mb-1" style={{ fontSize: '0.8rem' }}><strong>Admin:</strong> admin@example.com</p>
-                          <p className="text-white mb-0" style={{ fontSize: '0.8rem' }}><strong>Password:</strong> admin123</p>
-                        </div>
-                      </div>
-                    </div>
                   </form>
                   
                   {/* Copyright Notice */}
-                  <div className="mt-4 text-center">
-                    <p className="text-white mb-0" style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+                  <div className="mt-6 text-center">
+                    <p className="text-white mb-1" style={{ fontSize: '0.8rem', opacity: 0.7 }}>
                       © {new Date().getFullYear()} Egg Farm Pro. All rights reserved. Crafted with ❤️
                     </p>
                   </div>
@@ -288,19 +301,21 @@ export default function LoginPage() {
           position: absolute;
           top: 0;
           left: 0;
-          height: 20px;
-          width: 20px;
-          background-color: rgba(255, 255, 255, 0.8);
-          border-radius: 4px;
+          height: 16px;
+          width: 16px;
+          background-color: transparent;
+          border: 2px solid rgba(255, 255, 255, 0.8);
+          border-radius: 3px;
           transition: all 0.3s;
         }
         
         .checkbox-primary:hover input ~ .checkmark {
-          background-color: rgba(255, 255, 255, 1);
+          border-color: rgba(255, 255, 255, 1);
         }
         
         .checkbox-primary input:checked ~ .checkmark {
-          background-color: #4CAF50;
+          background-color: transparent;
+          border-color: rgba(255, 255, 255, 1);
         }
         
         .checkmark:after {
@@ -314,10 +329,10 @@ export default function LoginPage() {
         }
         
         .checkbox-primary .checkmark:after {
-          left: 7px;
-          top: 3px;
-          width: 6px;
-          height: 12px;
+          left: 5px;
+          top: 2px;
+          width: 5px;
+          height: 10px;
           border: solid white;
           border-width: 0 2px 2px 0;
           transform: rotate(45deg);
@@ -359,6 +374,45 @@ export default function LoginPage() {
         
         .animate__shakeX {
           animation: shake 0.5s ease;
+        }
+        
+        /* Animated Gradient Button */
+        .button-85 {
+          padding: 14px 20px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 8px;
+          width: 100%;
+          box-sizing: border-box;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(10px);
+          color: white;
+          font-size: 16px;
+          font-weight: 500;
+          cursor: pointer;
+          outline: none;
+          position: relative;
+          z-index: 10;
+        }
+
+        .button-85:hover {
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.7);
+          box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .button-85::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(10px);
+          left: 0;
+          top: 0;
+          border-radius: 8px;
+          z-index: -1;
         }
         
         @media (max-width: 767.98px) {
