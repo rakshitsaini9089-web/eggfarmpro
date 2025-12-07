@@ -29,6 +29,16 @@ export default function SettingsPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
+  // Set the document title when the component mounts
+  useEffect(() => {
+    document.title = 'Settings - Egg Farm Pro';
+    
+    // Cleanup function to reset title when component unmounts
+    return () => {
+      document.title = 'Egg Farm Pro';
+    };
+  }, []);
+
   // Check if user has permission to view user management
   const canManageUsers = user && (user.role === 'owner' || user.role === 'manager');
   // Only owner can create/delete users

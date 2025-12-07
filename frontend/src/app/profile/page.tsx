@@ -1,11 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
+
+  // Set the document title when the component mounts
+  useEffect(() => {
+    document.title = 'Profile - Egg Farm Pro';
+    
+    // Cleanup function to reset title when component unmounts
+    return () => {
+      document.title = 'Egg Farm Pro';
+    };
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto">

@@ -17,8 +17,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the request body and headers
-    const body = await request.text();
+    // Get the authorization header
     const authorizationHeader = request.headers.get('authorization');
     
     // Forward the request to the backend
@@ -26,14 +25,36 @@ export async function POST(request: NextRequest) {
     
     console.log('Proxying POST request to:', backendUrl);
     
-    const backendResponse = await fetch(backendUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(authorizationHeader && { 'Authorization': authorizationHeader }),
-      },
-      body: body,
-    });
+    // Check if the request has multipart form data
+    const contentType = request.headers.get('content-type');
+    let backendResponse;
+    
+    if (contentType && contentType.includes('multipart/form-data')) {
+      // For multipart form data, we need to forward the raw body
+      // Get the raw body as ArrayBuffer
+      const arrayBuffer = await request.arrayBuffer();
+      
+      backendResponse = await fetch(backendUrl, {
+        method: 'POST',
+        headers: {
+          ...(authorizationHeader && { 'Authorization': authorizationHeader }),
+          'content-type': contentType,
+        },
+        body: arrayBuffer,
+      });
+    } else {
+      // For JSON or other data types, handle as before
+      const body = await request.text();
+      
+      backendResponse = await fetch(backendUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authorizationHeader && { 'Authorization': authorizationHeader }),
+        },
+        body: body,
+      });
+    }
 
     // Get the response data
     const data = await backendResponse.text();

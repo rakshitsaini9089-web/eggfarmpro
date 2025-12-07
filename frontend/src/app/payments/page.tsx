@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { clientAPI, saleAPI, paymentAPI } from '../../lib/api';
 import { useFarm } from '../../contexts/FarmContext';
 import { UploadReader } from '@/components/UploadReader';
+import { VoiceInputButton } from '@/components/VoiceInputButton';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 interface Client {
   _id: string;
@@ -42,6 +44,16 @@ export default function PaymentsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingPayment, setEditingPayment] = useState<Payment | null>(null);
   const { selectedFarm } = useFarm();
+
+  // Set the document title when the component mounts
+  useEffect(() => {
+    document.title = 'Payments - Egg Farm Pro';
+    
+    // Cleanup function to reset title when component unmounts
+    return () => {
+      document.title = 'Egg Farm Pro';
+    };
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -204,18 +216,15 @@ export default function PaymentsPage() {
               Track incoming payments and methods against your sales.
             </p>
           </div>
-        </div>
-        
-        <div className="space-y-6">
-          {/* UPI Payment Reader */}
-          <UploadReader />
-          
           <button
             onClick={handleAddPayment}
             className="btn btn-primary text-xs sm:text-sm"
           >
             Add Payment
           </button>
+        </div>
+        
+        <div className="space-y-6">
 
           <div className="card">
             <div className="card-header flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -336,7 +345,9 @@ interface PaymentFormData {
   amount: number;
   paymentMethod: 'cash' | 'upi';
   utr: string;
+  upi_id?: string;
   date: string;
+  description?: string;
 }
 
 function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModalProps) {
@@ -348,6 +359,7 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
     utr: payment?.utr || '',
     date: payment?.date || new Date().toISOString().split('T')[0]
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (payment) {
@@ -371,10 +383,21 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
     }
   }, [payment]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     console.log('Form field changed:', name, '=', value);
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle UPI data from UploadReader
+  const handleUpiUpload = (upiData: any) => {
+    // Auto-fill form fields with extracted UPI data
+    setFormData(prev => ({
+      ...prev,
+      paymentMethod: 'upi',
+      amount: upiData.amount ? parseFloat(upiData.amount) : prev.amount,
+      utr: upiData.txnid || prev.utr
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -391,14 +414,19 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
       return;
     }
     
-    onSave({
-      saleId: formData.saleId,
-      clientId: formData.clientId,
-      amount: parseFloat(formData.amount.toString()),
-      paymentMethod: formData.paymentMethod as 'cash' | 'upi',
-      utr: formData.utr,
-      date: formData.date
-    });
+    setIsSubmitting(true);
+    try {
+      onSave({
+        saleId: formData.saleId,
+        clientId: formData.clientId,
+        amount: parseFloat(formData.amount.toString()),
+        paymentMethod: formData.paymentMethod as 'cash' | 'upi',
+        utr: formData.utr,
+        date: formData.date
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Filter sales by selected client
@@ -415,14 +443,22 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
   });
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-md my-8 max-h-[calc(100vh-2rem)] overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-          {payment ? 'Edit Payment' : 'Add Payment'}
-        </h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 sm:p-4 z-50 overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-md my-4 sm:my-8 max-h-[calc(100vh-2rem)] overflow-y-auto modal-responsive">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white truncate">
+            {payment ? 'Edit Payment' : 'Add Payment'}
+          </h2>
+          <button 
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0 ml-2"
+          >
+            <XMarkIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+          </button>
+        </div>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="payment-clientId">
+          <div className="mb-3 sm:mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-clientId">
               Client
             </label>
             <select
@@ -430,7 +466,7 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
               name="clientId"
               value={formData.clientId}
               onChange={handleChange}
-              className="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               required
             >
               <option value="">Select a client</option>
@@ -442,8 +478,8 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
             </select>
           </div>
           
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="payment-saleId">
+          <div className="mb-3 sm:mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-saleId">
               Sale
             </label>
             <select
@@ -451,7 +487,7 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
               name="saleId"
               value={formData.saleId}
               onChange={handleChange}
-              className="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               required
               disabled={!formData.clientId}
             >
@@ -464,8 +500,8 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
             </select>
           </div>
           
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="payment-amount">
+          <div className="mb-3 sm:mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-amount">
               Amount (₹)
             </label>
             <input
@@ -476,13 +512,13 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
               step="0.01"
               value={formData.amount}
               onChange={handleChange}
-              className="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               required
             />
           </div>
           
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="payment-method">
+          <div className="mb-3 sm:mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-method">
               Payment Method
             </label>
             <select
@@ -490,7 +526,7 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
               name="paymentMethod"
               value={formData.paymentMethod}
               onChange={handleChange}
-              className="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               required
             >
               <option value="cash">Cash</option>
@@ -498,24 +534,69 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
             </select>
           </div>
           
-          {formData.paymentMethod === 'upi' && (
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="payment-utr">
-                UTR Number
-              </label>
-              <input
-                type="text"
-                id="payment-utr"
-                name="utr"
-                value={formData.utr}
-                onChange={handleChange}
-                className="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          <div className="mb-3 sm:mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="payment-description">
+              Description (Optional)
+            </label>
+            <div className="relative">
+              <textarea
+                id="payment-description"
+                name="description"
+                value={formData.description || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10"
+                rows={2}
+                placeholder="Add any notes about this payment..."
               />
+              <div className="absolute right-2 bottom-2">
+                <VoiceInputButton 
+                  onTranscript={(text) => setFormData(prev => ({...prev, description: (prev.description || '') + (prev.description ? ' ' : '') + text}))}
+                  className="p-1"
+                />
+              </div>
+            </div>
+          </div>
+          
+          {formData.paymentMethod === 'upi' && (
+            <>
+              <div className="mb-3 sm:mb-4">
+                <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-utr">
+                  UTR Number
+                </label>
+                <input
+                  type="text"
+                  id="payment-utr"
+                  name="utr"
+                  value={formData.utr}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div className="mb-3 sm:mb-4">
+                <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-upi-id">
+                  UPI ID
+                </label>
+                <input
+                  type="text"
+                  id="payment-upi-id"
+                  name="upi_id"
+                  value={formData.upi_id || ''}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+            </>
+          )}
+          
+          {formData.paymentMethod === 'upi' && (
+            <div className="mb-3 sm:mb-4">
+              <label className="block text-gray-700 dark:text-gray-300 mb-2">Upload UPI Screenshot</label>
+              <UploadReader onUpload={handleUpiUpload} />
             </div>
           )}
           
-          <div className="mb-6">
-            <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="payment-date">
+          <div className="mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-date">
               Payment Date
             </label>
             <input
@@ -524,7 +605,7 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
               name="date"
               value={formData.date}
               onChange={handleChange}
-              className="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               required
             />
           </div>
@@ -534,14 +615,16 @@ function PaymentModal({ payment, clients, sales, onSave, onClose }: PaymentModal
               type="button"
               onClick={onClose}
               className="btn btn-secondary text-xs sm:text-sm"
+              disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
               className="btn btn-primary text-xs sm:text-sm"
+              disabled={isSubmitting}
             >
-              Save
+              {isSubmitting ? 'Saving…' : 'Save Payment'}
             </button>
           </div>
         </form>

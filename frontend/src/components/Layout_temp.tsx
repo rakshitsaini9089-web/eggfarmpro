@@ -154,6 +154,14 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   const getPageTitle = () => {
+    // Handle special cases for pages not in NAV_ITEMS
+    if (pathname === '/settings') {
+      return 'Settings';
+    }
+    if (pathname === '/profile') {
+      return 'Profile';
+    }
+    
     const item = NAV_ITEMS.find(i => i.href === pathname);
     return item ? item.name : 'Dashboard';
   };

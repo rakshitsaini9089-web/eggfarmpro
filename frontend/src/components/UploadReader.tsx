@@ -3,14 +3,15 @@
 import { useState, useRef } from 'react';
 
 interface UpiData {
-  amount: number;
-  senderUpiId: string;
-  date: string;
-  time: string;
+  amount: string;
+  upi_id: string;
+  txnid: string;
+  raw_text: string;
 }
 
 export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void } = {}) {
   const [image, setImage] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const [upiData, setUpiData] = useState<UpiData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,10 +20,24 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      if (!validTypes.includes(file.type)) {
+        setError('Please upload only JPG, JPEG, or PNG files');
+        return;
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('File size exceeds 5MB limit');
+        return;
+      }
+      
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result) {
           setImage(event.target.result as string);
+          setFileName(file.name);
           setUpiData(null);
           setError(null);
         }
@@ -44,85 +59,88 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
       
       // Create FormData for the image
       const formData = new FormData();
-      formData.append('screenshot', blob, 'screenshot.png');
+      formData.append("file", blob, fileName || 'screenshot.png');
       
       // Get token from localStorage
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       
-      console.log('Sending file to backend...');
+      // Check if we're using ngrok and need to use the proxy
+      const isNgrok = typeof window !== 'undefined' && window.location.hostname.includes('ngrok');
       
-      // Call the actual backend API
-      const apiResponse = await fetch('http://localhost:5001/api/ai/upi-reader', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      if (isNgrok) {
+        // Use proxy route for ngrok
+        const apiResponse = await fetch("/api/proxy?endpoint=/upi/scan", {
+          method: "POST",
+          body: formData,
+          headers: {
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+          },
+        });
+        
+        const responseText = await apiResponse.text();
+        
+        // Try to parse as JSON, show error if it fails
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Failed to parse JSON response:', responseText);
+          throw new Error(`Invalid response from server. Status: ${apiResponse.status}`);
         }
-      });
-      
-      console.log('Response status:', apiResponse.status);
-      
-      if (!apiResponse.ok) {
-        const errorData = await apiResponse.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || `HTTP ${apiResponse.status}`);
-      }
-      
-      const data = await apiResponse.json();
-      console.log('Received data:', data);
-      
-      // Use data from response properly
-      const extractedData: UpiData = {
-        amount: data.data?.amount || data.amount || 1500,
-        senderUpiId: data.data?.senderUpiId || data.senderUpiId || 'customer@upi',
-        date: data.data?.dateTime || data.dateTime || new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString()
-      };
-      
-      console.log('Extracted data:', extractedData);
-      setUpiData(extractedData);
-      
-      // Call the onUpload callback if provided
-      if (onUpload) {
-        onUpload(extractedData);
+        
+        setLoading(false);
+        
+        if (!data.success) {
+          alert("Could not read UPI details: " + (data.message || "Unknown error"));
+          return;
+        }
+        
+        setUpiData(data);
+        
+        // Call the onUpload callback if provided
+        if (onUpload) {
+          onUpload(data);
+        }
+      } else {
+        // Direct API call for local development
+        const apiResponse = await fetch("/api/upi/scan", {
+          method: "POST",
+          body: formData,
+          headers: {
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+          },
+        });
+
+        const responseText = await apiResponse.text();
+        
+        // Try to parse as JSON, show error if it fails
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Failed to parse JSON response:', responseText);
+          throw new Error(`Invalid response from server. Status: ${apiResponse.status}`);
+        }
+
+        setLoading(false);
+
+        if (!data.success) {
+          alert("Could not read UPI details: " + (data.message || "Unknown error"));
+          return;
+        }
+
+        setUpiData(data);
+        
+        // Call the onUpload callback if provided
+        if (onUpload) {
+          onUpload(data);
+        }
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       setError(`Failed to process image: ${errorMessage}`);
       console.error('Upload processing error:', err);
-    } finally {
       setLoading(false);
-    }
-  };
-
-  const handleSaveToLedger = async () => {
-    if (!upiData) return;
-    
-    try {
-      // Get token from localStorage
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      
-      // Call backend API to save to ledger
-      const response = await fetch('http://localhost:5001/api/screenshots/confirm', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify(upiData),
-      });
-      
-      if (!response.ok) throw new Error('Failed to save to ledger');
-      
-      alert('Payment successfully added to ledger!');
-      // Reset form
-      setImage(null);
-      setUpiData(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    } catch (err) {
-      setError('Failed to save payment to ledger. Please try again.');
-      console.error('Save to ledger error:', err);
     }
   };
 
@@ -151,7 +169,7 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
                   <span className="font-medium text-primary">Click to upload</span> a UPI screenshot
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  PNG, JPG up to 10MB
+                  PNG, JPG, JPEG files only (max 5MB)
                 </p>
               </div>
             )}
@@ -159,7 +177,7 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
               type="file"
               ref={fileInputRef}
               className="hidden"
-              accept="image/*"
+              accept="image/jpeg,image/jpg,image/png"
               onChange={handleImageUpload}
             />
           </div>
@@ -196,29 +214,18 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Amount:</span>
-                  <span className="font-medium">₹{upiData.amount.toFixed(2)}</span>
+                  <span className="font-medium">₹{upiData.amount || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Sender UPI ID:</span>
-                  <span className="font-medium">{upiData.senderUpiId}</span>
+                  <span className="text-gray-600 dark:text-gray-400">UPI ID:</span>
+                  <span className="font-medium">{upiData.upi_id || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Date:</span>
-                  <span className="font-medium">{upiData.date}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Time:</span>
-                  <span className="font-medium">{upiData.time}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Transaction ID:</span>
+                  <span className="font-medium">{upiData.txnid || 'N/A'}</span>
                 </div>
               </div>
             </div>
-            
-            <button
-              onClick={handleSaveToLedger}
-              className="btn btn-success w-full"
-            >
-              Save to Client Ledger
-            </button>
           </div>
         )}
       </div>

@@ -23,6 +23,7 @@ const farmsRouter = require('./farms');
 const reportsRouter = require('./reports');
 const authRouter = require('./auth');
 const aiRouter = require('./aiRoutes');
+const upiRouter = require('./upi');
 const { getDashboardStats } = require('../controllers/dashboardController');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -53,5 +54,6 @@ router.use('/voice', authenticateToken, voiceRouter);
 router.use('/farms', authenticateToken, farmsRouter);
 router.use('/reports', authenticateToken, reportsRouter);
 router.use('/ai', authenticateToken, aiRouter);
+router.use('/upi', authenticateToken, upiRouter);
 
 module.exports = router;

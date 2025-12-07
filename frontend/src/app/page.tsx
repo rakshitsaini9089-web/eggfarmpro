@@ -67,6 +67,7 @@ interface PaymentFormData {
   amount: number;
   paymentMethod: 'cash' | 'upi';
   utr?: string;
+  upi_id?: string;
   date: string;
   description?: string; // Optional description
 }
@@ -132,6 +133,16 @@ const DashboardPage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showScreenshotModal, setShowScreenshotModal] = useState(false);
+  
+  // Set the document title when the component mounts
+  useEffect(() => {
+    document.title = 'Dashboard - Egg Farm Pro';
+    
+    // Cleanup function to reset title when component unmounts
+    return () => {
+      document.title = 'Egg Farm Pro';
+    };
+  }, []);
   
   const router = useRouter();
   const { selectedFarm } = useFarm();
@@ -432,19 +443,19 @@ const DashboardPage = () => {
     };
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md my-8 max-h-[calc(100vh-2rem)] overflow-y-auto">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 sm:p-4 z-50 overflow-y-auto">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-md my-4 sm:my-8 max-h-[calc(100vh-2rem)] overflow-y-auto modal-responsive">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Add New Sale</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white truncate">Add New Sale</h2>
             <button 
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0 ml-2"
             >
-              <XMarkIcon className="h-6 w-6" />
+              <XMarkIcon className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
+            <div className="mb-3 sm:mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="sale-client">
                 Client
               </label>
@@ -464,17 +475,17 @@ const DashboardPage = () => {
               </select>
             </div>
             
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="sale-rate">
+            <div className="mb-3 sm:mb-4">
+              <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2" htmlFor="sale-rate">
                 Rate per Tray (₹)
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="number"
                   id="sale-rate"
                   value={formData.ratePerTray || ''}
                   onChange={(e) => setFormData({...formData, ratePerTray: parseFloat(e.target.value) || undefined})}
-                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder={clientRate ? `Default: ₹${clientRate}` : "Enter rate"}
                   min="0"
                   step="0.01"
@@ -483,14 +494,14 @@ const DashboardPage = () => {
                   type="button"
                   onClick={handleAISuggestAmount}
                   disabled={!formData.clientId || !formData.trays}
-                  className="btn btn-primary px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn btn-primary px-2 sm:px-3 py-2 text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   AI Suggest
                 </button>
               </div>
             </div>
             
-            <div className="mb-4">
+            <div className="mb-3 sm:mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="sale-trays">
                 Trays
               </label>
@@ -580,6 +591,7 @@ const DashboardPage = () => {
       saleId: '',
       amount: 0,
       paymentMethod: 'cash',
+      upi_id: '',
       date: new Date().toISOString().split('T')[0],
       description: ''
     });
@@ -761,30 +773,50 @@ const DashboardPage = () => {
             </div>
             
             {formData.paymentMethod === 'upi' && (
+              <>
+                <div className="mb-4">
+                  <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-utr">
+                    UTR Number
+                  </label>
+                  <input
+                    type="text"
+                    id="payment-utr"
+                    value={formData.utr || ''}
+                    onChange={(e) => setFormData({...formData, utr: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-upi-id">
+                    UPI ID
+                  </label>
+                  <input
+                    type="text"
+                    id="payment-upi-id"
+                    value={formData.upi_id || ''}
+                    onChange={(e) => setFormData({...formData, upi_id: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+              </>
+            )}
+            
+            {formData.paymentMethod === 'upi' && (
               <div className="mb-4">
-                <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-utr">
-                  UTR Number
-                </label>
-                <input
-                  type="text"
-                  id="payment-utr"
-                  value={formData.utr || ''}
-                  onChange={(e) => setFormData({...formData, utr: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                <label className="block text-gray-700 dark:text-gray-300 mb-2">Upload UPI Screenshot</label>
+                <UploadReader 
+                  onUpload={(data: any) => {
+                    // Auto-fill form fields with extracted UPI data
+                    setFormData(prev => ({
+                      ...prev,
+                      amount: data.amount ? parseFloat(data.amount) : prev.amount,
+                      upi_id: data.upi_id || prev.upi_id,
+                      utr: data.txnid || prev.utr
+                    }));
+                  }}
                 />
               </div>
             )}
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2">Upload Screenshot (Optional)</label>
-              <UploadReader 
-                onUpload={(data: any) => {
-                  if (data.amount) {
-                    setFormData({...formData, amount: data.amount, description: (formData.description || '') + (formData.description ? ' ' : '') + `[Screenshot: ${data.senderUpiId || 'uploaded'}]`});
-                  }
-                }}
-              />
-            </div>
             
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="payment-date">
