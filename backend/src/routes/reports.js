@@ -3,16 +3,13 @@ const router = express.Router();
 const { getReportTypes, generateReport, downloadReport } = require('../controllers/reportController');
 const { authenticateToken } = require('../middleware/auth');
 
-// Apply authentication middleware to all routes
-router.use(authenticateToken);
-
 // Get available report types
-router.get('/types', getReportTypes);
+router.get('/types', authenticateToken, getReportTypes);
 
 // Generate a report
-router.post('/generate', generateReport);
+router.post('/generate', authenticateToken, generateReport);
 
 // Download a generated report
-router.get('/download/:filename', downloadReport);
+router.get('/download/:filename', authenticateToken, downloadReport);
 
 module.exports = router;

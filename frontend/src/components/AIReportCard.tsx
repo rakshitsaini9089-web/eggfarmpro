@@ -37,7 +37,7 @@ export function AIReportCard() {
   const [error, setError] = useState<string | null>(null);
   const [isMinimized, setIsMinimized] = useState(false);
 
-  const handleGenerateReport = async (type: string) => {
+  const generateReport = async (type: string) => {
     setGeneratingType(type);
     setError(null);
     
@@ -47,15 +47,53 @@ export function AIReportCard() {
         report.type === type ? {...report, status: 'generating'} : report
       ));
       
-      // In a real implementation, this would call the backend API
-      // const response = await fetch(`/api/ai/report/${type}`, {
-      //   method: 'GET',
-      // });
+      // Get token from localStorage
+      const token = localStorage.getItem('token');
       
-      // if (!response.ok) throw new Error('Failed to generate report');
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Call the correct backend AI report endpoint directly
+      const response = await fetch(`${getApiBaseUrl()}/ai/report/${type}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.error || errorData.message || errorMessage;
+        } catch (e) {
+          // If parsing fails, use the raw text
+          errorMessage = errorText || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+      
+      // Get the PDF blob from the response
+      const blob = await response.blob();
+      
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a temporary link element
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${type}_report.pdf`;
+      
+      // Trigger the download
+      document.body.appendChild(a);
+      a.click();
+      
+      // Clean up
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
       
       // Update report with generated timestamp
       const now = new Date().toLocaleString();
@@ -64,12 +102,8 @@ export function AIReportCard() {
           ? {...report, status: 'available', lastGenerated: now} 
           : report
       ));
-      
-      // Open PDF in new tab (simulated)
-      // window.open(response.url, '_blank');
-      alert(`Generated ${type} report! In a real implementation, this would open the PDF.`);
-    } catch (err) {
-      setError(`Failed to generate ${type} report. Please try again.`);
+    } catch (err: any) {
+      setError(`Failed to generate ${type} report: ${err.message}`);
       // Update report status to error
       setReports(reports.map(report => 
         report.type === type ? {...report, status: 'error'} : report
@@ -79,6 +113,26 @@ export function AIReportCard() {
       setGeneratingType(null);
     }
   };
+
+  // Function to get API base URL (copied from frontend lib/api.ts)
+  function getApiBaseUrl() {
+    if (typeof window === 'undefined') {
+      return 'http://localhost:5001/api';
+    }
+    
+    // For localtunnel, use the same hostname but with port 5001
+    if (window.location.hostname.includes('loca.lt')) {
+      return 'https://clean-bears-make.loca.lt/api';
+    }
+    
+    // For ngrok, use the proxy route to avoid CORS issues
+    if (window.location.hostname.includes('ngrok')) {
+      return '/api/proxy';
+    }
+    
+    // For local development, use the same hostname but with port 5001
+    return `${window.location.protocol}//${window.location.hostname}:5001/api`;
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -152,7 +206,7 @@ export function AIReportCard() {
                     )}
                   </div>
                   <button
-                    onClick={() => handleGenerateReport(report.type)}
+                    onClick={() => generateReport(report.type)}
                     disabled={report.status === 'generating' || generatingType === report.type}
                     className={`ml-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                       report.status === 'generating' || generatingType === report.type
@@ -169,12 +223,7 @@ export function AIReportCard() {
                         Generating...
                       </span>
                     ) : (
-                      <span className="flex items-center">
-                        <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-                        </svg>
-                        Generate
-                      </span>
+                      'Generate'
                     )}
                   </button>
                 </div>

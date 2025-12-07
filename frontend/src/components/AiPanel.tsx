@@ -185,9 +185,12 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
         <div className="absolute inset-0 bg-black/5 dark:bg-transparent rounded-t-2xl"></div>
         <div className="flex items-center space-x-3 relative z-10">
           <div className="w-12 h-12 rounded-full bg-white/95 flex items-center justify-center shadow-lg ring-2 ring-white/20">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-lime-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5a4 4 0 100-8 4 4 0 000 8z" />
-            </svg>
+            {/* Replaced SVG with PNG logo */}
+            <img 
+              src="/logo/MindAilogo.png" 
+              alt="EggMind AI Logo" 
+              className="h-7 w-7 object-contain"
+            />
           </div>
           <div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight uppercase tracking-wider">Egg Mind AI</h3>

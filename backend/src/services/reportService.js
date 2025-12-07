@@ -3,6 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
 
+// Add puppeteer for HTML to PDF conversion
+const puppeteer = require('puppeteer');
+
+// Import the advanced report template
+const { generateAdvancedReportHTML } = require('./../templates/advancedReportTemplate');
+
 /**
  * Generate CSV content from data
  * @param {Array} headers - Column headers
@@ -158,7 +164,72 @@ function exportToText(title, data, headers, options, filename) {
 }
 
 /**
- * Export data to PDF format
+ * Generate advanced enterprise dashboard report in HTML format
+ * @param {Object} reportData - Data for the advanced report
+ * @returns {string} - HTML content for the report
+ */
+function generateAdvancedReport(reportData) {
+  return generateAdvancedReportHTML(reportData);
+}
+
+/**
+ * Export advanced enterprise dashboard report to PDF
+ * @param {Object} reportData - Data for the advanced report
+ * @param {string} filename - Filename for the export
+ * @returns {Object} - Export result with file path
+ */
+async function exportAdvancedReportToPDF(reportData, filename) {
+  try {
+    // Generate HTML content
+    const htmlContent = generateAdvancedReport(reportData);
+    
+    const filePath = path.join(__dirname, '..', 'exports', `${filename}.pdf`);
+    
+    // Ensure exports directory exists
+    const exportsDir = path.join(__dirname, '..', 'exports');
+    if (!fs.existsSync(exportsDir)) {
+      fs.mkdirSync(exportsDir, { recursive: true });
+    }
+    
+    // Launch browser and generate PDF
+    const browser = await puppeteer.launch({ headless: 'new' });
+    const page = await browser.newPage();
+    
+    // Set content and wait for it to load
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    
+    // Generate PDF with proper settings
+    await page.pdf({
+      path: filePath,
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '20mm',
+        right: '20mm',
+        bottom: '20mm',
+        left: '20mm'
+      }
+    });
+    
+    // Close browser
+    await browser.close();
+    
+    return {
+      success: true,
+      filePath: filePath,
+      format: 'pdf'
+    };
+  } catch (error) {
+    console.error('Advanced PDF Generation Error:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Export data to PDF format (legacy/simple version)
  * @param {string} title - Report title
  * @param {Array} data - Data to export
  * @param {Array} headers - Column headers
@@ -278,5 +349,7 @@ module.exports = {
   generateTextReport,
   exportToCSV,
   exportToText,
-  exportToPDF
+  exportToPDF,
+  generateAdvancedReport,
+  exportAdvancedReportToPDF
 };
