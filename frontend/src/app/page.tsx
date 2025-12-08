@@ -1457,7 +1457,7 @@ const DashboardPage = () => {
                 </div>
               </div>
               
-              {/* Hover Tooltip with Client Details */}
+              {/* Test fixed position tooltip */}
               {showPendingTooltip && typeof document !== 'undefined' && createPortal(
                 <div 
                   className="fixed z-[9999]"
@@ -1465,37 +1465,15 @@ const DashboardPage = () => {
                   style={{
                     position: 'fixed',
                     zIndex: 9999,
-                    left: `${tooltipPosition.left}px`,
-                    top: `${tooltipPosition.top}px`,
-                    width: `${tooltipPosition.width}px`,
+                    left: '100px',
+                    top: '100px',
+                    width: '300px',
+                    backgroundColor: 'red',
+                    color: 'white',
+                    padding: '20px',
                   }}
                 >
-                  <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg border border-gray-200 dark:border-gray-700 p-4 relative mt-2">
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-gray-900 dark:text-white">Clients with Pending Payments</h4>
-                    </div>
-                    <div className="space-y-2 max-h-60 overflow-y-auto">
-                      {clients
-                        .filter(client => (clientPendingAmounts[client._id] || 0) > 0)
-                        .map(client => (
-                          <div key={client._id} className="flex justify-between items-center text-sm py-1">
-                            <span className="text-gray-700 dark:text-gray-300">{client.name}</span>
-                            <span className="font-medium text-red-600 dark:text-red-400">₹{(clientPendingAmounts[client._id] || 0).toLocaleString()}</span>
-                          </div>
-                        ))
-                      }
-                      {clients.length === 0 && (
-                        <div className="text-gray-500 dark:text-gray-400 text-sm py-2">
-                          No clients found
-                        </div>
-                      )}
-                      {clients.length > 0 && clients.every(client => (clientPendingAmounts[client._id] || 0) <= 0) && (
-                        <div className="text-gray-500 dark:text-gray-400 text-sm py-2">
-                          No pending payments found
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  TEST TOOLTIP - IF YOU SEE THIS, THE PORTAL IS WORKING
                 </div>,
                 document.body
               )}
