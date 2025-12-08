@@ -622,7 +622,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="w-full sm:w-[380px] h-[calc(100vh-60px)] sm:h-[85vh] bg-white/90 dark:bg-gray-900/95 backdrop-blur-xl shadow-xl z-50 border border-gray-400/40 dark:border-gray-700/50 flex flex-col overflow-hidden rounded-2xl">
+    <div className="w-[90vw] sm:w-[380px] h-[70vh] sm:h-[85vh] mr-2 sm:mr-0 bg-white/90 dark:bg-gray-900/95 backdrop-blur-xl shadow-xl z-50 border border-gray-400/40 dark:border-gray-700/50 flex flex-col overflow-hidden rounded-2xl">
       {/* Hidden file input for UPI uploads */}
       <input
         type="file"
@@ -676,13 +676,13 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
 
       {/* Quick Actions (only shown when no messages except welcome) */}
       {messages.length <= 1 && (
-        <div className="p-3 sm:p-4 border-b border-gray-200/20 dark:border-gray-700/30 bg-white/70 dark:bg-gray-800/70 flex-shrink-0">
+        <div className="p-2 sm:p-4 border-b border-gray-200/20 dark:border-gray-700/30 bg-white/70 dark:bg-gray-800/70 flex-shrink-0">
           <div className="flex flex-wrap gap-2">
             {quickActions.map((action) => (
               <button
                 key={action.id}
                 onClick={() => handleQuickAction(action.prompt, action.id.includes('scan') ? 'scan-upi' : action.id.includes('report') ? 'report' : undefined)}
-                className="flex-shrink-0 bg-white dark:bg-gray-700/80 hover:bg-gray-100 dark:hover:bg-gray-600/80 border border-gray-200 dark:border-gray-600 rounded-full px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-medium text-gray-800 dark:text-gray-200 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md whitespace-nowrap"
+                className="flex-shrink-0 bg-white dark:bg-gray-700/80 hover:bg-gray-100 dark:hover:bg-gray-600/80 border border-gray-200 dark:border-gray-600 rounded-full px-2 py-1 sm:px-2.5 sm:py-1.5 text-xs font-medium text-gray-800 dark:text-gray-200 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md whitespace-nowrap"
               >
                 {action.title}
               </button>
