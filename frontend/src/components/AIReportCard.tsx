@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { useFarm } from '../contexts/FarmContext'; // Import the FarmContext
 
 interface ReportData {
   type: string;
@@ -12,6 +13,7 @@ interface ReportData {
 }
 
 export function AIReportCard() {
+  const { selectedFarm } = useFarm(); // Get the selected farm from context
   const [reports, setReports] = useState<ReportData[]>([
     {
       type: 'daily',
@@ -54,8 +56,17 @@ export function AIReportCard() {
         throw new Error('No authentication token found. Please log in again.');
       }
       
+      // Check if a farm is selected
+      if (!selectedFarm) {
+        throw new Error('No farm selected. Please select a farm before generating a report.');
+      }
+      
+      // Build the URL with farmId as query parameter
+      const baseUrl = getApiBaseUrl();
+      const url = `${baseUrl}/ai/generate-report/${type}?farmId=${selectedFarm._id}`;
+      
       // Call the correct backend AI report endpoint directly
-      const response = await fetch(`${getApiBaseUrl()}/ai/generate-report/${type}`, {
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -80,11 +91,11 @@ export function AIReportCard() {
       const blob = await response.blob();
       
       // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob);
+      const urlObj = window.URL.createObjectURL(blob);
       
       // Create a temporary link element
       const a = document.createElement('a');
-      a.href = url;
+      a.href = urlObj;
       a.download = `${type}_report.pdf`;
       
       // Trigger the download
@@ -93,7 +104,7 @@ export function AIReportCard() {
       
       // Clean up
       document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+      window.URL.revokeObjectURL(urlObj);
       
       // Update report with generated timestamp
       const now = new Date().toLocaleString();
@@ -182,6 +193,16 @@ export function AIReportCard() {
             </div>
           )}
           
+          {selectedFarm ? (
+            <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg">
+              Generating report for: <strong>{selectedFarm.name}</strong>
+            </div>
+          ) : (
+            <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 rounded-lg">
+              Please select a farm to generate reports.
+            </div>
+          )}
+          
           <div className="space-y-4">
             {reports.map((report) => (
               <div key={report.type} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 dark:bg-gray-700/30">
@@ -207,9 +228,9 @@ export function AIReportCard() {
                   </div>
                   <button
                     onClick={() => generateReport(report.type)}
-                    disabled={report.status === 'generating' || generatingType === report.type}
+                    disabled={report.status === 'generating' || generatingType === report.type || !selectedFarm}
                     className={`ml-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                      report.status === 'generating' || generatingType === report.type
+                      report.status === 'generating' || generatingType === report.type || !selectedFarm
                         ? 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
                         : 'bg-primary hover:bg-primary-dark text-gray-900 dark:text-white shadow-sm hover:shadow-md'
                     }`}

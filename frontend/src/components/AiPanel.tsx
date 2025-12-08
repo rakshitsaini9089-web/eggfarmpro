@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext'; // Import the AuthContext
 
 interface Message {
   id: string;
@@ -101,6 +102,7 @@ const renderMessageContent = (content: string) => {
 };
 
 export function AiPanel({ onClose }: { onClose: () => void }) {
+  const { token } = useAuth(); // Get the token from AuthContext
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -453,11 +455,8 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
     setShowSuggestions(false); // Hide suggestions when starting new message
 
     try {
-      // Get the auth token from localStorage
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      
-      // Call the actual AI API
-      const response = await fetch('/api/ai/chat', {
+      // Call the AI proxy API instead of the direct endpoint
+      const response = await fetch('/api/ai-proxy/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -498,27 +497,24 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       if (error.message?.includes('Unauthorized') || error.message?.includes('401')) {
         errorMessageContent = 'Authentication required. Please log in to use AI features.';
       } else if (error.message?.includes('Forbidden') || error.message?.includes('403')) {
-        errorMessageContent = 'AI features are not enabled on this server.';
-      } else if (error.message?.includes('Failed to fetch')) {
-        errorMessageContent = 'Unable to connect to AI service. Please check your internet connection.';
+        errorMessageContent = 'Access denied. You do not have permission to use AI features.';
       } else if (error.message) {
-        // Display the actual error message from the server
         errorMessageContent = error.message;
       }
       
+      // Add error message to chat
       const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: `error-${Date.now()}`,
         role: 'assistant',
         content: errorMessageContent,
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, errorMessage]);
-      setIsTyping(false);
-      setTypingContent('');
-      setShowSuggestions(true); // Show suggestions even on error
     } finally {
       setIsLoading(false);
-      // Note: We don't set isTyping to false here because simulateTyping handles it
+      setIsTyping(false);
+      setTypingContent('');
     }
   };
 
@@ -622,7 +618,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="w-full h-screen sm:h-[90vh] sm:max-h-[90vh] bg-white/90 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl z-50 border border-gray-400/40 dark:border-gray-700/50 flex flex-col overflow-hidden">
+    <div className="w-full h-[80vh] sm:h-[80vh] sm:max-h-[80vh] bg-white/90 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl z-50 border border-gray-400/40 dark:border-gray-700/50 flex flex-col overflow-hidden rounded-3xl sm:rounded-4xl">
       {/* Hidden file input for UPI uploads */}
       <input
         type="file"
@@ -633,7 +629,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       />
       
       {/* Header */}
-      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-r from-lime-500 via-green-400 to-emerald-500 relative overflow-hidden flex-shrink-0">
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-r from-lime-500 via-green-400 to-emerald-500 relative overflow-hidden flex-shrink-0 rounded-t-3xl sm:rounded-t-4xl">
         {/* Animated gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 dark:from-black/20 dark:via-transparent dark:to-black/20"></div>
         {/* Overlay for better text contrast in light mode */}
@@ -676,13 +672,13 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
 
       {/* Quick Actions (only shown when no messages except welcome) */}
       {messages.length <= 1 && (
-        <div className="p-3 sm:p-4 border-b border-gray-200/20 dark:border-gray-700/30 bg-white/70 dark:bg-gray-800/70 flex-shrink-0">
+        <div className="p-2 sm:p-3 border-b border-gray-200/20 dark:border-gray-700/30 bg-white/70 dark:bg-gray-800/70 flex-shrink-0">
           <div className="flex flex-wrap gap-2">
             {quickActions.map((action) => (
               <button
                 key={action.id}
                 onClick={() => handleQuickAction(action.prompt, action.id.includes('scan') ? 'scan-upi' : action.id.includes('report') ? 'report' : undefined)}
-                className="flex-shrink-0 bg-white dark:bg-gray-700/80 hover:bg-gray-100 dark:hover:bg-gray-600/80 border border-gray-200 dark:border-gray-600 rounded-full px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md whitespace-nowrap"
+                className="flex-shrink-0 bg-white dark:bg-gray-700/80 hover:bg-gray-100 dark:hover:bg-gray-600/80 border border-gray-200 dark:border-gray-600 rounded-full px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-xs font-medium text-gray-800 dark:text-gray-200 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md whitespace-nowrap"
               >
                 {action.title}
               </button>
@@ -694,7 +690,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       {/* Messages Container */}
       <div 
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gradient-to-b from-white/50 via-white/40 to-white/50 dark:from-gray-800/50 dark:via-gray-800/40 dark:to-gray-800/50 backdrop-blur-sm"
+        className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 sm:space-y-5 bg-gradient-to-b from-white/50 via-white/40 to-white/50 dark:from-gray-800/50 dark:via-gray-800/40 dark:to-gray-800/50 backdrop-blur-sm hide-scrollbar"
       >
         {messages.map((message) => (
           <div 
@@ -702,7 +698,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full animate-fadeIn`}
           >
             <div 
-              className={`w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-[22px] p-4 shadow-md backdrop-blur-sm ${
+              className={`w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-[18px] p-3 shadow-md backdrop-blur-sm ${
                 message.role === 'user' 
                   ? 'bg-gradient-to-r from-[#00B492] to-[#007CBA] text-white rounded-br-none shadow-lg' 
                   : 'bg-white border border-[rgba(0,0,0,0.05)] text-gray-800 rounded-bl-none'
@@ -802,8 +798,11 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <form onSubmit={handleSubmit} className="p-3 sm:p-4 border-t border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-t from-white/70 to-white/50 dark:from-gray-900/70 dark:to-gray-800/50 backdrop-blur-xl flex-shrink-0">
+      {/* Input Area */}
+      <form 
+        onSubmit={handleSubmit}
+        className="p-3 sm:p-4 border-t border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-t from-white/70 to-white/50 dark:from-gray-900/70 dark:to-gray-800/50 backdrop-blur-xl flex-shrink-0 rounded-b-3xl sm:rounded-b-4xl"
+      >
         <div className="flex space-x-2">
           <div className="flex-1 relative">
             <textarea

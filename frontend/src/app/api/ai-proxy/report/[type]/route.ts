@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 
 export async function GET(request: NextRequest, { params }: { params: { type: string } }) {
   try {
@@ -32,22 +33,61 @@ export async function GET(request: NextRequest, { params }: { params: { type: st
       );
     }
     
-    // In a real implementation, this would generate a PDF report
-    // based on the requested type and farm data
+    // Get the token from cookies
+    const cookieStore = cookies();
+    const token = cookieStore.get('token')?.value;
     
-    // For demo purposes, returning mock report data
-    const mockReportData = {
-      type,
-      title: `${type.charAt(0).toUpperCase() + type.slice(1)} Report`,
-      generatedAt: new Date().toISOString(),
-      url: `/api/ai/generate-report/${type}/download`, // Mock download URL
-      status: 'success'
-    };
+    if (!token) {
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { 
+          status: 401, 
+          headers: { 
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store'
+          } 
+        }
+      );
+    }
+    
+    // Get query parameters
+    const { searchParams } = new URL(request.url);
+    const queryParams = new URLSearchParams(searchParams);
+    
+    // Forward the request to the backend
+    const backendUrl = `${process.env.BACKEND_URL || 'http://localhost:5001'}/api/ai/generate-report/${type}?${queryParams.toString()}`;
+    
+    const response = await fetch(backendUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    // If the backend returns a PDF, we need to handle it differently
+    const contentType = response.headers.get('content-type');
+    
+    if (contentType && contentType.includes('application/pdf')) {
+      // Handle PDF response
+      const arrayBuffer = await response.arrayBuffer();
+      return new Response(arrayBuffer, {
+        status: response.status,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': response.headers.get('content-disposition') || 'attachment',
+          'Cache-Control': 'no-store'
+        }
+      });
+    }
+    
+    // Handle JSON response
+    const data = await response.json();
     
     return new Response(
-      JSON.stringify(mockReportData),
+      JSON.stringify(data),
       { 
-        status: 200, 
+        status: response.status, 
         headers: { 
           'Content-Type': 'application/json',
           'Cache-Control': 'no-store'
