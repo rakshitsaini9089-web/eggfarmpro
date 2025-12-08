@@ -265,6 +265,17 @@ export default function Layout({ children }: LayoutProps) {
         </nav>
       </div>
       
+      {/* Sidebar Footer - Separate section to avoid width issues */}
+      {!sidebarCollapsed && (
+        <div className="sidebar-desktop hidden md:flex md:flex-col md:relative z-30 w-48 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-xl h-auto transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700 before:absolute before:inset-0 before:bg-black/5 dark:before:bg-black/10 before:rounded-xl before:z-[-1] mt-[-1px]">
+          <div className="py-3 px-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="text-center text-xs text-gray-500 dark:text-gray-400">
+              © {new Date().getFullYear()} EggFarm Pro. All rights reserved.
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Main content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
