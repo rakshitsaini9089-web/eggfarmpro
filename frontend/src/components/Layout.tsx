@@ -271,9 +271,8 @@ export default function Layout({ children }: LayoutProps) {
               © {new Date().getFullYear()}
             </div>
           ) : (
-            <div className="text-left">
-              <div className="text-[10px] text-gray-500 dark:text-gray-400">© {new Date().getFullYear()} EggFarm Pro</div>
-              <div className="text-[10px] text-gray-500 dark:text-gray-400">All rights reserved</div>
+            <div className="text-left text-[10px] text-gray-500 dark:text-gray-400">
+              © {new Date().getFullYear()} EggFarm Pro • All rights reserved
             </div>
           )}
         </div>
@@ -584,9 +583,8 @@ export default function Layout({ children }: LayoutProps) {
             
             {/* Mobile Sidebar Footer */}
             <div className="mt-auto py-2 px-4 border-t border-gray-200 dark:border-gray-700">
-              <div className="text-left">
-                <div className="text-[10px] text-gray-500 dark:text-gray-400">© {new Date().getFullYear()} EggFarm Pro</div>
-                <div className="text-[10px] text-gray-500 dark:text-gray-400">All rights reserved</div>
+              <div className="text-left text-[10px] text-gray-500 dark:text-gray-400">
+                © {new Date().getFullYear()} EggFarm Pro • All rights reserved
               </div>
             </div>
           </div>
