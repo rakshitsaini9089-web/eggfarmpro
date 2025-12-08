@@ -42,7 +42,7 @@ router.get('/profit-calculator', getProfit);
 router.get('/farm-compare', compareFarms);
 
 // Report Generator Routes
-router.get('/report/:type', generateReport);
+router.get('/generate-report/:type', generateReport);
 
 // Feed Optimization Routes
 router.post('/feed-optimizer', optimizeFeedFormula);

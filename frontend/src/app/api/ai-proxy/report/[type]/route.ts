@@ -40,7 +40,7 @@ export async function GET(request: NextRequest, { params }: { params: { type: st
       type,
       title: `${type.charAt(0).toUpperCase() + type.slice(1)} Report`,
       generatedAt: new Date().toISOString(),
-      url: `/api/ai/report/${type}/download`, // Mock download URL
+      url: `/api/ai/generate-report/${type}/download`, // Mock download URL
       status: 'success'
     };
     

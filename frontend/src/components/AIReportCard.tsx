@@ -55,7 +55,7 @@ export function AIReportCard() {
       }
       
       // Call the correct backend AI report endpoint directly
-      const response = await fetch(`${getApiBaseUrl()}/ai/report/${type}`, {
+      const response = await fetch(`${getApiBaseUrl()}/ai/generate-report/${type}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
