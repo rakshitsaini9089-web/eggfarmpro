@@ -1,37 +1,4 @@
-// Premium PDF Report Template for Eggmind AI
-const generateAdvancedReportHTML = (reportData) => {
-  const {
-    farmName,
-    date,
-    reportId,
-    eggsCollected,
-    mortality,
-    efficiencyScore,
-    todaysRevenue,
-    weeklyRevenue,
-    monthlySales,
-    lastMonthSales,
-    productivityIndex,
-    fcr,
-    healthStabilityScore,
-    salesPerformanceRating,
-    dailySalesData,
-    feedConsumptionData,
-    aiInsights,
-    farmId
-  } = reportData;
 
-  // Determine trend indicator
-  const monthlyTrend = monthlySales > lastMonthSales ? '▲' : '▼';
-  const trendColor = monthlySales > lastMonthSales ? '#18A558' : '#0B5C2C';
-
-  // Calculate averages for KPIs
-  const avgProductivity = productivityIndex || 0;
-  const avgFCR = fcr || 0;
-  const avgHealth = healthStabilityScore || 0;
-  const avgSales = salesPerformanceRating || 0;
-
-  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -246,9 +213,9 @@ const generateAdvancedReportHTML = (reportData) => {
                 
                 <div class="insight-card">
                     <div class="insight-title">Key Metrics Overview</div>
-                    <p>Farm ID: ${farmId || 'N/A'}</p>
-                    <p>Report Date: ${date || new Date().toLocaleDateString()}</p>
-                    <p>Report ID: ${reportId || 'N/A'}</p>
+                    <p>Farm ID: FS-2025-001</p>
+                    <p>Report Date: 2025-12-08</p>
+                    <p>Report ID: TEST-001</p>
                 </div>
             </div>
         </div>
@@ -268,19 +235,19 @@ const generateAdvancedReportHTML = (reportData) => {
                     <tbody>
                         <tr>
                             <td>Eggs Collected</td>
-                            <td>${eggsCollected || 0}</td>
+                            <td>1200</td>
                         </tr>
                         <tr>
                             <td>Mortality</td>
-                            <td>${mortality || 0}</td>
+                            <td>5</td>
                         </tr>
                         <tr>
                             <td>Efficiency Score</td>
-                            <td>${efficiencyScore || 0}%</td>
+                            <td>95.5%</td>
                         </tr>
                         <tr>
                             <td>Today's Revenue</td>
-                            <td>₹${todaysRevenue || 0}</td>
+                            <td>₹6500</td>
                         </tr>
                     </tbody>
                 </table>
@@ -294,15 +261,15 @@ const generateAdvancedReportHTML = (reportData) => {
             <div class="section-content">
                 <div class="insight-card">
                     <div class="insight-title">AI Analysis</div>
-                    <p>${aiInsights || 'No specific insights available at this time.'}</p>
+                    <p>Your farm is performing well above average. Egg production is consistent and mortality rates are low.</p>
                 </div>
                 
                 <h3>Performance Indicators</h3>
                 <ul>
-                    <li>Productivity Index: ${avgProductivity}/100</li>
-                    <li>Feed Conversion Ratio: ${avgFCR.toFixed(2)}</li>
-                    <li>Health Stability: ${avgHealth}/100</li>
-                    <li>Sales Performance: ${avgSales}/100</li>
+                    <li>Productivity Index: 85/100</li>
+                    <li>Feed Conversion Ratio: 1.80</li>
+                    <li>Health Stability: 92/100</li>
+                    <li>Sales Performance: 88/100</li>
                 </ul>
             </div>
         </div>
@@ -323,24 +290,24 @@ const generateAdvancedReportHTML = (reportData) => {
                         </tr>
                     </thead>
                     <tbody>
-                        ${(dailySalesData || []).map(sale => `
+                        
                         <tr>
-                            <td>${sale.date || ''}</td>
-                            <td>${sale.customer || ''}</td>
-                            <td>${sale.quantity || 0}</td>
-                            <td>₹${sale.unitPrice || 0}</td>
-                            <td>₹${sale.total || 0}</td>
+                            <td>2025-12-08</td>
+                            <td>Local Market</td>
+                            <td>1200</td>
+                            <td>₹5.5</td>
+                            <td>₹6600</td>
                         </tr>
-                        `).join('')}
+                        
                     </tbody>
                 </table>
                 
                 <div class="insight-card">
                     <div class="insight-title">Sales Summary</div>
-                    <p>Weekly Revenue: ₹${weeklyRevenue || 0}</p>
-                    <p>Monthly Sales: ₹${monthlySales || 0}</p>
-                    <p>Previous Month: ₹${lastMonthSales || 0}</p>
-                    <p>Trend: <span style="color: ${trendColor};">${monthlyTrend} ${Math.abs(((monthlySales || 0) - (lastMonthSales || 0)) / (lastMonthSales || 1) * 100).toFixed(1)}%</span></p>
+                    <p>Weekly Revenue: ₹45000</p>
+                    <p>Monthly Sales: ₹200000</p>
+                    <p>Previous Month: ₹180000</p>
+                    <p>Trend: <span style="color: #18A558;">▲ 11.1%</span></p>
                 </div>
             </div>
         </div>
@@ -361,15 +328,15 @@ const generateAdvancedReportHTML = (reportData) => {
                         </tr>
                     </thead>
                     <tbody>
-                        ${(feedConsumptionData || []).map(feed => `
+                        
                         <tr>
-                            <td>${feed.date || ''}</td>
-                            <td>${feed.batch || ''}</td>
-                            <td>${feed.feedType || ''}</td>
-                            <td>${feed.quantity || 0}</td>
-                            <td>₹${feed.cost || 0}</td>
+                            <td>2025-12-08</td>
+                            <td>Batch A</td>
+                            <td>Layer Mash</td>
+                            <td>150</td>
+                            <td>₹4500</td>
                         </tr>
-                        `).join('')}
+                        
                     </tbody>
                 </table>
             </div>
@@ -382,7 +349,7 @@ const generateAdvancedReportHTML = (reportData) => {
             <div class="section-content">
                 <div class="insight-card">
                     <div class="insight-title">Actionable Insights</div>
-                    <p>${aiInsights || 'Continue monitoring your current operations for optimal performance.'}</p>
+                    <p>Your farm is performing well above average. Egg production is consistent and mortality rates are low.</p>
                 </div>
                 
                 <h3>Optimization Tips</h3>
@@ -398,12 +365,8 @@ const generateAdvancedReportHTML = (reportData) => {
         <!-- Footer -->
         <div class="report-footer">
             <div class="footer-divider"></div>
-            <p>Generated on: ${new Date().toLocaleString()}</p>
+            <p>Generated on: 8/12/2025, 1:53:00 pm</p>
         </div>
     </div>
 </body>
 </html>
-`;
-};
-
-module.exports = { generateAdvancedReportHTML };
