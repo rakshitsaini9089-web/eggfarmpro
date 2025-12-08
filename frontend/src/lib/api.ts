@@ -424,14 +424,36 @@ export const inventoryAPI = {
     const query = isValidObjectId ? `?farmId=${farmId}` : '';
     return fetchAPI(`/inventories/alerts/expiry${query}`);
   },
-  create: (data: any) => fetchAPI('/inventories', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }),
-  update: (id: string, data: any) => fetchAPI(`/inventories/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  }),
+  create: (data: any) => {
+    // Validate farmId in the data before making the request
+    if (data.farmId && !/^[0-9a-fA-F]{24}$/.test(data.farmId)) {
+      console.error('Invalid farmId provided to inventory.create:', data.farmId);
+      return Promise.reject(new Error('Invalid farmId format'));
+    }
+    
+    return fetchAPI('/inventories', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+  },
+  update: (id: string, data: any) => {
+    // Validate farmId in the data before making the request
+    if (data.farmId && !/^[0-9a-fA-F]{24}$/.test(data.farmId)) {
+      console.error('Invalid farmId provided to inventory.update:', data.farmId);
+      return Promise.reject(new Error('Invalid farmId format'));
+    }
+    
+    return fetchAPI(`/inventories/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+  },
   delete: (id: string) => fetchAPI(`/inventories/${id}`, {
     method: 'DELETE',
   }),

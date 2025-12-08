@@ -155,6 +155,14 @@ export default function InventoryPage() {
     ]);
   }, [selectedItemType, selectedFarm]);
 
+  // Add effect to log whenever selectedFarm changes
+  useEffect(() => {
+    console.log('Selected farm changed:', selectedFarm);
+    if (selectedFarm && selectedFarm._id === 'summary') {
+      console.error('ERROR: Selected farm is incorrectly set to "summary"', selectedFarm);
+    }
+  }, [selectedFarm]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({

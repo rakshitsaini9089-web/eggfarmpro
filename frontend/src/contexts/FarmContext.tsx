@@ -46,6 +46,18 @@ export function FarmProvider({ children }: { children: ReactNode }) {
 
   // Wrapper function to handle localStorage persistence
   const setSelectedFarm = (farm: Farm | null) => {
+    // Add validation to prevent invalid farm objects
+    if (farm && farm._id === 'summary') {
+      console.error('ERROR: Attempting to set selected farm to invalid value "summary"', farm);
+      return;
+    }
+    
+    // Also validate that farm._id is a valid ObjectId format
+    if (farm && farm._id && !/^[0-9a-fA-F]{24}$/.test(farm._id)) {
+      console.error('ERROR: Attempting to set selected farm with invalid ObjectId format', farm);
+      return;
+    }
+    
     setSelectedFarmState(farm);
     if (typeof window !== 'undefined') {
       if (farm) {
@@ -94,6 +106,14 @@ export function FarmProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     refreshFarms();
   }, [isAuthenticated, token]);
+
+  // Add debugging to see when selectedFarm changes
+  useEffect(() => {
+    console.log('FarmContext: selectedFarm changed', selectedFarm);
+    if (selectedFarm && selectedFarm._id === 'summary') {
+      console.error('ERROR: FarmContext selectedFarm is incorrectly set to "summary"', selectedFarm);
+    }
+  }, [selectedFarm]);
 
   return (
     <FarmContext.Provider value={{
