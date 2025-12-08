@@ -146,7 +146,7 @@ const DashboardPage = () => {
             width: rect.width
           });
         }
-      }, 0);
+      }, 100); // Increased delay to ensure proper rendering
       
       return () => clearTimeout(timer);
     }
@@ -1431,9 +1431,18 @@ const DashboardPage = () => {
                   ? 'bg-red-100 dark:bg-red-900/30 ring-2 ring-red-300 dark:ring-red-700' 
                   : 'hover:bg-red-100 dark:hover:bg-red-900/30'
               }`}
-              onMouseEnter={() => setShowPendingTooltip(true)}
-              onMouseLeave={() => setShowPendingTooltip(false)}
-              onClick={() => setShowPendingTooltip(!showPendingTooltip)}
+              onMouseEnter={() => {
+                console.log('Mouse entered pending card');
+                setShowPendingTooltip(true);
+              }}
+              onMouseLeave={() => {
+                console.log('Mouse left pending card');
+                setShowPendingTooltip(false);
+              }}
+              onClick={() => {
+                console.log('Clicked pending card');
+                setShowPendingTooltip(!showPendingTooltip);
+              }}
               title="Click or hover to see details"
             >
               <div className="flex items-center justify-between">
@@ -1465,35 +1474,27 @@ const DashboardPage = () => {
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-medium text-gray-900 dark:text-white">Clients with Pending Payments</h4>
                     </div>
-                    {clients.length > 0 ? (
-                      <div className="space-y-2 max-h-60 overflow-y-auto">
-                        {clients
-                          .filter(client => {
-                            const pendingAmount = clientPendingAmounts[client._id] || 0;
-                            return pendingAmount > 0;
-                          })
-                          .map(client => {
-                            const pendingAmount = clientPendingAmounts[client._id] || 0;
-                            return pendingAmount > 0 ? (
-                              <div key={client._id} className="flex justify-between items-center text-sm py-1">
-                                <span className="text-gray-700 dark:text-gray-300">{client.name}</span>
-                                <span className="font-medium text-red-600 dark:text-red-400">₹{pendingAmount.toLocaleString()}</span>
-                              </div>
-                            ) : null;
-                          })
-                          .filter(Boolean) // Remove any null entries
-                        }
-                        {clients.every(client => (clientPendingAmounts[client._id] || 0) <= 0) && (
-                          <div className="text-gray-500 dark:text-gray-400 text-sm py-2">
-                            No pending payments found
+                    <div className="space-y-2 max-h-60 overflow-y-auto">
+                      {clients
+                        .filter(client => (clientPendingAmounts[client._id] || 0) > 0)
+                        .map(client => (
+                          <div key={client._id} className="flex justify-between items-center text-sm py-1">
+                            <span className="text-gray-700 dark:text-gray-300">{client.name}</span>
+                            <span className="font-medium text-red-600 dark:text-red-400">₹{(clientPendingAmounts[client._id] || 0).toLocaleString()}</span>
                           </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="text-gray-500 dark:text-gray-400 text-sm py-2">
-                        No clients found
-                      </div>
-                    )}
+                        ))
+                      }
+                      {clients.length === 0 && (
+                        <div className="text-gray-500 dark:text-gray-400 text-sm py-2">
+                          No clients found
+                        </div>
+                      )}
+                      {clients.length > 0 && clients.every(client => (clientPendingAmounts[client._id] || 0) <= 0) && (
+                        <div className="text-gray-500 dark:text-gray-400 text-sm py-2">
+                          No pending payments found
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>,
                 document.body
