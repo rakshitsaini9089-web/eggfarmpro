@@ -157,7 +157,7 @@ export function AIReportCard() {
       case 'error':
         return (
           <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
           </svg>
         );
       default:
@@ -194,15 +194,15 @@ export function AIReportCard() {
           )}
           
           {selectedFarm ? (
-            <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg">
-              Generating report for: <strong>{selectedFarm.name}</strong>
+            <div className="mb-4 p-3 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-light rounded-lg">
+              Generating report for: <strong className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 dark:from-red-400 dark:via-purple-400 dark:to-blue-400 animate-rgb-text">{selectedFarm.name}</strong>
             </div>
           ) : (
-            <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 rounded-lg">
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg">
               Please select a farm to generate reports.
             </div>
           )}
-          
+
           <div className="space-y-4">
             {reports.map((report) => (
               <div key={report.type} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 dark:bg-gray-700/30">

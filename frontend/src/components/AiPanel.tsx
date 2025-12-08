@@ -812,7 +812,11 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       {/* Input Area */}
       <form 
         onSubmit={handleSubmit}
-        className="p-3 sm:p-4 border-t border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-t from-white/70 to-white/50 dark:from-gray-900/70 dark:to-gray-800/50 backdrop-blur-xl flex-shrink-0 rounded-b-3xl sm:rounded-b-4xl"
+        className="p-3 sm:p-4 border-t border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-t from-white/50 to-white/30 dark:from-gray-900/50 dark:to-gray-800/30 backdrop-blur-xl flex-shrink-0 rounded-b-3xl sm:rounded-b-4xl"
+        style={{
+          boxShadow: '0 4px 30px rgba(0, 119, 255, 0.1)',
+          border: '1px solid rgba(0, 119, 255, 0.2)'
+        }}
       >
         <div className="flex space-x-2 items-center">
           <div className="flex-1 relative">
