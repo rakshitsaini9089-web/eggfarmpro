@@ -596,12 +596,4 @@ export default function Layout({ children }: LayoutProps) {
       <AiChatWidget />
     </div>
   );
-}           </div>
-          </div>
-        </>
-      )}
-      {/* AI Chat Widget */}
-      <AiChatWidget />
-    </div>
-  );
 }
