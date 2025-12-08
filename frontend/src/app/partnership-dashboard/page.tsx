@@ -165,7 +165,7 @@ export default function PartnershipDashboard() {
         const totalSales = farmSales.reduce((sum, sale) => sum + sale.totalAmount, 0);
         const totalPayments = farmPayments.reduce((sum, payment) => sum + payment.amount, 0);
         const totalExpenses = farmExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-        const totalProfit = totalSales - totalPayments - totalExpenses;
+        const totalProfit = totalSales - totalExpenses; // Profit = Sales - Expenses (payments are money received)
         const totalBirdsInFarm = farmBatches.reduce((sum, batch) => sum + batch.quantity, 0);
         
         console.log(`Farm ${farm.name} totals:`, { 

@@ -146,8 +146,8 @@ function ReportsPage() {
       .filter(expense => expense.farmId === selectedFarm._id)
       .reduce((sum: number, expense: Expense) => sum + expense.amount, 0);
 
-    // Calculate profit/loss
-    const totalProfit = totalSales - totalPayments - totalExpenses;
+    // Calculate profit/loss (profit = sales - expenses, payments are money received from customers)
+    const totalProfit = totalSales - totalExpenses;
 
     // Calculate partner shares
     const partnerShares = selectedFarm.partnerDetails.map(partner => ({
@@ -175,7 +175,7 @@ function ReportsPage() {
       const totalSales = sales.reduce((sum: number, sale: Sale) => sum + sale.totalAmount, 0);
       const totalPayments = payments.reduce((sum: number, payment: Payment) => sum + payment.amount, 0);
       const totalExpenses = expenses.reduce((sum: number, expense: Expense) => sum + expense.amount, 0);
-      const totalProfit = totalSales - totalPayments - totalExpenses;
+      const totalProfit = totalSales - totalExpenses; // Profit = Sales - Expenses (payments are money received)
       
       return {
         totalSales,
@@ -193,7 +193,7 @@ function ReportsPage() {
       const totalSales = farmSales.reduce((sum: number, sale: Sale) => sum + sale.totalAmount, 0);
       const totalPayments = farmPayments.reduce((sum: number, payment: Payment) => sum + payment.amount, 0);
       const totalExpenses = farmExpenses.reduce((sum: number, expense: Expense) => sum + expense.amount, 0);
-      const totalProfit = totalSales - totalPayments - totalExpenses;
+      const totalProfit = totalSales - totalExpenses; // Profit = Sales - Expenses (payments are money received)
 
       return {
         totalSales,
@@ -219,7 +219,7 @@ function ReportsPage() {
     const totalSales = farmSales.reduce((sum: number, sale: Sale) => sum + sale.totalAmount, 0);
     const totalPayments = farmPayments.reduce((sum: number, payment: Payment) => sum + payment.amount, 0);
     const totalExpenses = farmExpenses.reduce((sum: number, expense: Expense) => sum + expense.amount, 0);
-    const totalProfit = totalSales - totalPayments - totalExpenses;
+    const totalProfit = totalSales - totalExpenses; // Profit = Sales - Expenses (payments are money received)
 
     return {
       ownerName: selectedFarm.owner,
@@ -276,7 +276,7 @@ function ReportsPage() {
       const totalSales = sales.reduce((sum: number, sale: Sale) => sum + sale.totalAmount, 0);
       const totalPayments = payments.reduce((sum: number, payment: Payment) => sum + payment.amount, 0);
       const totalExpenses = expenses.reduce((sum: number, expense: Expense) => sum + expense.amount, 0);
-      const totalProfit = totalSales - totalPayments - totalExpenses;
+      const totalProfit = totalSales - totalExpenses; // Profit = Sales - Expenses (payments are money received)
       
       return {
         farm,

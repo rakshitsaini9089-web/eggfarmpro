@@ -1,6 +1,7 @@
 'use client';
 // Modified by Egg Mind AI - Enhanced Payment Form with UPI Screenshot Reader
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { formatDate } from '../lib/dateUtils';
 import { dashboardAPI, saleAPI, paymentAPI, expenseAPI, clientAPI, marketRateAPI } from '../lib/api';
@@ -129,6 +130,27 @@ const DashboardPage = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [clientPendingAmounts, setClientPendingAmounts] = useState<Record<string, number>>({});
   const [showPendingTooltip, setShowPendingTooltip] = useState(false);
+  const pendingCardRef = useRef<HTMLDivElement>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0, width: 0 });
+
+  // Update tooltip position when it becomes visible
+  useEffect(() => {
+    if (showPendingTooltip) {
+      // Small delay to ensure the DOM is updated
+      const timer = setTimeout(() => {
+        if (pendingCardRef.current) {
+          const rect = pendingCardRef.current.getBoundingClientRect();
+          setTooltipPosition({
+            top: rect.bottom + window.scrollY,
+            left: rect.left + window.scrollX,
+            width: rect.width
+          });
+        }
+      }, 0);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showPendingTooltip]);
   const [showSaleModal, setShowSaleModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
@@ -1400,6 +1422,7 @@ const DashboardPage = () => {
             
             {/* Total Pending */}
             <div 
+              ref={pendingCardRef}
               className={`bg-red-50 dark:bg-red-900/20 p-4 rounded-lg cursor-pointer relative transition-colors duration-200 ${
                 showPendingTooltip 
                   ? 'bg-red-100 dark:bg-red-900/30 ring-2 ring-red-300 dark:ring-red-700' 
@@ -1423,9 +1446,19 @@ const DashboardPage = () => {
               </div>
               
               {/* Hover Tooltip with Client Details */}
-              {showPendingTooltip && (
-                <div className="absolute left-0 top-full mt-2 w-full z-50" onClick={(e) => e.stopPropagation()}>
-                  <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+              {showPendingTooltip && typeof document !== 'undefined' && createPortal(
+                <div 
+                  className="fixed z-[9999]"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    position: 'fixed',
+                    zIndex: 9999,
+                    left: `${tooltipPosition.left}px`,
+                    top: `${tooltipPosition.top}px`,
+                    width: `${tooltipPosition.width}px`,
+                  }}
+                >
+                  <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg border border-gray-200 dark:border-gray-700 p-4 relative mt-2">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">Clients with Pending Payments</h4>
                     {Object.keys(clientPendingAmounts).filter(clientId => clientPendingAmounts[clientId] > 0).length > 0 ? (
                       <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -1438,7 +1471,7 @@ const DashboardPage = () => {
                               return clientIdStr === clientId;
                             });
                             return client ? (
-                              <div key={clientId} className="flex justify-between items-center text-sm">
+                              <div key={clientId} className="flex justify-between items-center text-sm py-1">
                                 <span className="text-gray-700 dark:text-gray-300">{client.name}</span>
                                 <span className="font-medium text-red-600 dark:text-red-400">₹{amount.toLocaleString()}</span>
                               </div>
@@ -1451,7 +1484,8 @@ const DashboardPage = () => {
                       </div>
                     )}
                   </div>
-                </div>
+                </div>,
+                document.body
               )}
             </div>
           </div>
