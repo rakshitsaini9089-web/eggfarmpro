@@ -816,7 +816,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
                 }
               }}
               placeholder="Ask EggMind AI anything..."
-              className="w-full px-4 py-3 pr-12 border border-gray-300/40 dark:border-gray-600/40 rounded-2xl bg-white/80 dark:bg-gray-700/60 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent backdrop-blur-sm placeholder-gray-400 dark:placeholder-gray-500 resize-none min-h-[48px] max-h-[150px]"
+              className="w-full px-3 py-2 sm:px-4 sm:py-3 pr-10 sm:pr-12 border border-gray-300/40 dark:border-gray-600/40 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-gray-700/60 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent backdrop-blur-sm placeholder-gray-400 dark:placeholder-gray-500 resize-none min-h-[40px] sm:min-h-[48px] max-h-[120px] sm:max-h-[150px] hide-scrollbar"
               disabled={isLoading || isUploading}
               rows={1}
             />
