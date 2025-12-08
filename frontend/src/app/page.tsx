@@ -273,19 +273,19 @@ const DashboardPage = () => {
       fetchClients()
     ]);
 
-    // Set up auto-refresh every 30 seconds, but only if no modals are open
-    const interval = setInterval(() => {
-      // Only refresh if no modals are open to prevent data loss during user input
-      if (!showSaleModal && !showPaymentModal && !showExpenseModal && !showScreenshotModal) {
-        Promise.all([
-          fetchDashboardStats(),
-          fetchClients()
-        ]);
-      }
-    }, 30000);
+    // Auto-refresh disabled as per user request
+    // const interval = setInterval(() => {
+    //   // Only refresh if no modals are open to prevent data loss during user input
+    //   if (!showSaleModal && !showPaymentModal && !showExpenseModal && !showScreenshotModal) {
+    //     Promise.all([
+    //       fetchDashboardStats(),
+    //       fetchClients()
+    //     ]);
+    //   }
+    // }, 30000);
 
     // Clean up interval on component unmount
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, [selectedFarm, showSaleModal, showPaymentModal, showExpenseModal, showScreenshotModal]);
 
   // Close tooltip when clicking outside
