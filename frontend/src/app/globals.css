@@ -300,37 +300,6 @@ select {
   background-color: rgba(var(--primary), 0.15);
 }
 
-/* Enhanced dropdown styling */
-.enhanced-dropdown {
-  background: linear-gradient(145deg, rgb(var(--white)), rgb(var(--gray-50)));
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(var(--gray-200), 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transform: translateZ(0);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.enhanced-dropdown::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, rgb(var(--primary)), rgb(var(--primary-light)));
-  z-index: 1;
-}
-
-[data-theme="dark"] .enhanced-dropdown {
-  background: linear-gradient(145deg, rgb(var(--gray-800)), rgb(var(--gray-900)));
-  border-color: rgba(var(--gray-700), 0.8);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-}
-
 /* Nav button styling with magnify effect */
 .nav-button {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

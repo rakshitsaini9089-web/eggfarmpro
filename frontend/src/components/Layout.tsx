@@ -336,7 +336,7 @@ export default function Layout({ children }: LayoutProps) {
                 {/* User Dropdown Menu */}
                 {userMenuOpen && (
                   <div 
-                    className="absolute right-0 mt-2 w-48 enhanced-dropdown py-2 z-50"
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-xl shadow-lg py-2 z-50 border border-gray-200 dark:border-gray-600"
                     onMouseEnter={() => {
                       if (userMenuCloseTimer) {
                         clearTimeout(userMenuCloseTimer);
@@ -425,7 +425,7 @@ export default function Layout({ children }: LayoutProps) {
                   {/* Farm dropdown menu */}
                   {farmMenuOpen && (
                     <div 
-                      className="absolute right-0 mt-2 w-56 enhanced-dropdown py-2 z-50"
+                      className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-700 rounded-xl shadow-lg py-2 z-50 border border-gray-200 dark:border-gray-600"
                       onMouseEnter={() => {
                         if (farmMenuCloseTimer) {
                           clearTimeout(farmMenuCloseTimer);
