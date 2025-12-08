@@ -122,19 +122,19 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
   // Quick actions
   const quickActions: QuickAction[] = [
     { id: 'report-today', title: 'Generate Today’s Report', prompt: 'Generate today\'s farm report with all key metrics' },
-    { id: 'report-full', title: 'Generate Full PDF', prompt: 'Generate a comprehensive PDF report of all farm activities' },
+    { id: 'report-full', title: 'Download Full PDF', prompt: 'Generate a comprehensive PDF report of all farm activities' },
     { id: 'scan-upi', title: 'Scan UPI Screenshot', prompt: 'I want to scan a UPI payment screenshot' },
     { id: 'payments-today', title: 'View Today Payments', prompt: 'Show me all payments received today' },
     { id: 'ask-anything', title: 'Ask Anything', prompt: '' },
     { id: 'expense-summary', title: 'Expense Summary', prompt: 'Provide a summary of all expenses this month' },
-    { id: 'feed-calculator', title: 'Feed Calculator', prompt: 'Calculate optimal feed quantities for my flock' }
+    { id: 'flock-summary', title: 'Flock Summary', prompt: 'Show me the current flock status and health metrics' }
   ];
 
   // Suggestions that update based on context
   const [suggestions, setSuggestions] = useState<Suggestion[]>([
     { id: 'suggestion-1', text: 'Generate Today’s Report' },
-    { id: 'suggestion-2', text: 'Show recent activity' },
-    { id: 'suggestion-3', text: 'Create PDF' }
+    { id: 'suggestion-2', text: 'View Flock Summary' },
+    { id: 'suggestion-3', text: 'Check Payments' }
   ]);
 
   // Load chat history from localStorage on component mount
@@ -151,12 +151,12 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
         console.error('Failed to parse saved messages', e);
       }
     } else {
-      // Initial welcome message
+      // Initial welcome message in streaming style
       setMessages([
         {
           id: '1',
           role: 'assistant',
-          content: 'Hello! I\'m EggMind AI, your intelligent farming assistant. How can I help you with your egg farm management today?',
+          content: 'Hello there!\n\nI\'m EggMind AI, your intelligent farming assistant.\n\n- Ready to help with your egg farm management\n- Instant reports and insights\n- UPI payment processing\n\n*Key features*:\n\n- *Farm Reports* - Detailed analytics\n- *Payment Tracking* - UPI screenshot analysis\n- *24/7 Support* - Always here to help\n\nHow can I assist with your farm today?',
           timestamp: new Date()
         }
       ]);
@@ -270,13 +270,24 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
   // Handle suggestion click
   const handleSuggestionClick = (text: string) => {
     // Check if this is a report or UPI related suggestion
-    if (text.includes('Report') || text.includes('PDF')) {
+    if (text.includes('Report') || text.includes('PDF') || text.includes('Download')) {
       handleReportGeneration('report-today');
       return;
     }
     
-    if (text.includes('UPI') || text.includes('Scan')) {
+    if (text.includes('UPI') || text.includes('Scan') || text.includes('Receipt')) {
       fileInputRef.current?.click();
+      return;
+    }
+    
+    if (text.includes('Payment') || text.includes('Expense')) {
+      // For payment/expense related suggestions, add appropriate prompt
+      const prompt = text.includes('Payment') ? 'Show me recent payments' : 'Show me expense details';
+      setInputValue(prompt);
+      // Auto-submit after a short delay
+      setTimeout(() => {
+        handleSubmitPrompt(prompt);
+      }, 300);
       return;
     }
     
@@ -433,6 +444,63 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
     }
   };
 
+  // Format AI response in streaming style
+  const formatStreamingResponse = (content: string): string => {
+    // If the content is already formatted in our style, return as is
+    if (content.includes('*') || content.includes('\n\n') || content.includes('- ')) {
+      return content;
+    }
+    
+    // For unformatted content, apply our streaming style
+    // Split into sentences and add line breaks for better readability
+    const sentences = content.split('. ').filter(s => s.trim() !== '');
+    
+    if (sentences.length <= 1) {
+      return content; // Return as is if it's a short response
+    }
+    
+    // Add greeting and summary structure
+    const greeting = "Hello there!";
+    const summary = sentences.slice(0, 2).join('. ') + (sentences.length > 2 ? '.' : '');
+    
+    // Format as bullet points
+    const bulletPoints = sentences.slice(2).map(sentence => `- ${sentence.trim()}.`);
+    
+    // Combine with proper spacing
+    let formattedContent = `${greeting}
+
+${summary}
+
+`;
+    
+    if (bulletPoints.length > 0) {
+      formattedContent += bulletPoints.join('\n') + '\n\n';
+    }
+    
+    // Add key points in bold
+    formattedContent += '*Key insights*:\n\n';
+    
+    // Add some farming-specific key points based on content
+    if (content.toLowerCase().includes('report')) {
+      formattedContent += '- *Reports* are generated instantly\n';
+      formattedContent += '- *Data* is analyzed in real-time\n';
+      formattedContent += '- *PDF* download available\n\n';
+      formattedContent += 'Would you like me to generate a specific report for your farm?';
+    } else if (content.toLowerCase().includes('payment') || content.toLowerCase().includes('upi')) {
+      formattedContent += '- *Payments* are securely processed\n';
+      formattedContent += '- *UPI* screenshots are analyzed instantly\n';
+      formattedContent += '- *Records* are automatically maintained\n\n';
+      formattedContent += 'Would you like me to scan a payment receipt?';
+    } else {
+      formattedContent += '- *Farming* insights are personalized\n';
+      formattedContent += '- *Data* is always up-to-date\n';
+      formattedContent += '- *Support* is available 24/7\n\n';
+      formattedContent += 'How can I assist with your egg farm management today?';
+    }
+    
+    return formattedContent;
+  };
+
   // Submit a prompt (used for both manual input and quick actions)
   const handleSubmitPrompt = async (prompt: string) => {
     if (!prompt.trim() || isLoading) return;
@@ -487,11 +555,14 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
 
       const data = await response.json();
       
+      // Format the AI response in streaming style
+      const formattedContent = formatStreamingResponse(data.content);
+      
       // Add AI response directly without typing animation
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.content,
+        content: formattedContent,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, aiMessage]);
@@ -517,11 +588,21 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
         errorMessageContent = error.message;
       }
       
-      // Add error message to chat
+      // Add error message to chat in streaming style
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: errorMessageContent,
+        content: `Oops! Something went wrong.
+
+${errorMessageContent}
+
+*What you can do:*
+
+- Try again in a moment
+- Check your connection
+- Contact support if this continues
+
+Need help with something else?`,
         timestamp: new Date()
       };
       
@@ -587,21 +668,21 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
     // Simple context-based suggestions
     if (content.toLowerCase().includes('report')) {
       setSuggestions([
-        { id: 's1', text: 'Export this report as PDF' },
-        { id: 's2', text: 'Show me expense details' },
-        { id: 's3', text: 'Compare with last week' }
+        { id: 's1', text: 'Download PDF' },
+        { id: 's2', text: 'View Expense Details' },
+        { id: 's3', text: 'Compare with Last Week' }
       ]);
-    } else if (content.toLowerCase().includes('payment') || content.toLowerCase().includes('income')) {
+    } else if (content.toLowerCase().includes('payment') || content.toLowerCase().includes('income') || content.toLowerCase().includes('upi')) {
       setSuggestions([
-        { id: 's1', text: 'Show all payments this month' },
-        { id: 's2', text: 'Generate payment summary' },
-        { id: 's3', text: 'Scan another UPI receipt' }
+        { id: 's1', text: 'Show All Payments' },
+        { id: 's2', text: 'Generate Payment Summary' },
+        { id: 's3', text: 'Scan Another Receipt' }
       ]);
     } else {
       setSuggestions([
         { id: 's1', text: 'Generate Today’s Report' },
-        { id: 's2', text: 'Show recent activity' },
-        { id: 's3', text: 'Create PDF' }
+        { id: 's2', text: 'View Flock Summary' },
+        { id: 's3', text: 'Check Payments' }
       ]);
     }
   };
@@ -625,8 +706,8 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       ]);
       setSuggestions([
         { id: 's1', text: 'Generate Today’s Report' },
-        { id: 's2', text: 'Show recent activity' },
-        { id: 's3', text: 'Create PDF' }
+        { id: 's2', text: 'View Flock Summary' },
+        { id: 's3', text: 'Check Payments' }
       ]);
     }
   };
