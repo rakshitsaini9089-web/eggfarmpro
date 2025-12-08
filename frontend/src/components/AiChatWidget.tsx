@@ -40,7 +40,7 @@ export function AiChatWidget() {
             className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
             onClick={() => setIsOpen(false)}
           ></div>
-          <div className="relative transform transition-all duration-300 ease-in-out w-full h-[80vh] sm:h-auto sm:w-full sm:max-w-[20rem]">
+          <div className="relative transform transition-all duration-300 ease-in-out w-full h-[80vh] sm:h-auto sm:w-full sm:max-w-[22rem]">
             <AiPanel onClose={() => setIsOpen(false)} />
           </div>
         </div>

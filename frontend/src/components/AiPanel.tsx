@@ -487,8 +487,22 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
 
       const data = await response.json();
       
-      // Simulate typing animation for AI response
-      simulateTyping(data.content, updatedMessages);
+      // Add AI response directly without typing animation
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: data.content,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, aiMessage]);
+      setIsTyping(false);
+      setTypingContent('');
+      
+      // Show suggestions after a short delay
+      setTimeout(() => {
+        setShowSuggestions(true);
+      }, 200);
+
     } catch (error: any) {
       console.error('Error sending message:', error);
       let errorMessageContent = 'Sorry, I encountered an error processing your request. Please try again.';
@@ -524,8 +538,8 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
     setShowSuggestions(false);
     
     let i = 0;
-    // Use 40-55ms per character for realistic typing animation
-    const speed = Math.floor(Math.random() * 16) + 40; // Random between 40-55ms
+    // Use 15-25ms per character for faster typing animation
+    const speed = Math.floor(Math.random() * 11) + 15; // Random between 15-25ms
     
     // Clear any existing timeout
     if (typingTimeoutRef.current) {
@@ -558,10 +572,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
         // Show suggestions after typing is complete with fade-in animation
         setTimeout(() => {
           setShowSuggestions(true);
-        }, 100);
-        
-        // Update suggestions based on context (simplified logic)
-        updateSuggestions(content);
+        }, 200);
       }
     };
     
@@ -701,7 +712,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
               className={`w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-[18px] p-3 shadow-md backdrop-blur-sm ${
                 message.role === 'user' 
                   ? 'bg-gradient-to-r from-[#00B492] to-[#007CBA] text-white rounded-br-none shadow-lg' 
-                  : 'bg-white border border-[rgba(0,0,0,0.05)] text-gray-800 rounded-bl-none'
+                  : 'bg-white dark:bg-gray-800 border border-[rgba(0,0,0,0.05)] dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none'
               }`}
             >
               {message.role === 'user' ? (
@@ -711,7 +722,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
                   {renderMessageContent(message.content)}
                 </div>
               )}
-              <p className={`text-[10px] sm:text-xs mt-2 ${message.role === 'user' ? 'text-white/80' : 'text-gray-500'}`}>
+              <p className={`text-[10px] sm:text-xs mt-2 ${message.role === 'user' ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
                 {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
@@ -747,7 +758,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
         {/* Typing indicator */}
         {isTyping && (
           <div className="flex justify-start w-full animate-fadeIn">
-            <div className="bg-white rounded-[22px] rounded-bl-none p-4 shadow-md border border-[rgba(0,0,0,0.05)] w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%]">
+            <div className="bg-white dark:bg-gray-800 rounded-[22px] rounded-bl-none p-4 shadow-md border border-[rgba(0,0,0,0.05)] dark:border-gray-700 w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%]">
               <div className="flex items-center space-x-2">
                 <div className="flex space-x-1">
                   <div 
@@ -774,7 +785,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
                     }}
                   ></div>
                 </div>
-                <span className="text-sm text-gray-500 ml-2">AI is typing...</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">EggMind AI is typing...</span>
               </div>
             </div>
           </div>
@@ -787,14 +798,14 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
               <button
                 key={suggestion.id}
                 onClick={() => handleSuggestionClick(suggestion.text)}
-                className="bg-white hover:bg-white border border-[rgba(0,0,0,0.05)] rounded-[24px] px-[18px] py-2 text-sm text-[#2F3B52] shadow-[0_4px_10px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="bg-white dark:bg-gray-700/80 hover:bg-gray-100 dark:hover:bg-gray-600/80 border border-gray-200 dark:border-gray-600 rounded-[24px] px-[18px] py-2 text-sm text-[#2F3B52] dark:text-gray-200 shadow-[0_4px_10px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_10px_rgba(0,0,0,0.2)] transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
               >
                 {suggestion.text}
               </button>
             ))}
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -803,7 +814,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
         onSubmit={handleSubmit}
         className="p-3 sm:p-4 border-t border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-t from-white/70 to-white/50 dark:from-gray-900/70 dark:to-gray-800/50 backdrop-blur-xl flex-shrink-0 rounded-b-3xl sm:rounded-b-4xl"
       >
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 items-center">
           <div className="flex-1 relative">
             <textarea
               ref={textareaRef}
@@ -839,7 +850,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
           <button
             type="submit"
             disabled={isLoading || !inputValue.trim() || isUploading}
-            className="bg-gradient-to-r from-primary to-green-500 hover:from-primary-dark hover:to-green-600 text-gray-900 dark:text-white rounded-2xl p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg h-[48px] flex items-center justify-center"
+            className="bg-gradient-to-r from-primary to-green-500 hover:from-primary-dark hover:to-green-600 text-gray-900 dark:text-white rounded-2xl p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg h-[40px] sm:h-[48px] flex items-center justify-center"
             aria-label="Send message"
           >
             <svg 
