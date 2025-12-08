@@ -169,7 +169,20 @@ export default function InventoryPage() {
     try {
       const quantity = parseFloat(formData.quantity);
       const costPerUnit = parseFloat(formData.costPerUnit);
+      
+      // Validate that we have valid numbers
+      if (isNaN(quantity) || isNaN(costPerUnit)) {
+        alert('Please enter valid numbers for quantity and cost per unit.');
+        return;
+      }
+      
       const totalPrice = quantity * costPerUnit;
+      
+      // Validate that we have a valid totalPrice
+      if (isNaN(totalPrice)) {
+        alert('Failed to calculate total price. Please check your inputs.');
+        return;
+      }
       
       const inventoryData = {
         ...formData,
@@ -179,6 +192,12 @@ export default function InventoryPage() {
         lowStockThreshold: formData.lowStockThreshold ? parseFloat(formData.lowStockThreshold) : undefined,
         farmId: selectedFarm?._id
       };
+
+      // Validate that we have a farmId
+      if (!inventoryData.farmId) {
+        alert('Please select a farm before saving.');
+        return;
+      }
 
       if (editingInventoryItem) {
         await inventoryAPI.update(editingInventoryItem._id, inventoryData);

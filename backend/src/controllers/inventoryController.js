@@ -172,12 +172,40 @@ async function createInventoryItem(req, res) {
       farmId // Add farmId
     } = req.body;
     
+    // Validate required fields
+    if (!itemName || !itemType || quantity === undefined || unit === undefined || 
+        costPerUnit === undefined || !farmId) {
+      return res.status(400).json({ 
+        message: 'Missing required fields: itemName, itemType, quantity, unit, costPerUnit, and farmId are required' 
+      });
+    }
+    
+    // Validate numeric fields
+    const parsedQuantity = parseFloat(quantity);
+    const parsedCostPerUnit = parseFloat(costPerUnit);
+    
+    if (isNaN(parsedQuantity) || isNaN(parsedCostPerUnit)) {
+      return res.status(400).json({ 
+        message: 'Quantity and costPerUnit must be valid numbers' 
+      });
+    }
+    
+    // Calculate total price
+    const totalPrice = parsedQuantity * parsedCostPerUnit;
+    
+    if (isNaN(totalPrice)) {
+      return res.status(400).json({ 
+        message: 'Failed to calculate total price. Please check quantity and costPerUnit values.' 
+      });
+    }
+    
     const inventoryItem = new Inventory({
       itemName,
       itemType,
-      quantity: parseFloat(quantity),
+      quantity: parsedQuantity,
       unit,
-      costPerUnit: parseFloat(costPerUnit),
+      costPerUnit: parsedCostPerUnit,
+      totalPrice, // Use calculated total price
       supplier,
       purchaseDate: new Date(purchaseDate),
       expiryDate: expiryDate ? new Date(expiryDate) : undefined,
@@ -238,24 +266,67 @@ async function updateInventoryItem(req, res) {
       usedQuantity
     } = req.body;
     
+    // Build update object with validated values
+    const updateData = {
+      itemName,
+      itemType,
+      unit,
+      supplier,
+      purchaseDate: purchaseDate ? new Date(purchaseDate) : undefined,
+      expiryDate: expiryDate ? new Date(expiryDate) : undefined,
+      batchNumber,
+      location,
+      notes,
+      updatedBy: req.user.userId
+    };
+    
+    // Handle numeric fields
+    if (quantity !== undefined) {
+      const parsedQuantity = parseFloat(quantity);
+      if (isNaN(parsedQuantity)) {
+        return res.status(400).json({ message: 'Quantity must be a valid number' });
+      }
+      updateData.quantity = parsedQuantity;
+    }
+    
+    if (costPerUnit !== undefined) {
+      const parsedCostPerUnit = parseFloat(costPerUnit);
+      if (isNaN(parsedCostPerUnit)) {
+        return res.status(400).json({ message: 'Cost per unit must be a valid number' });
+      }
+      updateData.costPerUnit = parsedCostPerUnit;
+      
+      // If we have both quantity and costPerUnit, recalculate totalPrice
+      if (quantity !== undefined) {
+        const parsedQuantity = parseFloat(quantity);
+        if (!isNaN(parsedQuantity)) {
+          const totalPrice = parsedQuantity * parsedCostPerUnit;
+          if (!isNaN(totalPrice)) {
+            updateData.totalPrice = totalPrice;
+          }
+        }
+      }
+    }
+    
+    if (lowStockThreshold !== undefined) {
+      const parsedLowStockThreshold = parseFloat(lowStockThreshold);
+      if (isNaN(parsedLowStockThreshold)) {
+        return res.status(400).json({ message: 'Low stock threshold must be a valid number' });
+      }
+      updateData.lowStockThreshold = parsedLowStockThreshold;
+    }
+    
+    if (usedQuantity !== undefined) {
+      const parsedUsedQuantity = parseFloat(usedQuantity);
+      if (isNaN(parsedUsedQuantity)) {
+        return res.status(400).json({ message: 'Used quantity must be a valid number' });
+      }
+      updateData.usedQuantity = parsedUsedQuantity;
+    }
+
     const inventoryItem = await Inventory.findByIdAndUpdate(
       id,
-      {
-        itemName,
-        itemType,
-        quantity: quantity !== undefined ? parseFloat(quantity) : undefined,
-        unit,
-        costPerUnit: costPerUnit !== undefined ? parseFloat(costPerUnit) : undefined,
-        supplier,
-        purchaseDate: purchaseDate ? new Date(purchaseDate) : undefined,
-        expiryDate: expiryDate ? new Date(expiryDate) : undefined,
-        batchNumber,
-        location,
-        notes,
-        lowStockThreshold: lowStockThreshold !== undefined ? parseFloat(lowStockThreshold) : undefined,
-        usedQuantity: usedQuantity !== undefined ? parseFloat(usedQuantity) : undefined,
-        updatedBy: req.user.userId
-      },
+      updateData,
       { new: true }
     );
 
