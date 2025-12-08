@@ -640,18 +640,18 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       />
       
       {/* Header */}
-      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-r from-lime-500 via-green-400 to-emerald-500 relative overflow-hidden flex-shrink-0 rounded-t-3xl sm:rounded-t-4xl">
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200/20 dark:border-gray-700/30 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 relative overflow-hidden flex-shrink-0 rounded-t-3xl sm:rounded-t-4xl">
         {/* Animated gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 dark:from-black/20 dark:via-transparent dark:to-black/20"></div>
         {/* Overlay for better text contrast in light mode */}
         <div className="absolute inset-0 bg-black/5 dark:bg-transparent"></div>
         <div className="flex items-center space-x-2 sm:space-x-3 relative z-10 min-w-0">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 flex items-center justify-center shadow-lg ring-2 ring-white/20 flex-shrink-0">
+          <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-white/95 flex items-center justify-center shadow-lg ring-2 ring-white/20 flex-shrink-0">
             {/* Replaced SVG with PNG logo */}
             <img 
               src="/logo/MindAilogo.png" 
               alt="EggMind AI Logo" 
-              className="h-4 w-4 sm:h-5 sm:w-5 object-contain"
+              className="h-12 w-12 sm:h-13 sm:w-13 object-contain"
             />
           </div>
           <div className="min-w-0 flex-1">
@@ -711,7 +711,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
             <div 
               className={`w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-[18px] p-3 shadow-md backdrop-blur-sm ${
                 message.role === 'user' 
-                  ? 'bg-gradient-to-r from-[#00B492] to-[#007CBA] text-white rounded-br-none shadow-lg' 
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-none shadow-lg inline-block w-auto max-w-full' 
                   : 'bg-white dark:bg-gray-800 border border-[rgba(0,0,0,0.05)] dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none'
               }`}
             >
@@ -835,7 +835,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
               type="button"
               onClick={toggleListening}
               disabled={isLoading || isUploading}
-              className={`absolute right-10 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full ${
+              className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full ${
                 isListening 
                   ? 'bg-red-500 text-white' 
                   : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
@@ -850,7 +850,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
           <button
             type="submit"
             disabled={isLoading || !inputValue.trim() || isUploading}
-            className="bg-gradient-to-r from-primary to-green-500 hover:from-primary-dark hover:to-green-600 text-gray-900 dark:text-white rounded-2xl p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg h-[40px] sm:h-[48px] flex items-center justify-center"
+            className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-2xl p-2.5 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg h-[36px] sm:h-[40px] flex items-center justify-center -translate-y-1"
             aria-label="Send message"
           >
             <svg 
