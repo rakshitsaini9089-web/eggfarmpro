@@ -35,12 +35,12 @@ export function AiChatWidget() {
 
       {/* AI Panel with smooth transition */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 pointer-events-none">
+        <div className="fixed inset-0 z-50 flex items-end justify-end p-0 sm:p-4 pointer-events-auto">
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 pointer-events-auto"
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
             onClick={() => setIsOpen(false)}
           ></div>
-          <div className="fixed bottom-0 right-0 sm:bottom-4 sm:right-4 pointer-events-auto">
+          <div className="relative transform transition-all duration-300 ease-in-out w-full h-full sm:h-auto sm:w-full sm:max-w-2xl">
             <AiPanel onClose={() => setIsOpen(false)} />
           </div>
         </div>

@@ -291,7 +291,7 @@ export default function InventoryPage() {
             onClick={() => setSelectedItemType('all')}
             className={`px-4 py-2 rounded-lg transition-colors ${
               selectedItemType === 'all'
-                ? 'bg-primary text-white'
+                ? 'bg-[rgb(34,197,94)] text-white hover:bg-[rgb(22,163,74)]'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
@@ -301,7 +301,7 @@ export default function InventoryPage() {
             onClick={() => setSelectedItemType('feed')}
             className={`px-4 py-2 rounded-lg transition-colors ${
               selectedItemType === 'feed'
-                ? 'bg-primary text-white'
+                ? 'bg-[rgb(34,197,94)] text-white hover:bg-[rgb(22,163,74)]'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
@@ -311,7 +311,7 @@ export default function InventoryPage() {
             onClick={() => setSelectedItemType('medicine')}
             className={`px-4 py-2 rounded-lg transition-colors ${
               selectedItemType === 'medicine'
-                ? 'bg-primary text-white'
+                ? 'bg-[rgb(34,197,94)] text-white hover:bg-[rgb(22,163,74)]'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
@@ -321,7 +321,7 @@ export default function InventoryPage() {
             onClick={() => setSelectedItemType('vaccine')}
             className={`px-4 py-2 rounded-lg transition-colors ${
               selectedItemType === 'vaccine'
-                ? 'bg-primary text-white'
+                ? 'bg-[rgb(34,197,94)] text-white hover:bg-[rgb(22,163,74)]'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
