@@ -56,14 +56,11 @@ export function AIReportCard() {
         throw new Error('No authentication token found. Please log in again.');
       }
       
-      // Check if a farm is selected
-      if (!selectedFarm) {
-        throw new Error('Please select a specific farm to generate detailed reports. Consolidated reports for all farms are not yet available.');
-      }
-      
-      // Build the URL with farmId as query parameter
       const baseUrl = getApiBaseUrl();
-      const url = `${baseUrl}/ai/generate-report/${type}?farmId=${selectedFarm._id}`;
+      // Build the URL with farmId as query parameter
+      const url = selectedFarm 
+        ? `${baseUrl}/ai/generate-report/${type}?farmId=${selectedFarm._id}`
+        : `${baseUrl}/ai/generate-consolidated-report/${type}`;
       
       // Call the correct backend AI report endpoint directly
       const response = await fetch(url, {
@@ -198,8 +195,8 @@ export function AIReportCard() {
               Generating report for: <strong className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 dark:from-red-400 dark:via-purple-400 dark:to-blue-400 animate-rgb-text">{selectedFarm.name}</strong>
             </div>
           ) : (
-            <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 rounded-lg">
-              Showing consolidated reports for all farms. Select a specific farm for detailed reports.
+            <div className="mb-4 p-3 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-light rounded-lg">
+              Generating consolidated reports for: <strong className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 dark:from-red-400 dark:via-purple-400 dark:to-blue-400 animate-rgb-text">All Farms</strong>
             </div>
           )}
           
@@ -228,15 +225,12 @@ export function AIReportCard() {
                   </div>
                   <button
                     onClick={() => generateReport(report.type)}
-                    disabled={report.status === 'generating' || generatingType === report.type || !selectedFarm}
+                    disabled={report.status === 'generating' || generatingType === report.type}
                     className={`ml-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                       report.status === 'generating' || generatingType === report.type
                         ? 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
-                        : !selectedFarm
-                          ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 cursor-not-allowed'
-                          : 'bg-primary hover:bg-primary-dark text-gray-900 dark:text-white shadow-sm hover:shadow-md'
+                        : 'bg-primary hover:bg-primary-dark text-gray-900 dark:text-white shadow-sm hover:shadow-md'
                     }`}
-                    title={!selectedFarm ? 'Please select a specific farm to generate reports' : ''}
                   >
                     {generatingType === report.type ? (
                       <span className="flex items-center">
@@ -247,7 +241,7 @@ export function AIReportCard() {
                         Generating...
                       </span>
                     ) : (
-                      !selectedFarm ? 'Unavailable' : 'Generate'
+                      'Generate'
                     )}
                   </button>
                 </div>
