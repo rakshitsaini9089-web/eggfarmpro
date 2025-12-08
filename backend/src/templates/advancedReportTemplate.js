@@ -37,9 +37,9 @@ const generateAdvancedReportHTML = (reportData) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eggmind AI Report</title>
+    <title>Eggmind AI Report - ${farmName || 'Farm'} Report</title>
     <style>
-        /* Base styles */
+        /* Base styles for A4 size formatting */
         * {
             margin: 0;
             padding: 0;
@@ -57,19 +57,21 @@ const generateAdvancedReportHTML = (reportData) => {
             background-color: #FFFFFF;
         }
         
-        /* Main Content */
+        /* Main Content Container */
         .report-container {
             width: 100%;
             min-height: 297mm;
             padding: 0;
             margin: 0;
+            position: relative;
         }
         
-        /* Premium Header Section */
+        /* Premium Header Section with Professional Styling */
         .header-section {
             text-align: center;
             padding: 30px 20px;
             margin-bottom: 20px;
+            background-color: #FFFFFF;
         }
         
         .logo {
@@ -86,6 +88,18 @@ const generateAdvancedReportHTML = (reportData) => {
             color: #0B5C2C;
         }
         
+        .header-subtitle {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 15px;
+        }
+        
+        .report-meta {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        
         .divider {
             height: 2px;
             background-color: #18A558;
@@ -93,28 +107,33 @@ const generateAdvancedReportHTML = (reportData) => {
             margin: 0 auto 30px;
         }
         
-        /* Section Layout */
+        /* Section Layout with Proper Spacing */
         .section {
-            padding: 20px 30px;
+            padding: 25px 30px;
             margin-bottom: 30px;
-            page-break-before: always;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            page-break-inside: avoid;
         }
         
         .section:first-child {
-            page-break-before: auto;
+            margin-top: 0;
         }
         
         .section-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #0B5C2C;
+            border-bottom: 2px solid #18A558;
+            padding-bottom: 10px;
         }
         
         .section-divider {
             height: 1px;
             background-color: #E0E0E0;
-            margin-bottom: 20px;
+            margin: 15px 0 20px 0;
         }
         
         .section-content {
@@ -122,26 +141,55 @@ const generateAdvancedReportHTML = (reportData) => {
             line-height: 1.6;
         }
         
-        /* Table Styles */
+        /* Data Sections with Professional Spacing */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background-color: #F8F8F8;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0B5C2C;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        /* Table Styles with Enhanced Design */
         .data-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            margin: 15px 0;
+            margin: 15px 0 25px 0;
             border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .data-table th {
             background-color: #0B5C2C;
             color: #FFFFFF;
             text-align: left;
-            padding: 12px 14px;
-            font-weight: bold;
+            padding: 14px 16px;
+            font-weight: 600;
         }
         
         .data-table td {
-            padding: 12px 14px;
+            padding: 14px 16px;
             border-bottom: 1px solid #EEEEEE;
         }
         
@@ -153,30 +201,45 @@ const generateAdvancedReportHTML = (reportData) => {
             border-bottom: none;
         }
         
-        /* Card Blocks for AI Insights */
+        .data-table tr:hover {
+            background-color: #F0F0F0;
+        }
+        
+        /* Card Blocks for AI Insights with Premium Styling */
         .insight-card {
             background-color: #F3FFF6;
             border-left: 4px solid #18A558;
             border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            page-break-inside: avoid;
         }
         
         .insight-title {
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #0B5C2C;
         }
         
-        /* Footer */
+        .insight-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #333333;
+        }
+        
+        /* Footer with Timestamp */
         .report-footer {
             text-align: right;
-            padding: 20px 30px;
+            padding: 25px 30px;
             color: #666666;
             font-size: 12px;
             border-top: 1px solid #E0E0E0;
             margin-top: 30px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
         
         .footer-divider {
@@ -185,15 +248,35 @@ const generateAdvancedReportHTML = (reportData) => {
             margin-bottom: 15px;
         }
         
-        /* Lists */
+        /* Lists with Enhanced Styling */
         .section-content ul, 
         .section-content ol {
-            margin: 10px 0;
-            padding-left: 20px;
+            margin: 15px 0;
+            padding-left: 25px;
         }
         
         .section-content li {
-            margin: 8px 0;
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+        
+        .section-content ul li {
+            list-style-type: disc;
+        }
+        
+        .section-content ol li {
+            list-style-type: decimal;
+        }
+        
+        /* Trend Indicators */
+        .trend-positive {
+            color: #18A558;
+            font-weight: bold;
+        }
+        
+        .trend-negative {
+            color: #0B5C2C;
+            font-weight: bold;
         }
         
         /* Responsive adjustments for print */
@@ -207,14 +290,17 @@ const generateAdvancedReportHTML = (reportData) => {
             
             .section {
                 break-inside: avoid;
+                page-break-inside: avoid;
             }
             
             .data-table {
                 break-inside: avoid;
+                page-break-inside: avoid;
             }
             
             .data-table tr {
                 break-inside: avoid;
+                page-break-inside: avoid;
             }
             
             .data-table thead {
@@ -224,6 +310,16 @@ const generateAdvancedReportHTML = (reportData) => {
             .data-table tfoot {
                 display: table-footer-group;
             }
+            
+            .insight-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* Page Breaks for Better Organization */
+        .page-break {
+            page-break-before: always;
         }
     </style>
 </head>
@@ -232,86 +328,119 @@ const generateAdvancedReportHTML = (reportData) => {
     <div class="report-container">
         <!-- Premium Header Section -->
         <div class="header-section">
-            <img src="/logo/MindAilogo.png" alt="EggFarm Pro Logo" class="logo">
             <h1 class="header-title">Eggmind AI Report</h1>
+            <div class="header-subtitle">${farmName || 'Farm Management Report'}</div>
+            <div class="report-meta">
+                Generated on: ${new Date().toLocaleString()} | 
+                Report ID: ${reportId || 'N/A'} | 
+                Farm ID: ${farmId || 'N/A'}
+            </div>
             <div class="divider"></div>
         </div>
         
-        <!-- Summary Section -->
+        <!-- Executive Summary Section -->
         <div class="section">
-            <h2 class="section-title">Summary</h2>
+            <h2 class="section-title">Executive Summary</h2>
             <div class="section-divider"></div>
             <div class="section-content">
-                <p>This report provides a comprehensive overview of your farm's performance metrics, financial data, and AI-generated insights for optimal decision-making.</p>
+                <p>This comprehensive report provides key performance metrics, financial data, and AI-generated insights for optimal farm management decisions.</p>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Eggs Collected</div>
+                        <div class="metric-value">${eggsCollected || 0}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Today's Revenue</div>
+                        <div class="metric-value">₹${todaysRevenue || 0}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Efficiency Score</div>
+                        <div class="metric-value">${efficiencyScore || 0}%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Mortality Rate</div>
+                        <div class="metric-value">${mortality || 0}</div>
+                    </div>
+                </div>
                 
                 <div class="insight-card">
-                    <div class="insight-title">Key Metrics Overview</div>
-                    <p>Farm ID: ${farmId || 'N/A'}</p>
-                    <p>Report Date: ${date || new Date().toLocaleDateString()}</p>
-                    <p>Report ID: ${reportId || 'N/A'}</p>
+                    <div class="insight-title">Key Insight</div>
+                    <div class="insight-content">
+                        <p>${aiInsights || 'Current operational metrics indicate stable performance. Continue monitoring key indicators for optimal results.'}</p>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Daily Performance Section -->
+        <!-- Performance Metrics Section -->
         <div class="section">
-            <h2 class="section-title">Daily Performance</h2>
+            <h2 class="section-title">Performance Metrics</h2>
             <div class="section-divider"></div>
             <div class="section-content">
                 <table class="data-table">
                     <thead>
                         <tr>
                             <th>Metric</th>
-                            <th>Value</th>
+                            <th>Current Value</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Eggs Collected</td>
-                            <td>${eggsCollected || 0}</td>
+                            <td>Productivity Index</td>
+                            <td>${avgProductivity}/100</td>
+                            <td>${avgProductivity >= 80 ? 'Excellent' : avgProductivity >= 60 ? 'Good' : 'Needs Attention'}</td>
                         </tr>
                         <tr>
-                            <td>Mortality</td>
-                            <td>${mortality || 0}</td>
+                            <td>Feed Conversion Ratio</td>
+                            <td>${avgFCR.toFixed(2)}</td>
+                            <td>${avgFCR <= 2.0 ? 'Optimal' : avgFCR <= 2.5 ? 'Acceptable' : 'Requires Optimization'}</td>
                         </tr>
                         <tr>
-                            <td>Efficiency Score</td>
-                            <td>${efficiencyScore || 0}%</td>
+                            <td>Health Stability</td>
+                            <td>${avgHealth}/100</td>
+                            <td>${avgHealth >= 90 ? 'Excellent' : avgHealth >= 75 ? 'Good' : 'Monitor Closely'}</td>
                         </tr>
                         <tr>
-                            <td>Today's Revenue</td>
-                            <td>₹${todaysRevenue || 0}</td>
+                            <td>Sales Performance</td>
+                            <td>${avgSales}/100</td>
+                            <td>${avgSales >= 85 ? 'Strong' : avgSales >= 70 ? 'Steady' : 'Opportunity for Growth'}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
         
-        <!-- Key Insights Section -->
+        <!-- Financial Overview Section -->
         <div class="section">
-            <h2 class="section-title">Key Insights</h2>
+            <h2 class="section-title">Financial Overview</h2>
             <div class="section-divider"></div>
             <div class="section-content">
-                <div class="insight-card">
-                    <div class="insight-title">AI Analysis</div>
-                    <p>${aiInsights || 'No specific insights available at this time.'}</p>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Weekly Revenue</div>
+                        <div class="metric-value">₹${weeklyRevenue || 0}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Monthly Sales</div>
+                        <div class="metric-value">₹${monthlySales || 0}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Previous Month</div>
+                        <div class="metric-value">₹${lastMonthSales || 0}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Trend</div>
+                        <div class="metric-value">
+                            <span class="${monthlyTrend === '▲' ? 'trend-positive' : 'trend-negative'}">
+                                ${monthlyTrend} ${Math.abs(((monthlySales || 0) - (lastMonthSales || 0)) / (lastMonthSales || 1) * 100).toFixed(1)}%
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 
-                <h3>Performance Indicators</h3>
-                <ul>
-                    <li>Productivity Index: ${avgProductivity}/100</li>
-                    <li>Feed Conversion Ratio: ${avgFCR.toFixed(2)}</li>
-                    <li>Health Stability: ${avgHealth}/100</li>
-                    <li>Sales Performance: ${avgSales}/100</li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Sales Data Section -->
-        <div class="section">
-            <h2 class="section-title">Sales Data</h2>
-            <div class="section-divider"></div>
-            <div class="section-content">
+                <h3>Detailed Sales Data</h3>
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -332,24 +461,22 @@ const generateAdvancedReportHTML = (reportData) => {
                             <td>₹${sale.total || 0}</td>
                         </tr>
                         `).join('')}
+                        ${(dailySalesData || []).length === 0 ? `
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #666666;">No sales data available</td>
+                        </tr>
+                        ` : ''}
                     </tbody>
                 </table>
-                
-                <div class="insight-card">
-                    <div class="insight-title">Sales Summary</div>
-                    <p>Weekly Revenue: ₹${weeklyRevenue || 0}</p>
-                    <p>Monthly Sales: ₹${monthlySales || 0}</p>
-                    <p>Previous Month: ₹${lastMonthSales || 0}</p>
-                    <p>Trend: <span style="color: ${trendColor};">${monthlyTrend} ${Math.abs(((monthlySales || 0) - (lastMonthSales || 0)) / (lastMonthSales || 1) * 100).toFixed(1)}%</span></p>
-                </div>
             </div>
         </div>
         
-        <!-- Expense Overview Section -->
+        <!-- Operational Data Section -->
         <div class="section">
-            <h2 class="section-title">Expense Overview</h2>
+            <h2 class="section-title">Operational Data</h2>
             <div class="section-divider"></div>
             <div class="section-content">
+                <h3>Feed Consumption</h3>
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -370,6 +497,11 @@ const generateAdvancedReportHTML = (reportData) => {
                             <td>₹${feed.cost || 0}</td>
                         </tr>
                         `).join('')}
+                        ${(feedConsumptionData || []).length === 0 ? `
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #666666;">No feed consumption data available</td>
+                        </tr>
+                        ` : ''}
                     </tbody>
                 </table>
             </div>
@@ -382,23 +514,39 @@ const generateAdvancedReportHTML = (reportData) => {
             <div class="section-content">
                 <div class="insight-card">
                     <div class="insight-title">Actionable Insights</div>
-                    <p>${aiInsights || 'Continue monitoring your current operations for optimal performance.'}</p>
+                    <div class="insight-content">
+                        <p>${aiInsights || 'Based on current data patterns, maintain current operational procedures while monitoring key performance indicators for optimization opportunities.'}</p>
+                    </div>
                 </div>
                 
-                <h3>Optimization Tips</h3>
+                <h3>Optimization Strategies</h3>
                 <ol>
-                    <li>Maintain consistent feeding schedules to optimize egg production</li>
-                    <li>Monitor flock health regularly to prevent disease outbreaks</li>
-                    <li>Analyze sales trends to adjust pricing strategies</li>
-                    <li>Review expense patterns to identify cost-saving opportunities</li>
+                    <li><strong>Production Efficiency:</strong> Maintain consistent feeding schedules to optimize egg production rates</li>
+                    <li><strong>Health Monitoring:</strong> Implement regular health checks to prevent disease outbreaks and maintain flock stability</li>
+                    <li><strong>Financial Performance:</strong> Analyze sales trends to adjust pricing strategies and maximize revenue</li>
+                    <li><strong>Cost Management:</strong> Review expense patterns to identify cost-saving opportunities without compromising quality</li>
+                    <li><strong>Data-Driven Decisions:</strong> Leverage AI insights for predictive analytics and proactive farm management</li>
                 </ol>
+                
+                <div class="insight-card">
+                    <div class="insight-title">Next Steps</div>
+                    <div class="insight-content">
+                        <ul>
+                            <li>Review this report weekly to track performance trends</li>
+                            <li>Implement recommended optimization strategies</li>
+                            <li>Monitor key metrics for continuous improvement</li>
+                            <li>Consult with agricultural specialists for complex issues</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         
         <!-- Footer -->
         <div class="report-footer">
             <div class="footer-divider"></div>
-            <p>Generated on: ${new Date().toLocaleString()}</p>
+            <p>Generated by Eggmind AI on: ${new Date().toLocaleString()}</p>
+            <p>Confidential - For Internal Use Only</p>
         </div>
     </div>
 </body>
