@@ -58,7 +58,7 @@ export function AIReportCard() {
       
       // Check if a farm is selected
       if (!selectedFarm) {
-        throw new Error('No farm selected. Please select a farm before generating a report.');
+        throw new Error('Please select a specific farm to generate detailed reports. Consolidated reports for all farms are not yet available.');
       }
       
       // Build the URL with farmId as query parameter
@@ -198,8 +198,8 @@ export function AIReportCard() {
               Generating report for: <strong className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 dark:from-red-400 dark:via-purple-400 dark:to-blue-400 animate-rgb-text">{selectedFarm.name}</strong>
             </div>
           ) : (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg">
-              Please select a farm to generate reports.
+            <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 rounded-lg">
+              Showing consolidated reports for all farms. Select a specific farm for detailed reports.
             </div>
           )}
           
@@ -230,10 +230,13 @@ export function AIReportCard() {
                     onClick={() => generateReport(report.type)}
                     disabled={report.status === 'generating' || generatingType === report.type || !selectedFarm}
                     className={`ml-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                      report.status === 'generating' || generatingType === report.type || !selectedFarm
+                      report.status === 'generating' || generatingType === report.type
                         ? 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
-                        : 'bg-primary hover:bg-primary-dark text-gray-900 dark:text-white shadow-sm hover:shadow-md'
+                        : !selectedFarm
+                          ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 cursor-not-allowed'
+                          : 'bg-primary hover:bg-primary-dark text-gray-900 dark:text-white shadow-sm hover:shadow-md'
                     }`}
+                    title={!selectedFarm ? 'Please select a specific farm to generate reports' : ''}
                   >
                     {generatingType === report.type ? (
                       <span className="flex items-center">
@@ -244,7 +247,7 @@ export function AIReportCard() {
                         Generating...
                       </span>
                     ) : (
-                      'Generate'
+                      !selectedFarm ? 'Unavailable' : 'Generate'
                     )}
                   </button>
                 </div>
