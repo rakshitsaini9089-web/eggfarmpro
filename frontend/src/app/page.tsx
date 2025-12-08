@@ -215,15 +215,18 @@ const DashboardPage = () => {
       clientsData.forEach((client: Client) => {
         console.log(`Processing client: ${client.name} (${client._id}) - Type: ${typeof client._id}`);
         
+        // Normalize client ID for comparison
+        const normalizedClientId = typeof client._id === 'string' ? client._id : String(client._id);
+        
         // Calculate total sales amount for this client
         const clientSales = salesData.filter((sale: Sale) => {
           // Handle both string and object IDs
           const saleClientId = typeof sale.clientId === 'string' ? sale.clientId : String(sale.clientId);
-          const isMatch = saleClientId === client._id;
+          const isMatch = saleClientId === normalizedClientId;
           if (isMatch) {
             console.log(`  Matched sale:`, sale);
           } else {
-            console.log(`  Sale ${sale._id} clientId "${saleClientId}" does not match client._id "${client._id}"`);
+            console.log(`  Sale ${sale._id} clientId "${saleClientId}" does not match client._id "${normalizedClientId}"`);
           }
           return isMatch;
         });
@@ -233,11 +236,11 @@ const DashboardPage = () => {
         const clientPayments = paymentsData.filter((payment: Payment) => {
           // Handle both string and object IDs
           const paymentClientId = typeof payment.clientId === 'string' ? payment.clientId : String(payment.clientId);
-          const isMatch = paymentClientId === client._id;
+          const isMatch = paymentClientId === normalizedClientId;
           if (isMatch) {
             console.log(`  Matched payment:`, payment);
           } else {
-            console.log(`  Payment ${payment._id} clientId "${paymentClientId}" does not match client._id "${client._id}"`);
+            console.log(`  Payment ${payment._id} clientId "${paymentClientId}" does not match client._id "${normalizedClientId}"`);
           }
           return isMatch;
         });
@@ -246,7 +249,7 @@ const DashboardPage = () => {
         // Calculate pending amount
         const pendingAmount = totalOwed - totalPaid;
         console.log(`  Client ${client.name}: Owed=${totalOwed}, Paid=${totalPaid}, Pending=${pendingAmount}`);
-        pendingAmounts[client._id] = pendingAmount;
+        pendingAmounts[normalizedClientId] = pendingAmount;
         if (pendingAmount > 0) {
           totalPending += pendingAmount;
         }
@@ -1459,28 +1462,36 @@ const DashboardPage = () => {
                   }}
                 >
                   <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg border border-gray-200 dark:border-gray-700 p-4 relative mt-2">
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Clients with Pending Payments</h4>
-                    {Object.keys(clientPendingAmounts).filter(clientId => clientPendingAmounts[clientId] > 0).length > 0 ? (
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-medium text-gray-900 dark:text-white">Clients with Pending Payments</h4>
+                    </div>
+                    {clients.length > 0 ? (
                       <div className="space-y-2 max-h-60 overflow-y-auto">
-                        {Object.entries(clientPendingAmounts)
-                          .filter(([clientId, amount]) => amount > 0)
-                          .map(([clientId, amount]) => {
-                            // Find client by ID, handling both string and object IDs
-                            const client = clients.find(c => {
-                              const clientIdStr = typeof c._id === 'string' ? c._id : String(c._id);
-                              return clientIdStr === clientId;
-                            });
-                            return client ? (
-                              <div key={clientId} className="flex justify-between items-center text-sm py-1">
+                        {clients
+                          .filter(client => {
+                            const pendingAmount = clientPendingAmounts[client._id] || 0;
+                            return pendingAmount > 0;
+                          })
+                          .map(client => {
+                            const pendingAmount = clientPendingAmounts[client._id] || 0;
+                            return pendingAmount > 0 ? (
+                              <div key={client._id} className="flex justify-between items-center text-sm py-1">
                                 <span className="text-gray-700 dark:text-gray-300">{client.name}</span>
-                                <span className="font-medium text-red-600 dark:text-red-400">₹{amount.toLocaleString()}</span>
+                                <span className="font-medium text-red-600 dark:text-red-400">₹{pendingAmount.toLocaleString()}</span>
                               </div>
                             ) : null;
-                          })}
+                          })
+                          .filter(Boolean) // Remove any null entries
+                        }
+                        {clients.every(client => (clientPendingAmounts[client._id] || 0) <= 0) && (
+                          <div className="text-gray-500 dark:text-gray-400 text-sm py-2">
+                            No pending payments found
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="text-gray-500 dark:text-gray-400 text-sm py-2">
-                        No pending payments found
+                        No clients found
                       </div>
                     )}
                   </div>
