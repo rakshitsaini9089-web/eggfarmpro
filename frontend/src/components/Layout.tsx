@@ -265,7 +265,7 @@ export default function Layout({ children }: LayoutProps) {
         </nav>
         
         {/* Sidebar Footer */}
-        <div className="mt-auto py-3 px-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-auto py-2 px-4 border-t border-gray-200 dark:border-gray-700">
           {sidebarCollapsed ? (
             <div className="text-center text-xs text-gray-500 dark:text-gray-400" title="© {new Date().getFullYear()} EggFarm Pro. All rights reserved.">
               © {new Date().getFullYear()}
@@ -583,7 +583,7 @@ export default function Layout({ children }: LayoutProps) {
             </nav>
             
             {/* Mobile Sidebar Footer */}
-            <div className="mt-auto py-3 px-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="mt-auto py-2 px-4 border-t border-gray-200 dark:border-gray-700">
               <div className="text-center">
                 <div className="text-xs text-gray-500 dark:text-gray-400">© {new Date().getFullYear()} EggFarm Pro</div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">All rights reserved</div>
