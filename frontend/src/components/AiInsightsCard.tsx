@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { dashboardAPI } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 interface AiInsight {
   id: string;
@@ -16,6 +17,7 @@ export function AiInsightsCard() {
   const [insights, setInsights] = useState<AiInsight[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const fetchAiInsights = async () => {
     setLoading(true);
@@ -149,7 +151,24 @@ export function AiInsightsCard() {
               </div>
               {insight.action && (
                 <div className="mt-3">
-                  <button className="btn btn-primary btn-sm">
+                  <button 
+                    className="btn btn-primary btn-sm"
+                    onClick={() => {
+                      // Navigate to appropriate page based on action
+                      if (insight.action === 'Check Health Records') {
+                        router.push('/vaccination');
+                      } else if (insight.action === 'View Mortality Records') {
+                        router.push('/mortality');
+                      } else if (insight.action === 'Explore Feed Options') {
+                        router.push('/feed-consumption');
+                      } else if (insight.action === 'Schedule Vaccination') {
+                        router.push('/vaccination');
+                      } else {
+                        // Default action - could be customized further
+                        console.log('Action clicked:', insight.action);
+                      }
+                    }}
+                  >
                     {insight.action}
                   </button>
                 </div>
