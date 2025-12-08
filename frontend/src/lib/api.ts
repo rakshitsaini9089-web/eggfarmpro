@@ -399,21 +399,29 @@ export const inventoryAPI = {
   getAll: (itemType?: string, farmId?: string) => {
     const params = new URLSearchParams();
     if (itemType) params.append('itemType', itemType);
-    if (farmId) params.append('farmId', farmId);
+    // Only add farmId to query if it's a valid ObjectId-like string
+    const isValidObjectId = farmId && /^[0-9a-fA-F]{24}$/.test(farmId);
+    if (isValidObjectId) params.append('farmId', farmId);
     const query = params.toString() ? `?${params.toString()}` : '';
     return fetchAPI(`/inventories${query}`);
   },
   getById: (id: string) => fetchAPI(`/inventories/${id}`),
   getSummary: (farmId?: string) => {
-    const query = farmId ? `?farmId=${farmId}` : '';
+    // Only add farmId to query if it's a valid ObjectId-like string
+    const isValidObjectId = farmId && /^[0-9a-fA-F]{24}$/.test(farmId);
+    const query = isValidObjectId ? `?farmId=${farmId}` : '';
     return fetchAPI(`/inventories/summary${query}`);
   },
   getLowStockAlerts: (farmId?: string) => {
-    const query = farmId ? `?farmId=${farmId}` : '';
+    // Only add farmId to query if it's a valid ObjectId-like string
+    const isValidObjectId = farmId && /^[0-9a-fA-F]{24}$/.test(farmId);
+    const query = isValidObjectId ? `?farmId=${farmId}` : '';
     return fetchAPI(`/inventories/alerts/low-stock${query}`);
   },
   getExpiryAlerts: (farmId?: string) => {
-    const query = farmId ? `?farmId=${farmId}` : '';
+    // Only add farmId to query if it's a valid ObjectId-like string
+    const isValidObjectId = farmId && /^[0-9a-fA-F]{24}$/.test(farmId);
+    const query = isValidObjectId ? `?farmId=${farmId}` : '';
     return fetchAPI(`/inventories/alerts/expiry${query}`);
   },
   create: (data: any) => fetchAPI('/inventories', {
