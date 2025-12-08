@@ -793,10 +793,14 @@ Need help with something else?`,
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full animate-fadeIn`}
           >
             <div 
-              className={`w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-[18px] p-3 shadow-md backdrop-blur-sm ${
+              className={`w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-[18px] shadow-md backdrop-blur-sm ${
                 message.role === 'user' 
-                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-none shadow-lg inline-block w-auto max-w-full' 
-                  : 'bg-white dark:bg-gray-800 border border-[rgba(0,0,0,0.05)] dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none'
+                  ? `bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-none shadow-lg inline-block ${
+                      message.content.length < 50 ? 'max-w-[fit-content] px-4 py-2' : 
+                      message.content.length < 100 ? 'max-w-[70%] p-3' : 
+                      'max-w-full p-3'
+                    }`
+                  : 'bg-white dark:bg-gray-800 border border-[rgba(0,0,0,0.05)] dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none p-3'
               }`}
             >
               {message.role === 'user' ? (
