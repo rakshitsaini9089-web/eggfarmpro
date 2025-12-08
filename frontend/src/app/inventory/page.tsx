@@ -68,10 +68,19 @@ export default function InventoryPage() {
     try {
       setLoading(true);
       // Only fetch items if we have a valid farm ID
+      console.log('Fetching inventory items, selectedFarm:', selectedFarm);
       if (selectedFarm?._id) {
-        const data = await inventoryAPI.getAll(selectedItemType === 'all' ? undefined : selectedItemType, selectedFarm._id);
-        setInventoryItems(data);
+        console.log('Farm ID being passed to items:', selectedFarm._id);
+        // Validate that the farm ID is a proper ObjectId
+        if (/^[0-9a-fA-F]{24}$/.test(selectedFarm._id)) {
+          const data = await inventoryAPI.getAll(selectedItemType === 'all' ? undefined : selectedItemType, selectedFarm._id);
+          setInventoryItems(data);
+        } else {
+          console.warn('Invalid farm ID format for items, not fetching:', selectedFarm._id);
+          setInventoryItems([]);
+        }
       } else {
+        console.log('No valid farm ID for items, setting empty items');
         setInventoryItems([]);
       }
     } catch (error) {
@@ -85,10 +94,19 @@ export default function InventoryPage() {
   const fetchInventorySummary = async () => {
     try {
       // Only fetch summary if we have a valid farm ID
+      console.log('Fetching inventory summary, selectedFarm:', selectedFarm);
       if (selectedFarm?._id) {
-        const data = await inventoryAPI.getSummary(selectedFarm._id);
-        setInventorySummary(data);
+        console.log('Farm ID being passed:', selectedFarm._id);
+        // Validate that the farm ID is a proper ObjectId
+        if (/^[0-9a-fA-F]{24}$/.test(selectedFarm._id)) {
+          const data = await inventoryAPI.getSummary(selectedFarm._id);
+          setInventorySummary(data);
+        } else {
+          console.warn('Invalid farm ID format, not fetching summary:', selectedFarm._id);
+          setInventorySummary([]);
+        }
       } else {
+        console.log('No valid farm ID, setting empty summary');
         setInventorySummary([]);
       }
     } catch (error) {
@@ -99,16 +117,26 @@ export default function InventoryPage() {
 
   const fetchAlerts = async () => {
     try {
+      console.log('Fetching alerts, selectedFarm:', selectedFarm);
       // Only fetch alerts if we have a valid farm ID
       if (selectedFarm?._id) {
-        // Fetch low stock alerts
-        const lowStockData = await inventoryAPI.getLowStockAlerts(selectedFarm._id);
-        setLowStockAlerts(lowStockData);
-        
-        // Fetch expiry alerts
-        const expiryData = await inventoryAPI.getExpiryAlerts(selectedFarm._id);
-        setExpiryAlerts(expiryData);
+        console.log('Farm ID being passed to alerts:', selectedFarm._id);
+        // Validate that the farm ID is a proper ObjectId
+        if (/^[0-9a-fA-F]{24}$/.test(selectedFarm._id)) {
+          // Fetch low stock alerts
+          const lowStockData = await inventoryAPI.getLowStockAlerts(selectedFarm._id);
+          setLowStockAlerts(lowStockData);
+          
+          // Fetch expiry alerts
+          const expiryData = await inventoryAPI.getExpiryAlerts(selectedFarm._id);
+          setExpiryAlerts(expiryData);
+        } else {
+          console.warn('Invalid farm ID format for alerts, not fetching:', selectedFarm._id);
+          setLowStockAlerts([]);
+          setExpiryAlerts([]);
+        }
       } else {
+        console.log('No valid farm ID for alerts, setting empty alerts');
         setLowStockAlerts([]);
         setExpiryAlerts([]);
       }

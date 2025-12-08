@@ -12,7 +12,8 @@ async function getInventoryItems(req, res) {
     if (itemType) {
       query.itemType = itemType;
     }
-    if (farmId) {
+    // Add farmId filter if provided and valid
+    if (farmId && /^[0-9a-fA-F]{24}$/.test(farmId)) {
       query.farmId = farmId;
     }
     
@@ -58,7 +59,8 @@ async function getLowStockAlerts(req, res) {
       lowStockThreshold: { $exists: true, $ne: null }
     };
     
-    if (farmId) {
+    // Add farmId filter if provided and valid
+    if (farmId && /^[0-9a-fA-F]{24}$/.test(farmId)) {
       query.farmId = farmId;
     }
     
@@ -86,7 +88,8 @@ async function getExpiryAlerts(req, res) {
       }
     };
     
-    if (farmId) {
+    // Add farmId filter if provided and valid
+    if (farmId && /^[0-9a-fA-F]{24}$/.test(farmId)) {
       query.farmId = farmId;
     }
     
@@ -135,8 +138,8 @@ async function getInventorySummary(req, res) {
       }
     ];
     
-    // Add match stage for farmId if provided
-    if (farmId) {
+    // Add match stage for farmId if provided and valid
+    if (farmId && /^[0-9a-fA-F]{24}$/.test(farmId)) {
       pipeline.unshift({ $match: { farmId } });
     }
     
