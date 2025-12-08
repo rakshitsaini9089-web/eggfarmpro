@@ -513,6 +513,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       } else if (error.message?.includes('Forbidden') || error.message?.includes('403')) {
         errorMessageContent = 'Access denied. You do not have permission to use AI features.';
       } else if (error.message) {
+        // Display the actual error message from the server
         errorMessageContent = error.message;
       }
       
@@ -527,8 +528,10 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
+      // Note: We don't set isTyping to false here because simulateTyping handles it
       setIsTyping(false);
       setTypingContent('');
+      setShowSuggestions(true); // Show suggestions even on error
     }
   };
 
@@ -805,7 +808,7 @@ export function AiPanel({ onClose }: { onClose: () => void }) {
             ))}
           </div>
         )}
-
+        
         <div ref={messagesEndRef} />
       </div>
 

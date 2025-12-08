@@ -202,7 +202,7 @@ export function AIReportCard() {
               Please select a farm to generate reports.
             </div>
           )}
-
+          
           <div className="space-y-4">
             {reports.map((report) => (
               <div key={report.type} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 dark:bg-gray-700/30">
