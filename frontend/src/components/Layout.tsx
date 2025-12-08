@@ -264,7 +264,12 @@ export default function Layout({ children }: LayoutProps) {
           </ul>
         </nav>
         
-        {/* Sidebar Footer - Removed to prevent hook mismatch errors */}
+        {/* Sidebar Footer */}
+        <div className="mt-auto py-3 px-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="text-center text-xs text-gray-500 dark:text-gray-400">
+            © {new Date().getFullYear()} EggFarm Pro. All rights reserved.
+          </div>
+        </div>
       </div>
       
       {/* Main content */}
