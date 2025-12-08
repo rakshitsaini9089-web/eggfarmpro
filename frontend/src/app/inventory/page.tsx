@@ -67,10 +67,16 @@ export default function InventoryPage() {
   const fetchInventoryItems = async () => {
     try {
       setLoading(true);
-      const data = await inventoryAPI.getAll(selectedItemType === 'all' ? undefined : selectedItemType, selectedFarm?._id);
-      setInventoryItems(data);
+      // Only fetch items if we have a valid farm ID
+      if (selectedFarm?._id) {
+        const data = await inventoryAPI.getAll(selectedItemType === 'all' ? undefined : selectedItemType, selectedFarm._id);
+        setInventoryItems(data);
+      } else {
+        setInventoryItems([]);
+      }
     } catch (error) {
       console.error('Failed to fetch inventory items:', error);
+      setInventoryItems([]); // Set to empty array on error
     } finally {
       setLoading(false);
     }
@@ -78,24 +84,38 @@ export default function InventoryPage() {
 
   const fetchInventorySummary = async () => {
     try {
-      const data = await inventoryAPI.getSummary(selectedFarm?._id);
-      setInventorySummary(data);
+      // Only fetch summary if we have a valid farm ID
+      if (selectedFarm?._id) {
+        const data = await inventoryAPI.getSummary(selectedFarm._id);
+        setInventorySummary(data);
+      } else {
+        setInventorySummary([]);
+      }
     } catch (error) {
       console.error('Failed to fetch inventory summary:', error);
+      setInventorySummary([]); // Set to empty array on error
     }
   };
 
   const fetchAlerts = async () => {
     try {
-      // Fetch low stock alerts
-      const lowStockData = await inventoryAPI.getLowStockAlerts(selectedFarm?._id);
-      setLowStockAlerts(lowStockData);
-      
-      // Fetch expiry alerts
-      const expiryData = await inventoryAPI.getExpiryAlerts(selectedFarm?._id);
-      setExpiryAlerts(expiryData);
+      // Only fetch alerts if we have a valid farm ID
+      if (selectedFarm?._id) {
+        // Fetch low stock alerts
+        const lowStockData = await inventoryAPI.getLowStockAlerts(selectedFarm._id);
+        setLowStockAlerts(lowStockData);
+        
+        // Fetch expiry alerts
+        const expiryData = await inventoryAPI.getExpiryAlerts(selectedFarm._id);
+        setExpiryAlerts(expiryData);
+      } else {
+        setLowStockAlerts([]);
+        setExpiryAlerts([]);
+      }
     } catch (error) {
       console.error('Failed to fetch alerts:', error);
+      setLowStockAlerts([]);
+      setExpiryAlerts([]);
     }
   };
 
@@ -105,7 +125,7 @@ export default function InventoryPage() {
       fetchInventorySummary(),
       fetchAlerts()
     ]);
-  }, [selectedItemType]);
+  }, [selectedItemType, selectedFarm]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
