@@ -796,9 +796,9 @@ Need help with something else?`,
               className={`w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-[18px] shadow-md backdrop-blur-sm ${
                 message.role === 'user' 
                   ? `bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-none shadow-lg inline-block ${
-                      message.content.length < 50 ? 'max-w-[fit-content] px-4 py-2' : 
-                      message.content.length < 100 ? 'max-w-[70%] p-3' : 
-                      'max-w-full p-3'
+                      message.content.length < 50 ? 'user-bubble-fit px-4 py-2' : 
+                      message.content.length < 100 ? 'user-bubble-70 p-3' : 
+                      'user-bubble-full p-3'
                     }`
                   : 'bg-white dark:bg-gray-800 border border-[rgba(0,0,0,0.05)] dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none p-3'
               }`}
@@ -1039,6 +1039,20 @@ Need help with something else?`,
         @keyframes dotOpacity {
           0%, 60%, 100% { opacity: 0.6; transform: scale(1); }
           30% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        /* Dynamic user bubble sizing */
+        .user-bubble-fit {
+          width: fit-content;
+          max-width: fit-content;
+        }
+        
+        .user-bubble-70 {
+          max-width: 70%;
+        }
+        
+        .user-bubble-full {
+          max-width: 100%;
         }
       `}</style>
     </div>
