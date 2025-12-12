@@ -54,6 +54,10 @@
   --gray-900: 17, 24, 39;
 }
 
+[data-theme="dark"] body {
+  background: rgb(var(--background-start-rgb));
+}
+
 html,
 body {
   height: 100%;
@@ -61,7 +65,11 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb));
+  background: #f5ebeb;
+  background: linear-gradient(258deg, rgba(245, 235, 235, 1) 0%, rgba(223, 229, 237, 1) 35%, rgba(240, 255, 240, 1) 65%, rgba(255, 245, 245, 1) 100%);
+  background-size: 200% 200%;
+  animation: richGradientAnimation 20s ease infinite;
+  background-attachment: fixed;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -71,6 +79,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
 }
 
 html {
@@ -619,6 +628,43 @@ select {
   }
   50% {
     opacity: .5;
+  }
+}
+
+/* Animated Gradient Background */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* More complex animated gradient for richer visual effect */
+@keyframes richGradientAnimation {
+  0% {
+    background-position: 0% 50%;
+    background-size: 200% 200%;
+  }
+  25% {
+    background-position: 100% 50%;
+    background-size: 250% 250%;
+  }
+  50% {
+    background-position: 100% 100%;
+    background-size: 200% 200%;
+  }
+  75% {
+    background-position: 0% 100%;
+    background-size: 250% 250%;
+  }
+  100% {
+    background-position: 0% 50%;
+    background-size: 200% 200%;
   }
 }
 

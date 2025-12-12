@@ -620,6 +620,16 @@ const DashboardPage = () => {
       date: new Date().toISOString().split('T')[0],
       description: ''
     });
+    
+    // Debug effect to monitor form data changes
+    useEffect(() => {
+      console.log('Payment form data updated:', formData);
+    }, [formData]);
+    
+    // Debug effect to monitor form data changes
+    useEffect(() => {
+      console.log('Payment form data updated:', formData);
+    }, [formData]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [clientSales, setClientSales] = useState<any[]>([]);
     const [loadingSales, setLoadingSales] = useState(false);
@@ -750,7 +760,7 @@ const DashboardPage = () => {
               <input
                 type="number"
                 id="payment-amount"
-                value={formData.amount || ''}
+                value={formData.amount || 0}
                 onChange={(e) => setFormData({...formData, amount: parseFloat(e.target.value) || 0})}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 required
@@ -841,8 +851,10 @@ const DashboardPage = () => {
                     // Parse amount safely - ULTIMATE FORCE APPROACH
                     let parsedAmount = 0;
                     
-                    if (data.amount) {
+                    if (data.amount || data.amount === 0) {
                       console.log('=== PROCESSING AMOUNT ===');
+                      console.log('Raw amount data:', data.amount);
+                      console.log('Amount type:', typeof data.amount);
                       
                       if (typeof data.amount === 'string') {
                         console.log('Processing string amount:', data.amount);
@@ -908,14 +920,19 @@ const DashboardPage = () => {
                     
                     // Auto-fill form fields with extracted UPI data
                     console.log('Updating form with amount:', parsedAmount);
-                    setFormData(prev => ({
-                      ...prev,
-                      amount: (parsedAmount && parsedAmount > 0) ? parsedAmount : prev.amount,
-                      upi_id: data.upi_id || prev.upi_id,
-                      utr: data.txnid || prev.utr
-                    }));
+                    console.log('Current form data before update:', formData);
                     
-                    console.log('Form updated with new amount');
+                    // Direct and simple form update
+                    setFormData(prev => {
+                      const updatedData = {
+                        ...prev,
+                        amount: parsedAmount > 0 ? parsedAmount : prev.amount,
+                        upi_id: data.upi_id || prev.upi_id,
+                        utr: data.txnid || prev.utr
+                      };
+                      console.log('Form data being set:', updatedData);
+                      return updatedData;
+                    });
                   }}
                 />
               </div>

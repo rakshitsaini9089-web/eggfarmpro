@@ -197,6 +197,15 @@ class AIEngine {
   /**
    * Generate structured JSON response
    */
+  async generateResponse(prompt) {
+    try {
+      return await this.generate(prompt, true);
+    } catch (error) {
+      console.error('AI generation error:', error);
+      throw error;
+    }
+  }
+
   async generateJSON(instruction) {
     const prompt = `
     You are EggMind AI, an intelligent assistant for an egg farm management system.

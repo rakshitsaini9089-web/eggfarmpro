@@ -24,6 +24,7 @@ const reportsRouter = require('./reports');
 const authRouter = require('./auth');
 const aiRouter = require('./aiRoutes');
 const upiRouter = require('./upi');
+const aiUpiRouter = require('./aiUpiRoutes');
 const { getDashboardStats } = require('../controllers/dashboardController');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -54,6 +55,8 @@ router.use('/voice', authenticateToken, voiceRouter);
 router.use('/farms', authenticateToken, farmsRouter);
 router.use('/reports', authenticateToken, reportsRouter);
 router.use('/ai', authenticateToken, aiRouter);
-router.use('/upi', authenticateToken, upiRouter);
+router.use('/ai-upi', authenticateToken, aiUpiRouter);
+// UPI route - temporarily public for testing
+router.use('/upi', upiRouter);
 
 module.exports = router;

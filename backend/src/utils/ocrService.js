@@ -67,11 +67,54 @@ async function processScreenshot(screenshotId) {
 function extractPaymentInfo(text) {
   const data = {};
   
-  // Extract amount (look for patterns like ₹1234.56, 1234.56, etc.)
-  const amountRegex = /[₹$]?[\s]*([\d,]+\.?\d*)/;
-  const amountMatch = text.match(amountRegex);
-  if (amountMatch) {
-    data.amount = parseFloat(amountMatch[1].replace(/[,]/g, ''));
+  // Extract amount with improved pattern matching for all UPI providers including PayTM
+  // Try multiple approaches for better accuracy
+  
+  // Approach 1: Enhanced regex pattern
+  const enhancedAmountRegex = /(?:₹|rs\.?|inr)[\s]*([\d,]+\.\d{2})|([\d,]+\.\d{2})[\s]*(?:rs\.?|inr|rupees)|(?:paid|amount|total)[\s]*[₹:]?[\s]*([\d,]+\.\d{2})|[₹:]?[\s]*([\d,]+\.\d{2})[\s]*(?:paid|amount|total)/gi;
+  
+  let amountValue = null;
+  const enhancedMatch = text.match(enhancedAmountRegex);
+  if (enhancedMatch) {
+    // Extract the actual amount value from the match
+    for (const match of enhancedMatch) {
+      const potentialAmount = match.replace(/[^\d.]/g, '');
+      if (potentialAmount && potentialAmount.includes('.')) {
+        const parsed = parseFloat(potentialAmount);
+        if (!isNaN(parsed) && parsed > 0) {
+          amountValue = parsed;
+          break;
+        }
+      }
+    }
+  }
+  
+  // Approach 2: Fallback to original pattern if enhanced approach didn't work
+  if (!amountValue) {
+    const amountRegex = /[₹$]?[\s]*([\d,]+\.?\d*)/;
+    const amountMatch = text.match(amountRegex);
+    if (amountMatch) {
+      amountValue = parseFloat(amountMatch[1].replace(/[,]/g, ''));
+    }
+  }
+  
+  // Approach 3: Last resort - look for any decimal number that looks like currency
+  if (!amountValue) {
+    const decimalNumbers = text.match(/\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?/g);
+    if (decimalNumbers) {
+      const validAmounts = decimalNumbers
+        .map(n => parseFloat(n.replace(/,/g, '')))
+        .filter(val => !isNaN(val) && val >= 10 && val <= 10000000) // Reasonable payment range
+        .sort((a, b) => b - a); // Sort descending
+      
+      if (validAmounts.length > 0) {
+        amountValue = validAmounts[0]; // Take the largest reasonable amount
+      }
+    }
+  }
+  
+  if (amountValue) {
+    data.amount = amountValue;
   }
   
   // Extract UTR (look for alphanumeric patterns, typically 12 characters)

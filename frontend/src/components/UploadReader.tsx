@@ -10,6 +10,8 @@ interface UpiData {
 }
 
 export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void } = {}) {
+  console.log('UploadReader component initialized with onUpload:', !!onUpload);
+  console.log('onUpload function:', onUpload);
   const [image, setImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [upiData, setUpiData] = useState<UpiData | null>(null);
@@ -40,15 +42,24 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
           setFileName(file.name);
           setUpiData(null);
           setError(null);
+          setLoading(false); // Ensure loading is reset when new image is uploaded
         }
       };
       reader.readAsDataURL(file);
+      
+      // Don't automatically process the image - let the user click the Process Image button
+      // This ensures the button stays visible for manual processing
     }
   };
 
   const handleProcessImage = async () => {
-    if (!image) return;
+    // Make sure we have an image before processing
+    if (!image) {
+      console.log('No image to process');
+      return;
+    }
     
+    console.log('Starting image processing');
     setLoading(true);
     setError(null);
     
@@ -63,13 +74,19 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
       
       // Get token from localStorage
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      console.log('Token:', token);
       
       // Check if we're using ngrok and need to use the proxy
       const isNgrok = typeof window !== 'undefined' && window.location.hostname.includes('ngrok');
+      console.log('Is Ngrok:', isNgrok);
+      
+      let apiResponse;
+      let responseText;
       
       if (isNgrok) {
         // Use proxy route for ngrok
-        const apiResponse = await fetch("/api/proxy?endpoint=/upi/scan", {
+        console.log('Making request to proxy endpoint');
+        apiResponse = await fetch("/api/proxy?endpoint=/upi/scan", {
           method: "POST",
           body: formData,
           headers: {
@@ -77,70 +94,73 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
           },
         });
         
-        const responseText = await apiResponse.text();
-        
-        // Try to parse as JSON, show error if it fails
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error('Failed to parse JSON response:', responseText);
-          throw new Error(`Invalid response from server. Status: ${apiResponse.status}`);
-        }
-        
-        setLoading(false);
-        
-        if (!data.success) {
-          console.log('UPI processing failed:', data);
-          alert("Could not read UPI details: " + (data.message || "Unknown error"));
-          return;
-        }
-        
-        console.log('UPI data received:', data);
-        setUpiData(data);
-        
-        // Call the onUpload callback if provided
-        if (onUpload) {
-          console.log('Calling onUpload callback with data:', data);
-          onUpload(data);
-        }
+        console.log('Proxy response status:', apiResponse.status);
+        responseText = await apiResponse.text();
+        console.log('Proxy response text:', responseText);
       } else {
         // Direct API call for local development
-        const apiResponse = await fetch("/api/upi/scan", {
+        console.log('Making direct API call to /api/upi/scan');
+        apiResponse = await fetch("/api/upi/scan", {
           method: "POST",
           body: formData,
           headers: {
             ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
           },
         });
-
-        const responseText = await apiResponse.text();
         
-        // Try to parse as JSON, show error if it fails
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error('Failed to parse JSON response:', responseText);
-          throw new Error(`Invalid response from server. Status: ${apiResponse.status}`);
+        console.log('Direct API response status:', apiResponse.status);
+        responseText = await apiResponse.text();
+        console.log('Direct API response text:', responseText);
+      }
+      
+      // Try to parse as JSON, show error if it fails
+      let data;
+      try {
+        data = JSON.parse(responseText);
+        console.log('Successfully parsed JSON response:', data);
+        
+        // Validate the response structure
+        if (!data.hasOwnProperty('success')) {
+          console.warn('Response missing success property');
         }
+        if (!data.hasOwnProperty('amount')) {
+          console.warn('Response missing amount property');
+        }
+        if (!data.hasOwnProperty('upi_id')) {
+          console.warn('Response missing upi_id property');
+        }
+        if (!data.hasOwnProperty('txnid')) {
+          console.warn('Response missing txnid property');
+        }
+      } catch (parseError) {
+        console.error('Failed to parse JSON response:', responseText);
+        throw new Error(`Invalid response from server. Status: ${apiResponse.status}. Response: ${responseText}`);
+      }
 
+      if (!data.success) {
+        console.log('UPI processing failed:', data);
+        setError("Could not read UPI details: " + (data.message || "Unknown error"));
         setLoading(false);
+        return;
+      }
 
-        if (!data.success) {
-          console.log('UPI processing failed:', data);
-          alert("Could not read UPI details: " + (data.message || "Unknown error"));
-          return;
-        }
-
-        console.log('UPI data received:', data);
-        setUpiData(data);
-        
-        // Call the onUpload callback if provided
-        if (onUpload) {
-          console.log('Calling onUpload callback with data:', data);
+      console.log('UPI data received:', data);
+      setUpiData(data);
+      setLoading(false);
+      
+      // Call the onUpload callback if provided
+      if (onUpload) {
+        console.log('Calling onUpload callback with data:', data);
+        console.log('onUpload function type:', typeof onUpload);
+        console.log('onUpload function value:', onUpload);
+        try {
           onUpload(data);
+          console.log('onUpload callback executed successfully');
+        } catch (callbackError) {
+          console.error('Error in onUpload callback:', callbackError);
         }
+      } else {
+        console.log('No onUpload callback provided');
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
@@ -189,22 +209,23 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
           </div>
         </div>
         
-        {image && (
-          <button
-            onClick={handleProcessImage}
-            disabled={loading}
-            className="btn btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Processing...
-              </span>
-            ) : 'Process Image'}
-          </button>
+        <button
+          type="button"
+          onClick={handleProcessImage}
+          disabled={!image || loading}
+          className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+        >
+          {loading ? 'Processing...' : 'Process Image'}
+        </button>
+        
+        {loading && (
+          <div className="flex items-center justify-center p-4">
+            <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Processing image...</span>
+          </div>
         )}
         
         {error && (
@@ -220,15 +241,15 @@ export function UploadReader({ onUpload }: { onUpload?: (data: UpiData) => void 
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Amount:</span>
-                  <span className="font-medium">₹{upiData.amount || 'N/A'}</span>
+                  <span className="font-medium">₹{upiData?.amount || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">UPI ID:</span>
-                  <span className="font-medium">{upiData.upi_id || 'N/A'}</span>
+                  <span className="font-medium">{upiData?.upi_id || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Transaction ID:</span>
-                  <span className="font-medium">{upiData.txnid || 'N/A'}</span>
+                  <span className="font-medium">{upiData?.txnid || 'N/A'}</span>
                 </div>
               </div>
             </div>

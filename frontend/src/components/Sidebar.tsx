@@ -17,7 +17,8 @@ import {
   ScaleIcon,
   ChartBarIcon,
   ChatBubbleLeftRightIcon,
-  XMarkIcon
+  XMarkIcon,
+  PhotoIcon
 } from '@heroicons/react/24/outline';
 
 const NAV_ITEMS = [
@@ -37,6 +38,7 @@ const NAV_ITEMS = [
   { name: 'Market Rate', href: '/market-rate', icon: ChartBarIcon },
   { name: 'Inventory', href: '/inventory', icon: ArchiveBoxIcon },
   { name: 'Reports', href: '/reports', icon: ChartBarIcon },
+  { name: 'UPI Reader', href: '/ocr', icon: PhotoIcon },
   { name: 'WhatsApp', href: '/whatsapp', icon: ChatBubbleLeftRightIcon },
 ];
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ReactNode, useEffect, useRef } from 'react';
+import { useState, ReactNode, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
@@ -77,6 +77,63 @@ export default function Layout({ children }: LayoutProps) {
   const farmMenuRef = useRef<HTMLDivElement>(null);
 
   const darkMode = theme === 'dark';
+
+  // Memoize desktop navigation items
+  const desktopNavItems = useMemo(() => NAV_ITEMS.map((item) => {
+    const isActive = pathname === item.href;
+    return (
+      <li key={item.name}>
+        <Link 
+          href={item.href}
+          prefetch={true}
+          className={`flex items-center p-3 rounded-lg transition-colors duration-100 sidebar-menu-item ${isActive 
+              ? 'bg-gradient-primary text-white shadow-md' 
+              : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+          }`}
+          onClick={(e) => {
+            // Ensure navigation works properly
+            e.stopPropagation();
+          }}
+        >
+          <item.icon className={`h-5 w-5 ${sidebarCollapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`} />
+          {!sidebarCollapsed && (
+            <span className={`font-medium ${isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>{item.name}</span>
+          )}
+        </Link>
+      </li>
+    );
+  }), [pathname, sidebarCollapsed]);
+
+  // Memoize mobile navigation items
+  const mobileNavItems = useMemo(() => NAV_ITEMS.map((item) => {
+    const isActive = pathname === item.href;
+    return (
+      <li key={item.name}>
+        <Link
+          href={item.href}
+          prefetch={true}
+          onClick={(e) => {
+            setSidebarOpen(false);
+            // Ensure navigation works properly
+            e.stopPropagation();
+          }}
+          className={`flex items-center p-3 rounded-lg transition-colors duration-100 sidebar-menu-item ${isActive
+              ? 'bg-gradient-primary text-white shadow-md'
+              : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+          }`}
+        >
+          <item.icon
+            className={`h-5 w-5 mr-3 ${
+              isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'
+            }`}
+          />
+          <span className={`font-medium ${isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+            {item.name}
+          </span>
+        </Link>
+      </li>
+    );
+  }), [pathname]);
 
   // Only run auth check on client side
   useEffect(() => {
@@ -181,7 +238,7 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 ease-in-out">
+    <div className="flex h-screen transition-colors duration-300 ease-in-out">
       <style jsx>{`
         .scrollbar-hidden::-webkit-scrollbar {
           display: none;
@@ -198,7 +255,7 @@ export default function Layout({ children }: LayoutProps) {
       `}</style>
       
       {/* Sidebar */}
-      <div className="sidebar-desktop hidden md:flex md:flex-col md:relative z-30 ${sidebarCollapsed ? 'w-20' : 'w-48'} bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-xl h-full transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700 before:absolute before:inset-0 before:bg-black/5 dark:before:bg-black/10 before:rounded-xl before:z-[-1]">
+      <div className={`sidebar-desktop hidden md:flex md:flex-col md:relative z-30 ${sidebarCollapsed ? 'w-20' : 'w-64'} bg-white dark:bg-gray-800/70 shadow-xl h-full transition-all duration-150 ease-in-out border-r border-gray-200 dark:border-gray-700 before:absolute before:inset-0 before:bg-black/0 dark:before:bg-black/10 before:rounded-xl before:z-[-1]`}>
         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-secondary dark:bg-gray-800">
           {!sidebarCollapsed && (
             <div className="flex items-center space-x-3 max-w-full">
@@ -238,29 +295,7 @@ export default function Layout({ children }: LayoutProps) {
         {/* Navigation */}
         <nav className="flex-1 px-2 py-4 overflow-y-auto scrollbar-hidden">
           <ul className="space-y-1">
-            {NAV_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <li key={item.name}>
-                  <Link 
-                    href={item.href}
-                    className={`flex items-center p-3 rounded-lg transition-all duration-200 sidebar-menu-item ${isActive 
-                        ? 'bg-gradient-primary text-white shadow-md' 
-                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                    }`}
-                    onClick={(e) => {
-                      // Ensure navigation works properly
-                      e.stopPropagation();
-                    }}
-                  >
-                    <item.icon className={`h-5 w-5 ${sidebarCollapsed ? 'mx-auto' : 'mr-3'} ${isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`} />
-                    {!sidebarCollapsed && (
-                      <span className={`font-medium ${isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>{item.name}</span>
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
+            {desktopNavItems}
           </ul>
         </nav>
         
@@ -516,7 +551,7 @@ export default function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto bg-white dark:bg-gray-900">
+        <main className="flex-1 overflow-y-auto">
           <div className="mx-auto w-full max-w-6xl px-2 sm:px-3 md:px-6 py-3 sm:py-4 md:py-6 space-y-3 sm:space-y-4 md:space-y-6">
             {children}
           </div>
@@ -531,7 +566,7 @@ export default function Layout({ children }: LayoutProps) {
             className="fixed inset-0 z-40 bg-black/50 md:hidden"
             onClick={() => setSidebarOpen(false)}
           ></div>
-          <div className="fixed inset-y-0 left-0 z-50 w-48 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-xl md:hidden flex flex-col border-r border-gray-200 dark:border-gray-700 before:absolute before:inset-0 before:bg-black/5 dark:before:bg-black/10 before:rounded-xl before:z-[-1]">
+          <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800/70 shadow-xl md:hidden flex flex-col border-r border-gray-200 dark:border-gray-700 before:absolute before:inset-0 before:bg-black/0 dark:before:bg-black/10 before:rounded-xl before:z-[-1]">
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-secondary dark:bg-gray-800">
               <div className="flex items-center space-x-3 max-w-full">
                 <img src="/logo.png" alt="EggFarm Pro Logo" className="w-9 h-9 object-contain rounded-none border-0" />
@@ -542,7 +577,7 @@ export default function Layout({ children }: LayoutProps) {
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-primary p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 nav-button"
+                className="text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-primary p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-100 nav-button"
                 aria-label="Close sidebar"
               >
                 <XMarkIcon className="h-5 w-5" />
@@ -550,34 +585,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
             <nav className="flex-1 px-2 py-4 overflow-y-auto scrollbar-hidden">
               <ul className="space-y-1">
-                {NAV_ITEMS.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        onClick={(e) => {
-                          setSidebarOpen(false);
-                          // Ensure navigation works properly
-                          e.stopPropagation();
-                        }}
-                        className={`flex items-center p-3 rounded-lg transition-all duration-200 sidebar-menu-item ${isActive
-                            ? 'bg-gradient-primary text-white shadow-md'
-                            : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                        }`}
-                      >
-                        <item.icon
-                          className={`h-5 w-5 mr-3 ${
-                            isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'
-                          }`}
-                        />
-                        <span className={`font-medium ${isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>
-                          {item.name}
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
+                {mobileNavItems}
               </ul>
             </nav>
             
